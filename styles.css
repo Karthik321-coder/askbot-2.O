@@ -680,19 +680,23 @@ body.dark-mode .header {
 
 /* Chatbot Styles */
 .chatbot-container {
+
     position: fixed;
     bottom: 100px;
     right: 250px;
     width: 1000px;
     height: 500px;
     background: var(--bg-primary);
-    border-radius: 1rem;
+    border-radius: 10px;
     box-shadow: var(--shadow-large);
     display: none;
     flex-direction: column;
     overflow: hidden;
     border: 1px solid var(--border-color);
     z-index: 1000;
+     /* ...your existing styles... */
+  background: url('https://t3.ftcdn.net/jpg/09/22/01/20/360_F_922012043_DQe3SsAg0RC5IyjhkSOVpO0IQdJT6kt3.jpg') no-repeat center center;
+  background-size: cover;
 }
 
 .chatbot-container.active {
@@ -701,7 +705,7 @@ body.dark-mode .header {
 
 .chatbot-header {
     background: var(--gradient-primary);
-    color: white;
+    color: rgb(157, 23, 23);
     padding: 1rem;
     display: flex;
     justify-content: space-between;
@@ -710,6 +714,7 @@ body.dark-mode .header {
 
 .chatbot-title {
     display: flex;
+
     align-items: center;
     gap: 0.5rem;
     font-weight: 600;
@@ -812,8 +817,8 @@ body.dark-mode .header {
 .chatbox-input button {
   height: 50px;                  /* Match button height */
   padding: 0 20px;
-  background-color: #5b6ef7;
-  color: white;
+  background-color: #b66b26;
+  color: rgb(182, 198, 13);
   border: none;
   border-radius: 8px;
   font-size: 16px;
