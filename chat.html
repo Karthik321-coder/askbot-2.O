@@ -1,0 +1,38 @@
+<!-- ✅ chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AskBot Chat</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="script.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-pO2eDlpS1Yg4/o3kKYMwbDyGPT3Gq7bCZ1XPS+x5DTRPq+02PhXowkqzUVXUNJobuiTE4CIlBPh7Hanao+UiTA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+<body>
+
+
+
+
+  <!-- Chat Container (Full-screen) -->
+  <div id="chatbotContainer" class="chatbot-container active">
+    <div class="chat-header">
+      <span>AskBot 💬</span>
+      <i id="minimizeChat" class="fas fa-minus-circle"></i>
+    </div>
+    <div id="chatbotMessages" class="chatbot-messages"></div>
+    <div class="chatbox-input">
+      <input type="text" id="messageInput" placeholder="Ask me anything..." />
+      <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div id="notification" class="notification"></div>
+</body>
+</html>
