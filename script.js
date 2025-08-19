@@ -4,7 +4,7 @@ let currentUser = '';
 let fuse;
 let dataset = [];
 
-let chatHistory = []; // ðŸ”¥ Add this line to fix the issue
+let chatHistory = []; // 🔥 Add this line to fix the issue
 
 
 const chatbotResponses = {
@@ -248,11 +248,11 @@ async function generateAIResponse(userMessage) {
       chatHistory.push({ role: "bot", content: data.reply });
       return data.reply;
     } else {
-      return "âš ï¸ I didn't get a response from Gemini.";
+      return "⚠️ I didn't get a response from Gemini.";
     }
   } catch (error) {
     console.error("Fetch error:", error);
-    return "âŒ Could not contact the bot.";
+    return "❌ Could not contact the bot.";
   }
 }
 
