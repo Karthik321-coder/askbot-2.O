@@ -1,38 +1,10 @@
-// ====== Backend API Connection ======
-const BASE_URL = "https://askbot-2-o.onrender.com";
-
-async function generateAIResponse(userInput) {
-  try {
-    console.log("Sending request to backend:", userInput);
-    
-    const response = await fetch(`${BASE_URL}/generate`, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        messages: [{ role: "user", content: userInput }] 
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Backend error: ${response.status} ${response.statusText}`);
-    }
-    
-    const data = await response.json();
-    console.log("Backend response:", data);
-    
-    return data.reply || "I'm having trouble thinking right now. Try again!";
-  } catch (error) {
-    console.error("Connection error:", error);
-    
 // ====== Global Variables ======
 let isLoggedIn = false;
 let currentUser = '';
 let fuse;
 let dataset = [];
 
-let chatHistory = []; // 🔥 Add this line to fix the issue
+let chatHistory = []; // ðŸ”¥ Add this line to fix the issue
 
 
 const chatbotResponses = {
@@ -276,11 +248,11 @@ async function generateAIResponse(userMessage) {
       chatHistory.push({ role: "bot", content: data.reply });
       return data.reply;
     } else {
-      return "⚠️ I didn't get a response from Gemini.";
+      return "âš ï¸ I didn't get a response from Gemini.";
     }
   } catch (error) {
     console.error("Fetch error:", error);
-    return "❌ Could not contact the bot.";
+    return "âŒ Could not contact the bot.";
   }
 }
 
@@ -306,4 +278,3 @@ function showNotification(msg, type = "success") {
     elements.notification.classList.remove("show");
   }, 3000);
 }
-
