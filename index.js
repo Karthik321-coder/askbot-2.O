@@ -6,32 +6,55 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
+
+// Ensure API_KEY exists
+if (!process.env.API_KEY) {
+  console.error("❌ ERROR: API_KEY not found in .env file");
+  process.exit(1);
+}
 
 // Initialize Gemini client
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
+// Routes
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from the backend!" });
+});
+
+app.get("/api/users", (req, res) => {
+  res.json([{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]);
+});
+
 app.post("/generate", async (req, res) => {
   try {
     const { messages } = req.body;
+
     if (!Array.isArray(messages)) {
-      return res.status(400).json({ error: "'messages' must be an array" });
+      return res
+        .status(400)
+        .json({ error: "'messages' must be an array of objects [{role, content}]" });
     }
-    const prompt = messages.map(m => `${m.role}: ${m.content}`).join("\n");
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+    const prompt = messages.map((m) => `${m.role}: ${m.content}`).join("\n");
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = await response.text();
-    res.json({ reply: text });
-  } catch (err) {
-    console.error("Gemini API error:", err.message);
-    res.status(500).json({ error: "Gemini API failed: " + err.message });
+    const text = await result.response.text();
+
+    return res.status(200).json({ reply: text });
+  } catch (error) {
+    console.error("❌ Gemini API error:", error);
+    return res
+      .status(500)
+      .json({ error: "Gemini API failed: " + (error?.message || "Unknown error") });
   }
 });
 
-// THIS IS THE CRUCIAL PART - listen on a port
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`✅ AskBot backend running at http://localhost:${PORT}`);
+// Listen on all interfaces for cloud deployment
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ AskBot backend running on port ${PORT}`);
 });
