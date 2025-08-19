@@ -21,7 +21,20 @@ if (!process.env.API_KEY) {
 // Initialize Gemini client
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-// Routes
+// ✅ ADD ROOT ROUTE - This fixes the "Cannot GET /" error
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "AskBot Backend API is running! 🤖",
+    status: "online",
+    endpoints: {
+      health: "/api/hello",
+      users: "/api/users", 
+      chat: "/generate"
+    }
+  });
+});
+
+// Existing routes
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from the backend!" });
 });
@@ -54,7 +67,7 @@ app.post("/generate", async (req, res) => {
   }
 });
 
-// Listen on all interfaces for cloud deployment
+// ✅ Listen on 0.0.0.0 for cloud deployment
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ AskBot backend running on port ${PORT}`);
 });
