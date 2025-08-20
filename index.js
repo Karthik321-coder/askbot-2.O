@@ -5,6 +5,24 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // Add after existing imports
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { MongoClient } from 'mongodb';
+
+const client = new MongoClient(process.env.MONGODB_URI);
+
+app.post('/api/analytics', async (req, res) => {
+    try {
+        await client.connect();
+        const db = client.db('askbot');
+        await db.collection('events').insertOne({
+            ...req.body,
+            createdAt: new Date()
+        });
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 // Initialize Firebase Admin (for server-side)
 initializeApp();
@@ -153,5 +171,6 @@ app.post("/generate", async (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ AskBot backend running on 0.0.0.0:${PORT}`);
 });
+
 
 
