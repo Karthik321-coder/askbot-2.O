@@ -1,3 +1,16 @@
+// ====== API Configuration ====== 
+// Add this BEFORE your existing code in script.js
+const BASE_URL = window.location.hostname.includes('vercel.app') 
+  ? `${window.location.origin}/api`  // Vercel production
+  : 'https://askbot-2-o.onrender.com'; // Your existing Render backend
+
+// Your existing code continues below...
+let isLoggedIn = false;
+let currentUser = '';
+// ... rest of your existing script
+
+
+
 // ====== Global Variables ======
 let isLoggedIn = false;
 let currentUser = '';
@@ -506,6 +519,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
