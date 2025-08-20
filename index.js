@@ -14,6 +14,35 @@ const db = getFirestore();
 app.post("/generate", async (req, res) => {
   try {
     const { messages, userId, metadata } = req.body;
+    // Add after existing routes
+app.post('/api/analytics', (req, res) => {
+    const { userId, event, properties, timestamp } = req.body;
+    
+    // Log to console for now (later: save to database)
+    console.log('📊 User Event:', {
+        userId,
+        event,
+        properties,
+        timestamp: new Date(timestamp)
+    });
+    
+    // TODO: Save to database
+    // await db.collection('events').add(req.body);
+    
+    res.json({ success: true });
+});
+
+// Get user stats
+app.get('/api/user-stats', (req, res) => {
+    // Mock data - replace with real database queries
+    res.json({
+        totalUsers: 150,
+        activeUsers: 45,
+        messagesPerDay: 234,
+        averageSessionTime: '4.2 minutes'
+    });
+});
+
     
     // Log user interaction
     await db.collection('chat_sessions').add({
@@ -124,4 +153,5 @@ app.post("/generate", async (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ AskBot backend running on 0.0.0.0:${PORT}`);
 });
+
 
