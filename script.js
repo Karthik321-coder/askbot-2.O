@@ -26,7 +26,6 @@ const chatbotResponses = {
     "Based on current industry standards and best practices:"
   ]
 };
-const BASE_URL = "https://askbot-2-o.onrender.com";
 
 async function generateAIResponse(userInput) {
   try {
@@ -370,6 +369,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
