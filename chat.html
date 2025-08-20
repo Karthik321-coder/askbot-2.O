@@ -1,48 +1,416 @@
-<!-- ✅ chat.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AskBot Chat</title>
-  ...
-</head>
-
-
-  <title>AskBot Chat</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="script.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-pO2eDlpS1Yg4/o3kKYMwbDyGPT3Gq7bCZ1XPS+x5DTRPq+02PhXowkqzUVXUNJobuiTE4CIlBPh7Hanao+UiTA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskBot Chat - AI Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Chat-specific styles */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .chat-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .back-to-home {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 1rem;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: var(--bg-secondary);
+        }
+        
+        .message {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            max-width: 80%;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+        }
+        
+        .message i {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .bot-message i {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .user-message i {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+        
+        .message-content {
+            background: var(--bg-primary);
+            padding: 1rem 1.25rem;
+            border-radius: 1rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+        
+        .user-message .message-content {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .chat-input-container {
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--border-color);
+            border-radius: 2rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .message-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(205, 62, 81, 0.1);
+        }
+        
+        .send-button {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-large);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Welcome message */
+        .welcome-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .welcome-message i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .chat-header {
+                padding: 1rem;
+            }
+            
+            .chat-header h1 {
+                font-size: 1.25rem;
+            }
+            
+            .back-to-home {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .chat-messages {
+                padding: 1rem;
+            }
+            
+            .chat-input-container {
+                padding: 1rem;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .message-content {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Chat Header with Back Button -->
+    <header class="chat-header">
+        <h1>
+            <i class="fas fa-robot"></i>
+            AskBot Chat
+        </h1>
+        <a href="index.html" class="back-to-home">
+            <i class="fas fa-home"></i>
+            Back to Home
+        </a>
+    </header>
 
-<body style="background: url('https://img.pikbest.com/origin/09/28/35/25KpIkbEsTf4R.jpg!w700wp') no-repeat center center fixed; background-size: cover;">
-  <!-- Rest of your page... -->
-</body>
+    <!-- Main Chat Container -->
+    <main class="chat-container">
+        <!-- Messages Area -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <i class="fas fa-robot"></i>
+                <h3>Welcome to AskBot Chat!</h3>
+                <p>I'm here to help answer your questions. Type a message below to get started.</p>
+            </div>
+        </div>
+        
+        <!-- Input Area -->
+        <div class="chat-input-container">
+            <div class="chat-input">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    class="message-input" 
+                    placeholder="Type your message here..."
+                    autocomplete="off"
+                >
+                <button id="sendButton" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </main>
 
+    <!-- Chat Script -->
+    <script>
+        // ====== Chat Page Configuration ======
+        const BASE_URL = "https://askbot-2-o.onrender.com";
+        let isTyping = false;
 
+        // DOM Elements
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
 
-  <!-- Chat Container (Full-screen) -->
-  <div id="chatbotContainer" class="chatbot-container active">
-    <div class="chat-header">
-      <span>AskBot 🤖</span>
-      <i id="minimizeChat" class="fas fa-minus-circle"></i>
-    </div>
-    <div id="chatbotMessages" class="chatbot-messages"></div>
-    <div class="chatbox-input">
-      <input type="text" id="messageInput" placeholder="Ask me anything..." />
-      <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
-    </div>
-  </div>
+        // Initialize Chat
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeChat();
+            loadTheme();
+        });
 
-  <!-- Notification -->
-  <div id="notification" class="notification"></div>
+        function initializeChat() {
+            // Event listeners
+            sendButton.addEventListener("click", sendMessage);
+            messageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Focus on input
+            messageInput.focus();
+            
+            // Add initial bot greeting
+            setTimeout(() => {
+                addMessage("Hello! I'm AskBot, your AI assistant. How can I help you today?", "bot");
+            }, 1000);
+        }
+
+        // Load theme from localStorage
+        function loadTheme() {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+                document.body.classList.add("dark-mode");
+            }
+        }
+
+        // Send Message Function
+        async function sendMessage() {
+            const input = messageInput.value.trim();
+            if (!input || isTyping) return;
+
+            // Add user message
+            addMessage(input, "user");
+            
+            // Clear input and disable button
+            messageInput.value = "";
+            setTypingState(true);
+
+            // Show typing indicator
+            const typingMessage = addMessage("Typing...", "bot", true);
+
+            try {
+                // Get AI response
+                const response = await generateAIResponse(input);
+                
+                // Remove typing indicator
+                typingMessage.remove();
+                
+                // Add bot response
+                addMessage(response, "bot");
+            } catch (error) {
+                // Remove typing indicator
+                typingMessage.remove();
+                
+                // Show error message
+                addMessage("❌ Sorry, I'm having trouble connecting right now. Please try again.", "bot");
+            }
+            
+            setTypingState(false);
+        }
+
+        // Add Message to Chat
+        function addMessage(content, sender, isTyping = false) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `message ${sender}-message`;
+            
+            const icon = document.createElement("i");
+            icon.className = sender === "bot" ? "fas fa-robot" : "fas fa-user";
+            
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "message-content";
+            contentDiv.textContent = content;
+            
+            messageDiv.appendChild(icon);
+            messageDiv.appendChild(contentDiv);
+            
+            // Add typing animation for bot
+            if (isTyping && sender === "bot") {
+                messageDiv.classList.add("typing");
+                contentDiv.innerHTML = 'Typing<span class="dots">...</span>';
+            }
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        // Set typing state
+        function setTypingState(typing) {
+            isTyping = typing;
+            sendButton.disabled = typing;
+            messageInput.disabled = typing;
+            
+            if (typing) {
+                sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            } else {
+                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                messageInput.focus();
+            }
+        }
+
+        // Generate AI Response
+        async function generateAIResponse(userInput) {
+            const response = await fetch(`${BASE_URL}/generate`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 
+                    messages: [{ role: "user", content: userInput }] 
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
+        }
+    </script>
 </body>
 </html>
