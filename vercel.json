@@ -1,28 +1,31 @@
 {
   "version": 2,
-  "functions": {
-    "index1.js": {
-      "maxDuration": 30
-    }
-  },
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/index1.js"
-    },
-    {
-      "source": "/api",
-      "destination": "/index1.js"
+      "src": "index1.js",
+      "use": "@vercel/node"
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
-      ]
+      "src": "/api/generate",
+      "dest": "/index1.js"
+    },
+    {
+      "src": "/api/analytics", 
+      "dest": "/index1.js"
+    },
+    {
+      "src": "/api/hello",
+      "dest": "/index1.js"
+    },
+    {
+      "src": "/api",
+      "dest": "/index1.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
