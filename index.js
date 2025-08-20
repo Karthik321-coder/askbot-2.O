@@ -2,6 +2,54 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+// Add after existing imports
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+
+// Initialize Firebase Admin (for server-side)
+initializeApp();
+const db = getFirestore();
+
+// Enhanced generate endpoint with analytics
+app.post("/generate", async (req, res) => {
+  try {
+    const { messages, userId, metadata } = req.body;
+    
+    // Log user interaction
+    await db.collection('chat_sessions').add({
+      userId: userId || 'anonymous',
+      messages: messages,
+      metadata: metadata || {},
+      timestamp: new Date(),
+      ip: req.ip
+    });
+
+    // Your existing AI generation code
+    const prompt = messages.map((m) => `${m.role}: ${m.content}`).join("\n");
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(prompt);
+    const text = await result.response.text();
+
+    return res.status(200).json({ reply: text });
+  } catch (error) {
+    console.error("❌ Error:", error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+// Analytics endpoint
+app.get("/api/analytics", async (req, res) => {
+  try {
+    const stats = await db.collection('chat_sessions').count().get();
+    res.json({ 
+      totalChats: stats.data().count,
+      status: "active" 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 dotenv.config();
 
@@ -76,3 +124,4 @@ app.post("/generate", async (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ AskBot backend running on 0.0.0.0:${PORT}`);
 });
+
