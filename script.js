@@ -527,6 +527,63 @@ function togglePassword() {
   }
 }
 
+// Add these functions at the END of your script.js file
+
+// Generate AI Response Function
+async function generateAIResponse(userInput) {
+  try {
+    console.log("🤖 Sending to backend:", userInput);
+    
+    const response = await fetch(`${BASE_URL}/generate`, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ 
+        messages: [{ role: "user", content: userInput }] 
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Backend error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.reply || "I'm having trouble thinking right now. Try again!";
+  } catch (error) {
+    console.error("❌ Connection error:", error);
+    return "❌ Could not contact the bot. Please try again.";
+  }
+}
+
+// Show Notification Function
+function showNotification(message, type = "success") {
+  if (!elements.notification) return;
+  
+  elements.notification.textContent = message;
+  elements.notification.className = `notification ${type}`;
+  elements.notification.classList.add("show");
+  
+  setTimeout(() => {
+    elements.notification.classList.remove("show");
+  }, 3000);
+}
+
+// Toggle Password Function
+function togglePassword() {
+  const passwordInput = document.getElementById("password");
+  const toggleIcon = elements.passwordToggle;
+  
+  if (passwordInput && toggleIcon) {
+    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
+    toggleIcon.classList.toggle("fa-eye");
+    toggleIcon.classList.toggle("fa-eye-slash");
+  }
+}
+
+
+
 
 
 
