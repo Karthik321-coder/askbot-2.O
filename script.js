@@ -26,22 +26,32 @@ const chatbotResponses = {
     "Based on current industry standards and best practices:"
   ]
 };
-
 const BASE_URL = "https://askbot-2-o.onrender.com";
 
 async function generateAIResponse(userInput) {
   try {
     const response = await fetch(`${BASE_URL}/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: [{ role: "user", content: userInput }] })
+      headers: { 
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ 
+        messages: [{ role: "user", content: userInput }] 
+      })
     });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
     const data = await response.json();
-    return data.reply;
+    return data.reply || "No response received";
   } catch (error) {
-    return `Error: ${error.message}`;
+    console.error("Backend Error:", error);
+    return `Error connecting to AI: ${error.message}`;
   }
 }
+
 
 
 // ====== DOM Elements ======
@@ -295,4 +305,5 @@ function showNotification(msg, type = "success") {
     elements.notification.classList.remove("show");
   }, 3000);
 }
+
 
