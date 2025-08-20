@@ -6,7 +6,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 10000; // ✅ Render default port
 
 // Middlewares
 app.use(cors());
@@ -21,11 +21,12 @@ if (!process.env.API_KEY) {
 // Initialize Gemini client
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-// ✅ ADD ROOT ROUTE - This fixes the "Cannot GET /" error
+// ✅ ROOT ROUTE - Fixes "Cannot GET /" 
 app.get("/", (req, res) => {
   res.json({ 
     message: "AskBot Backend API is running! 🤖",
     status: "online",
+    timestamp: new Date().toISOString(),
     endpoints: {
       health: "/api/hello",
       users: "/api/users", 
@@ -34,7 +35,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// Existing routes
+// Health check endpoint
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from the backend!" });
 });
@@ -43,17 +44,21 @@ app.get("/api/users", (req, res) => {
   res.json([{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]);
 });
 
+// AI generation endpoint
 app.post("/generate", async (req, res) => {
   try {
     const { messages } = req.body;
 
+    // Validate input
     if (!Array.isArray(messages)) {
       return res
         .status(400)
         .json({ error: "'messages' must be an array of objects [{role, content}]" });
     }
 
+    // Convert to prompt format
     const prompt = messages.map((m) => `${m.role}: ${m.content}`).join("\n");
+    
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(prompt);
     const text = await result.response.text();
@@ -67,7 +72,7 @@ app.post("/generate", async (req, res) => {
   }
 });
 
-// ✅ Listen on 0.0.0.0 for cloud deployment
+// ✅ CRITICAL: Bind to 0.0.0.0 for Render deployment
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ AskBot backend running on port ${PORT}`);
+  console.log(`✅ AskBot backend running on 0.0.0.0:${PORT}`);
 });
