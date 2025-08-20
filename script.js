@@ -6,6 +6,128 @@ let dataset = [];
 
 let chatHistory = []; // 🔥 Add this line to fix the issue
 
+// Add these functions to your existing script.js
+
+// User tier management
+const USER_LIMITS = {
+    free: {
+        dailyMessages: 10,
+        features: ['basic_chat'],
+        waitTime: 3000 // 3 seconds between messages
+    },
+    premium: {
+        dailyMessages: 500,
+        features: ['unlimited_chat', 'priority_support', 'export_chats'],
+        waitTime: 0
+    }
+};
+
+function checkMessageLimit() {
+    const today = new Date().toDateString();
+    const messageCount = parseInt(localStorage.getItem(`messages_${today}`) || '0');
+    const userTier = localStorage.getItem('userTier') || 'free';
+    
+    if (messageCount >= USER_LIMITS[userTier].dailyMessages) {
+        showUpgradeModal();
+        return false;
+    }
+    
+    // Increment message count
+    localStorage.setItem(`messages_${today}`, messageCount + 1);
+    return true;
+}
+
+function showUpgradeModal() {
+    const modal = document.createElement('div');
+    modal.className = 'upgrade-modal-overlay';
+    modal.innerHTML = `
+        <div class="upgrade-modal">
+            <div class="upgrade-header">
+                <h2>🚀 Upgrade to Premium</h2>
+                <span class="close-upgrade" onclick="this.parentElement.parentElement.parentElement.remove()">×</span>
+            </div>
+            <div class="upgrade-content">
+                <p>You've reached your daily limit of ${USER_LIMITS.free.dailyMessages} messages.</p>
+                <div class="upgrade-features">
+                    <h3>Premium Features:</h3>
+                    <ul>
+                        <li>✅ 500 messages per day</li>
+                        <li>✅ Priority responses</li>
+                        <li>✅ Chat history</li>
+                        <li>✅ Export conversations</li>
+                        <li>✅ No waiting time</li>
+                    </ul>
+                </div>
+                <div class="upgrade-pricing">
+                    <div class="price">$9.99<span>/month</span></div>
+                    <button onclick="upgradeToPremium()" class="upgrade-btn">
+                        Upgrade Now
+                    </button>
+                </div>
+                <p class="upgrade-trial">7-day free trial • Cancel anytime</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Track upgrade attempt
+    if (window.askBotAnalytics) {
+        window.askBotAnalytics.trackUpgradeAttempt();
+    }
+}
+
+function upgradeToPremium() {
+    // For now, just simulate upgrade (implement payment later)
+    localStorage.setItem('userTier', 'premium');
+    showNotification('🎉 Upgraded to Premium! Enjoy unlimited access.', 'success');
+    document.querySelector('.upgrade-modal-overlay').remove();
+}
+
+// Update your existing sendChatMessage function
+async function sendChatMessage() {
+    const input = elements.messageInput.value.trim();
+    if (!input) return;
+    
+    // Check message limits
+    if (!checkMessageLimit()) {
+        return;
+    }
+    
+    // Track message analytics
+    if (window.askBotAnalytics) {
+        window.askBotAnalytics.trackMessage();
+    }
+    
+    // Add rate limiting for free users
+    const userTier = localStorage.getItem('userTier') || 'free';
+    if (USER_LIMITS[userTier].waitTime > 0) {
+        elements.sendMessage.disabled = true;
+        elements.messageInput.disabled = true;
+        
+        setTimeout(() => {
+            elements.sendMessage.disabled = false;
+            elements.messageInput.disabled = false;
+        }, USER_LIMITS[userTier].waitTime);
+    }
+    
+    // Your existing chat logic continues here...
+    addMessage(input, "user");
+    elements.messageInput.value = "";
+    
+    const typingDiv = document.createElement("div");
+    typingDiv.className = "message bot-message";
+    typingDiv.textContent = "Typing...";
+    elements.chatbotMessages.appendChild(typingDiv);
+    elements.chatbotMessages.scrollTop = elements.chatbotMessages.scrollHeight;
+    
+    const reply = await generateAIResponse(input);
+    
+    typingDiv.remove();
+    addMessage(reply, "bot");
+}
+
+
 
 const chatbotResponses = {
   greetings: [
@@ -384,6 +506,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
