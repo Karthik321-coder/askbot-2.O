@@ -1,3 +1,10 @@
+// Add this at the TOP of your script.js file
+const BASE_URL = "https://askbot-2-o.vercel.app/api";
+
+// Your existing code continues below...
+// (don't change anything else)
+
+
 // ====== API Configuration ====== 
 // Add this BEFORE your existing code in script.js
 const BASE_URL = window.location.hostname.includes('vercel.app') 
@@ -519,6 +526,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
