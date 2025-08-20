@@ -27,32 +27,6 @@ const chatbotResponses = {
   ]
 };
 
-async function generateAIResponse(userInput) {
-  try {
-    const response = await fetch(`${BASE_URL}/generate`, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        messages: [{ role: "user", content: userInput }] 
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    
-    const data = await response.json();
-    return data.reply || "No response received";
-  } catch (error) {
-    console.error("Backend Error:", error);
-    return `Error connecting to AI: ${error.message}`;
-  }
-}
-
-
-
 // ====== DOM Elements ======
 const elements = {
   loginModal: document.getElementById('loginModal'),
@@ -332,16 +306,7 @@ async function generateAIResponse(userInput) {
     return data.reply || "I'm having trouble thinking right now. Try again!";
   } catch (error) {
     console.error("❌ Connection error:", error);
-    
-    // Fallback responses when backend is unreachable
-    const fallbackResponses = [
-      "I'm currently offline, but I'll be back soon! 🤖",
-      "Having some connection issues. Please try again in a moment.",
-      "My brain is taking a quick break. Try refreshing the page!",
-      "Could not contact the bot. Please check your connection."
-    ];
-    
-    return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+    return "❌ Could not contact the bot. Please check your connection.";
   }
 }
 
@@ -369,8 +334,3 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
-
-
-
-
-
