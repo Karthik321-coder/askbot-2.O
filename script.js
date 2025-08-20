@@ -51,6 +51,35 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeApp();
 });
 
+// Track important events
+function trackEvent(eventName, parameters = {}) {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', eventName, parameters);
+  }
+}
+
+// Track user login
+function trackLogin() {
+  trackEvent('login', { method: 'admin' });
+}
+
+// Track chat messages (add to your existing sendChatMessage function)
+function trackChatMessage() {
+  trackEvent('chat_message_sent', {
+    event_category: 'engagement',
+    event_label: 'ai_chat'
+  });
+}
+
+// Track upgrade attempts (for your freemium model)
+function trackUpgradeAttempt() {
+  trackEvent('upgrade_attempted', {
+    event_category: 'conversion',
+    current_tier: 'free'
+  });
+}
+
+
 function initializeApp() {
   setupEventListeners();
   loadTheme();
@@ -334,3 +363,4 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
