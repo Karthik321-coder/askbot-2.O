@@ -1,98 +1,97 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import cors from 'cors';
 
-// Initialize Gemini client
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-// CORS middleware function
-function runMiddleware(req, res, fn) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
-}
-
-// Main serverless function handler
 export default async function handler(req, res) {
-  // Enable CORS
-  await runMiddleware(req, res, cors({
-    origin: true,
-    credentials: true
-  }));
+  // Enable CORS for all requests
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Handle different routes
-  const { method, url } = req;
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
   try {
-    if (method === 'GET' && url === '/api') {
-      return res.status(200).json({ message: "AskBot API is running!" });
+    const { method, url = '' } = req;
+
+    // Health check endpoint
+    if (method === 'GET' && (url === '/' || url.includes('hello'))) {
+      return res.status(200).json({ 
+        message: "AskBot API is working!",
+        timestamp: new Date().toISOString()
+      });
     }
 
-    if (method === 'GET' && url === '/api/hello') {
-      return res.status(200).json({ message: "Hello from the backend!" });
-    }
-
-    if (method === 'GET' && url === '/api/users') {
-      return res.status(200).json([
-        { id: 1, name: 'Alice' }, 
-        { id: 2, name: 'Bob' }
-      ]);
-    }
-
-    if (method === 'POST' && url === '/api/generate') {
-      const { messages } = req.body;
+    // AI Chat endpoint
+    if (method === 'POST' && url.includes('generate')) {
+      const { messages } = req.body || {};
 
       // Validate input
       if (!Array.isArray(messages)) {
         return res.status(400).json({ 
-          error: "'messages' must be an array of objects [{role, content}]" 
+          error: "Messages must be an array of objects [{role, content}]" 
         });
       }
 
       // Check API key
       if (!process.env.API_KEY) {
         return res.status(500).json({ 
-          error: "API_KEY not configured" 
+          error: "API_KEY not configured in environment variables" 
         });
       }
 
-      // Convert to prompt format
+      // Create prompt
       const prompt = messages
         .map((m) => `${m.role}: ${m.content}`)
         .join("\n");
 
+      console.log("🤖 Processing prompt:", prompt);
+
+      // Generate AI response
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const result = await model.generateContent(prompt);
       const text = await result.response.text();
 
+      console.log("✅ Generated response:", text.substring(0, 100) + "...");
+
       return res.status(200).json({ reply: text });
     }
 
-    if (method === 'POST' && url === '/api/analytics') {
-      const { userId, event, properties } = req.body;
+    // Analytics endpoint
+    if (method === 'POST' && url.includes('analytics')) {
+      const { userId, event, properties } = req.body || {};
       
-      // Log analytics (you can add database storage later)
-      console.log('📊 User Analytics:', {
+      console.log('📊 Analytics tracked:', {
         userId,
         event,
         properties,
         timestamp: new Date()
       });
       
-      return res.json({ success: true });
+      return res.status(200).json({ success: true });
     }
 
-    // Handle 404 for unknown routes
-    return res.status(404).json({ error: "Route not found" });
+    // Users endpoint (for testing)
+    if (method === 'GET' && url.includes('users')) {
+      return res.status(200).json([
+        { id: 1, name: 'Alice' }, 
+        { id: 2, name: 'Bob' }
+      ]);
+    }
+
+    // 404 for unknown routes
+    return res.status(404).json({ 
+      error: "Route not found",
+      availableRoutes: ['/generate', '/analytics', '/users', '/hello']
+    });
 
   } catch (error) {
-    console.error("❌ API Error:", error);
+    console.error("❌ Server Error:", error);
     return res.status(500).json({ 
-      error: "Internal server error: " + error.message 
+      error: "Internal server error: " + error.message,
+      timestamp: new Date().toISOString()
     });
   }
 }
