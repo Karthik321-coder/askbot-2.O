@@ -27,6 +27,23 @@ const chatbotResponses = {
   ]
 };
 
+const BASE_URL = "https://askbot-2-o.onrender.com";
+
+async function generateAIResponse(userInput) {
+  try {
+    const response = await fetch(`${BASE_URL}/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: [{ role: "user", content: userInput }] })
+    });
+    const data = await response.json();
+    return data.reply;
+  } catch (error) {
+    return `Error: ${error.message}`;
+  }
+}
+
+
 // ====== DOM Elements ======
 const elements = {
   loginModal: document.getElementById('loginModal'),
@@ -278,3 +295,4 @@ function showNotification(msg, type = "success") {
     elements.notification.classList.remove("show");
   }, 3000);
 }
+
