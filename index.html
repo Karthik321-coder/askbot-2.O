@@ -1,28 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Add to <head> section of both index.html and chat.html -->
-<script src="analytics.js"></script>
-
-  <!-- Add in <head> section -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
-
-<!-- Add banner ad in chat interface -->
-<div class="ad-container" style="margin: 1rem 0; text-align: center;">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-         data-ad-slot="YOUR_AD_SLOT"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-</div>
-
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#cd3e51">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AskBot – Your AI Chat Assistant</title>
@@ -31,6 +9,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
+
+    
 
   <!-- Header / Navigation -->
   <header class="header">
@@ -105,96 +85,33 @@
     </section>
 
     <!-- About -->
- <!-- About Section -->
-<div class="about-section" id="aboutSection">
-    <div class="about-container glassmorphism">
-        <div class="about-header">
-            <div class="developer-avatar">
-                <div class="avatar-circle">
-                    <i class="fas fa-code"></i>
-                </div>
-                <div class="avatar-status"></div>
-            </div>
-            <div class="developer-info">
-                <h1 class="developer-name">Karthik</h1>
-                <p class="developer-title">Web Developer</p>
-                <div class="developer-badges">
-                    <span class="badge">Full Stack</span>
-                    <span class="badge">React Expert</span>
-                    <span class="badge">BTech MSRIT</span>
-                </div>
-            </div>
+    <section id="about" class="about">
+      <h2>About the Developer</h2>
+      <h2>KARTHIK</h2>
+      <div class="about-grid">
+        <div class="about-card">
+          <i class="fas fa-user-graduate"></i>
+          <h3>Education</h3>
+          <p>Currently pursuing BTech at MSRIT Bangalore.</p>
         </div>
-
-        <div class="about-content">
-            <div class="about-grid">
-                <div class="about-card glassmorphism">
-                    <div class="card-icon">
-                        <i class="fas fa-user-graduate"></i>
-                    </div>
-                    <h3>Education</h3>
-                    <p>Currently pursuing BTech at MSRIT Bangalore, specializing in modern web technologies and software engineering principles.</p>
-                </div>
-
-                <div class="about-card glassmorphism">
-                    <div class="card-icon">
-                        <i class="fas fa-laptop-code"></i>
-                    </div>
-                    <h3>Expertise</h3>
-                    <p>Passionate web developer with expertise in HTML5, CSS3, JavaScript, React, and modern UI/UX design patterns.</p>
-                </div>
-
-                <div class="about-card glassmorphism">
-                    <div class="card-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>Projects</h3>
-                    <p>Created innovative web applications including this interactive quiz platform with advanced animations and user experience.</p>
-                </div>
-
-                <div class="about-card glassmorphism">
-                    <div class="card-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3>Passion</h3>
-                    <p>Dedicated to creating beautiful, functional websites that solve real-world problems and enhance user experiences.</p>
-                </div>
-            </div>
-
-            <div class="skills-section">
-                <h3>Technical Skills</h3>
-                <div class="skills-grid">
-                    <div class="skill-item">
-                        <i class="fab fa-html5"></i>
-                        <span>HTML5</span>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 95%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fab fa-css3-alt"></i>
-                        <span>CSS3</span>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 90%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fab fa-js-square"></i>
-                        <span>JavaScript</span>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <i class="fab fa-react"></i>
-                        <span>React</span>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 80%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="about-card">
+          <i class="fas fa-laptop-code"></i>
+          <h3>Expertise</h3>
+          <p>HTML5, CSS3, JavaScript, React, and modern UI/UX design.</p>
+        </div>
+        <div class="about-card">
+          <i class="fas fa-rocket"></i>
+          <h3>Projects</h3>
+          <p>Interactive quiz platforms, AI chatbots, and dynamic web apps.</p>
+        </div>
+        <div class="about-card">
+          <i class="fas fa-heart"></i>
+          <h3>Passion</h3>
+          <p>Creating beautiful, functional websites that solve real-world problems.</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <!-- Chatbot Container -->
   <div class="chatbot-container" id="chatbotContainer">
@@ -254,40 +171,7 @@
   <div class="notification" id="notification"></div>
 
   <!-- Scripts -->
-          <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
-
-<script>
-// Firebase configuration
-const firebaseConfig = {
-  // Your config here
-};
-
-firebase.initializeApp(firebaseConfig);
-const analytics = firebase.analytics();
-const db = firebase.firestore();
-
-// Track user interactions
-function trackUserEvent(eventName, properties) {
-  analytics.logEvent(eventName, properties);
-  
-  // Store in Firestore for detailed analysis
-  db.collection('user_interactions').add({
-    event: eventName,
-    properties: properties,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    userId: currentUser || 'anonymous'
-  });
-}
-</script>
-
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
