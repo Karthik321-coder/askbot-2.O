@@ -311,7 +311,8 @@
 
     <script>
         // ====== Chat Page Configuration ======
-const BASE_URL = window.location.hostname.includes('vercel.app') 
+const BASE_URL = "https://askbot-2-o.vercel.app/api";
+
   ? `${window.location.origin}/api`  // Vercel production
   : 'https://askbot-2-o.onrender.com'; // Your existing Render backend
         let isTyping = false;
@@ -452,6 +453,7 @@ const BASE_URL = window.location.hostname.includes('vercel.app')
     </script>
 </body>
 </html>
+
 
 
 
