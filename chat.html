@@ -311,7 +311,9 @@
 
     <script>
         // ====== Chat Page Configuration ======
-        const BASE_URL = "https://askbot-2-o.onrender.com";
+const BASE_URL = window.location.hostname.includes('vercel.app') 
+  ? `${window.location.origin}/api`  // Vercel production
+  : 'https://askbot-2-o.onrender.com'; // Your existing Render backend
         let isTyping = false;
 
         // DOM Elements
@@ -450,6 +452,7 @@
     </script>
 </body>
 </html>
+
 
 
 
