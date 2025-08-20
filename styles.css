@@ -964,3 +964,42 @@ body.dark-mode .header {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary-color);
 }
+
+/* Mobile-First Approach */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem !important;
+    line-height: 1.2;
+  }
+  
+  .nav {
+    padding: 0.5rem 1rem;
+  }
+  
+  .chat-input-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .chat-messages {
+    padding-bottom: 100px; /* Space for fixed input */
+  }
+}
+
+/* Touch-friendly buttons */
+.send-button, .login-button, .cta-primary {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Prevent zoom on input focus (iOS) */
+input, textarea {
+  font-size: 16px !important;
+}
+
+
