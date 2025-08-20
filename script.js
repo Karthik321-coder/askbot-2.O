@@ -27,6 +27,46 @@ const chatbotResponses = {
   ]
 };
 
+// Add to your existing script.js
+const userLimits = {
+    free: {
+        dailyMessages: 10,
+        features: ['basic_chat']
+    },
+    premium: {
+        dailyMessages: 100,
+        features: ['unlimited_chat', 'chat_history', 'export_chats', 'priority_support']
+    }
+};
+
+function checkUserLimit() {
+    const today = new Date().toDateString();
+    const messageCount = parseInt(localStorage.getItem(`messages_${today}`) || '0');
+    const userTier = localStorage.getItem('userTier') || 'free';
+    
+    if (messageCount >= userLimits[userTier].dailyMessages) {
+        showUpgradeModal();
+        return false;
+    }
+    
+    localStorage.setItem(`messages_${today}`, messageCount + 1);
+    return true;
+}
+
+function showUpgradeModal() {
+    // Create upgrade modal
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div class="upgrade-modal">
+            <h3>🚀 Upgrade to Premium</h3>
+            <p>You've reached your daily limit. Upgrade for unlimited access!</p>
+            <button onclick="upgradeToPremium()">Upgrade for $9.99/month</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+
 // ====== DOM Elements ======
 const elements = {
   loginModal: document.getElementById('loginModal'),
@@ -344,5 +384,6 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
