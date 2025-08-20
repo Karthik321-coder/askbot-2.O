@@ -26,125 +26,6 @@
     --gradient-hero: linear-gradient(135deg, #667eea 0%, #4b7ba2 100%);
 }
 
-/* Upgrade Modal Styles */
-.upgrade-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    backdrop-filter: blur(5px);
-}
-
-.upgrade-modal {
-    background: var(--bg-primary);
-    border-radius: 1rem;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: var(--shadow-large);
-    animation: modalSlideIn 0.3s ease;
-    border: 2px solid var(--primary-color);
-}
-
-.upgrade-header {
-    background: var(--gradient-primary);
-    color: white;
-    padding: 1.5rem;
-    border-radius: 1rem 1rem 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.upgrade-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.close-upgrade {
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0 0.5rem;
-    border-radius: 50%;
-    transition: background 0.3s;
-}
-
-.close-upgrade:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.upgrade-content {
-    padding: 2rem;
-    text-align: center;
-}
-
-.upgrade-features {
-    margin: 1.5rem 0;
-    text-align: left;
-}
-
-.upgrade-features h3 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.upgrade-features ul {
-    list-style: none;
-    padding: 0;
-}
-
-.upgrade-features li {
-    padding: 0.5rem 0;
-    color: var(--text-primary);
-}
-
-.upgrade-pricing {
-    margin: 2rem 0;
-}
-
-.price {
-    font-size: 3rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.price span {
-    font-size: 1rem;
-    color: var(--text-secondary);
-}
-
-.upgrade-btn {
-    background: var(--gradient-primary);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    max-width: 300px;
-}
-
-.upgrade-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
-}
-
-.upgrade-trial {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-
-
 /* Dark Theme */
 body.dark-mode {
     --bg-primary: #0f172a;
@@ -173,6 +54,10 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     transition: all 0.3s ease;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    
 }
 
 .container {
@@ -804,9 +689,15 @@ body.dark-mode .header {
     bottom: 100px;
     right: 250px;
     width: 1000px;
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 10px;
+    box-sizing: border-box;
+
     height: 500px;
     background: var(--bg-primary);
-    border-radius: 10px;
+    border-radius: 1rem;
     box-shadow: var(--shadow-large);
     display: none;
     flex-direction: column;
@@ -816,6 +707,33 @@ body.dark-mode .header {
      /* ...your existing styles... */
   background: url('https://t3.ftcdn.net/jpg/09/22/01/20/360_F_922012043_DQe3SsAg0RC5IyjhkSOVpO0IQdJT6kt3.jpg') no-repeat center center;
   background-size: cover;
+}
+
+.code-example {
+  background: #23272f;
+  color: #f9f9f9;
+  padding: 18px 13px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 1em;
+  max-width: 100%;
+  overflow-x: auto;               /* Enables horizontal scrolling for very long lines */
+  box-sizing: border-box;
+  
+  /* Ensure long words and code lines wrap or break */
+  white-space: pre-wrap;           /* Preserve formatting but wrap as needed */
+  word-wrap: break-word;           /* Legacy name for overflow-wrap */
+  overflow-wrap: break-word;       /* Modern property to break long words */
+  word-break: break-word;          /* Break words at arbitrary points if needed */
+}
+
+.code-example h1, 
+.code-example h2, 
+.code-example h3,
+.code-example strong {
+  font-size: 1em;            /* Prevents huge headers inside box */
+  font-weight: bold;
+  word-break: break-word;
 }
 
 .chatbot-container.active {
@@ -1001,7 +919,12 @@ body.dark-mode .header {
     .nav-menu {
         display: none;
     }
-    
+      .code-example {
+    font-size: 0.93em;
+    padding: 9px 5px;
+    border-radius: 7px;
+  }
+
     .hero-content {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -1024,6 +947,10 @@ body.dark-mode .header {
     .chatbot-container {
         width: 300px;
         height: 400px;
+        padding: 8px;
+        margin: 10px auto;
+        border-radius: 7px;
+
     }
     
     .container {
@@ -1045,8 +972,7 @@ body.dark-mode .header {
     }
     
     .chatbot-container {
-        width: calc(100vw - 40px);
-        left: 20px;
+        bottom: 20px;
         right: 20px;
     }
 }
@@ -1084,42 +1010,66 @@ body.dark-mode .header {
     background: var(--primary-color);
 }
 
-/* Mobile-First Approach */
+/* === Chatbox Hot-Fix & Animated Background ================================= */
+@keyframes cbGradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+/* Universal anti-overflow guard for every text-bearing child */
+.chatbot-container,
+.chatbot-messages,
+.message-content,
+.code-example,
+.code-example pre,
+.code-example code {
+  overflow-wrap: anywhere;         /* modern overflow control */
+  word-break: break-word;          /* fallback for old engines */
+  white-space: pre-wrap;           /* respect \n but allow wrap */
+}
+
+/* === FINAL LEFT-EDGE GUARD FOR CHATBOX === */
+.chatbot-container *,
+.chatbot-messages *,
+.message-content,
+.code-example,
+.code-example pre,
+.code-example code {
+  max-width: 100% !important;           /* Constrain width to container */
+  box-sizing: border-box !important;    /* Include padding in width */
+  overflow-wrap: anywhere !important;   /* Break long words/URLs anywhere */
+  word-break: break-word !important;    /* Fallback for older engines */
+  margin-left: 0 !important;            /* Eliminate negative or inherited offsets */
+}
+
+/* Prevent the messages pane itself from scrolling past left border */
+.chatbot-messages {
+  overflow-x: hidden !important;
+  padding-left: 1rem !important;        /* Give a consistent inner margin */
+}
+
+/* === Center & Slightly Wider Chatbox === */
+.chatbot-container {
+  max-width: 650px !important;    /* ↑ increase from 600px to 650px */
+  margin: 0 auto !important;      /* center horizontally */
+}
+
+/* Centered chat container with increased maximum width and fixed right space */
+.chatbot-container {
+  max-width: 1000px !important;      /* Increased width for a roomier chatbox */
+  width: 100% !important;           /* Expands to maximum up to 800px */
+  margin: 0 auto !important;        /* Always centered horizontally */
+  padding-right: 20px !important;   /* Fixed right-hand spacing */
+  box-sizing: border-box !important;
+}
+
+/* Responsiveness: On smaller screens, adjust to fit the viewport */
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem !important;
-    line-height: 1.2;
-  }
-  
-  .nav {
-    padding: 0.5rem 1rem;
-  }
-  
-  .chat-input-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border-color);
-  }
-  
-  .chat-messages {
-    padding-bottom: 100px; /* Space for fixed input */
+  .chatbot-container {
+    max-width: 80vw !important;
+    padding-right: 20px !important;
   }
 }
-
-/* Touch-friendly buttons */
-.send-button, .login-button, .cta-primary {
-  min-height: 48px;
-  min-width: 48px;
-}
-
-/* Prevent zoom on input focus (iOS) */
-input, textarea {
-  font-size: 16px !important;
-}
-
-
-
