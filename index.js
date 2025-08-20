@@ -22,6 +22,35 @@ app.post('/api/analytics', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+// Add to your existing index.js after other routes
+
+// Analytics endpoint
+app.post('/api/analytics', (req, res) => {
+    const { userId, event, properties } = req.body;
+    
+    // Log analytics (replace with database storage later)
+    console.log('📊 User Analytics:', {
+        userId,
+        event,
+        properties,
+        timestamp: new Date()
+    });
+    
+    res.json({ success: true });
+});
+
+// User stats dashboard
+app.get('/api/stats', (req, res) => {
+    // Mock data - replace with real database queries
+    res.json({
+        totalUsers: 347,
+        activeToday: 89,
+        messagesPerDay: 1234,
+        averageSession: '5.2 minutes',
+        conversionRate: '12.3%'
+    });
+});
+
 
 
 // Initialize Firebase Admin (for server-side)
@@ -171,6 +200,7 @@ app.post("/generate", async (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ AskBot backend running on 0.0.0.0:${PORT}`);
 });
+
 
 
 
