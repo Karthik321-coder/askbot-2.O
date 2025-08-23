@@ -1,5 +1,6 @@
 // ====== Chat Page Script ======
-const BASE_URL = "https://askbot-backend-cfl7.onrender.com";
+const BASE_URL = "/api/proxy"; // ✅ Use proxy to avoid CORS issues
+
 let chatHistory = [];
 
 // DOM Elements for Chat Page
@@ -62,6 +63,7 @@ async function sendMessage() {
       typingElement.remove();
     }
     
+    console.error("Detailed error:", error);
     addChatMessage("❌ Could not contact the bot. Please try again.", "bot");
   }
 }
@@ -89,10 +91,10 @@ function addChatMessage(message, sender) {
   return messageDiv;
 }
 
-// Generate AI Response Function (Same as main script)
+// Generate AI Response Function
 async function generateAIResponse(userInput) {
   try {
-    console.log("🤖 Sending to backend:", userInput);
+    console.log("🤖 Sending to backend via proxy:", userInput);
     
     const response = await fetch(`${BASE_URL}/generate`, {
       method: "POST",
@@ -105,11 +107,12 @@ async function generateAIResponse(userInput) {
     });
     
     if (!response.ok) {
-      throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`Backend error: ${response.status} ${response.statusText} - ${errorText}`);
     }
     
     const data = await response.json();
-    console.log("✅ Backend response:", data);
+    console.log("✅ Backend response via proxy:", data);
     
     return data.reply || "I'm having trouble thinking right now. Try again!";
   } catch (error) {
