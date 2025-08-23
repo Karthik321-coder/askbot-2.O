@@ -1,122 +1,72 @@
-// ====== Chat Page Script ======
-const BASE_URL = "/api/proxy"; // ✅ Use proxy to avoid CORS issues
-
+// Simple working chat script
 let chatHistory = [];
 
-// DOM Elements for Chat Page
-const chatElements = {
-  messagesContainer: document.querySelector('.chat-messages') || document.getElementById('chatMessages'),
-  messageInput: document.querySelector('.message-input') || document.getElementById('messageInput'),
-  sendButton: document.querySelector('.send-button') || document.getElementById('sendButton')
-};
-
-// Initialize Chat Page
 document.addEventListener("DOMContentLoaded", () => {
-  initializeChat();
-});
-
-function initializeChat() {
-  if (chatElements.sendButton) {
-    chatElements.sendButton.addEventListener("click", sendMessage);
-  }
-  
-  if (chatElements.messageInput) {
-    chatElements.messageInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        sendMessage();
-      }
-    });
-  }
+  const messageInput = document.querySelector('.message-input') || document.getElementById('messageInput');
+  const sendButton = document.querySelector('.send-button') || document.getElementById('sendButton');
+  const messagesContainer = document.querySelector('.chat-messages') || document.getElementById('chatMessages');
   
   // Add welcome message
-  addChatMessage("Hello! I'm AskBot. How can I help you today?", "bot");
-}
-
-// Send Message Function
-async function sendMessage() {
-  const input = chatElements.messageInput?.value?.trim();
-  if (!input) return;
+  addMessage("Hello! I'm AskBot. How can I help you today?", "bot");
   
-  // Add user message
-  addChatMessage(input, "user");
-  
-  // Clear input
-  chatElements.messageInput.value = "";
-  
-  // Show typing indicator
-  const typingElement = addChatMessage("Typing...", "bot");
-  
-  try {
-    // Get AI response
-    const response = await generateAIResponse(input);
-    
-    // Remove typing indicator
-    if (typingElement) {
-      typingElement.remove();
-    }
-    
-    // Add bot response
-    addChatMessage(response, "bot");
-  } catch (error) {
-    // Remove typing indicator
-    if (typingElement) {
-      typingElement.remove();
-    }
-    
-    console.error("Detailed error:", error);
-    addChatMessage("❌ Could not contact the bot. Please try again.", "bot");
-  }
-}
-
-// Add Message to Chat
-function addChatMessage(message, sender) {
-  const messageDiv = document.createElement("div");
-  messageDiv.className = `message ${sender}-message`;
-  
-  const messageContent = document.createElement("div");
-  messageContent.className = "message-content";
-  messageContent.textContent = message;
-  
-  const icon = document.createElement("i");
-  icon.className = sender === "bot" ? "fas fa-robot" : "fas fa-user";
-  
-  messageDiv.appendChild(icon);
-  messageDiv.appendChild(messageContent);
-  
-  if (chatElements.messagesContainer) {
-    chatElements.messagesContainer.appendChild(messageDiv);
-    chatElements.messagesContainer.scrollTop = chatElements.messagesContainer.scrollHeight;
+  // Send button click
+  if (sendButton) {
+    sendButton.addEventListener("click", sendMessage);
   }
   
-  return messageDiv;
-}
-
-// Generate AI Response Function
-async function generateAIResponse(userInput) {
-  try {
-    console.log("🤖 Sending to backend via proxy:", userInput);
-    
-    const response = await fetch(`${BASE_URL}/generate`, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        messages: [{ role: "user", content: userInput }] 
-      })
+  // Enter key press
+  if (messageInput) {
+    messageInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
     });
+  }
+  
+  async function sendMessage() {
+    const input = messageInput?.value?.trim();
+    if (!input) return;
     
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Backend error: ${response.status} ${response.statusText} - ${errorText}`);
+    addMessage(input, "user");
+    messageInput.value = "";
+    
+    const typingDiv = addMessage("Typing...", "bot");
+    
+    try {
+      const response = await fetch('https://askbot-backend-cfl7.onrender.com/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [{ role: 'user', content: input }] }),
+        mode: 'cors'
+      });
+      
+      const data = await response.json();
+      typingDiv.remove();
+      addMessage(data.reply || "Sorry, I couldn't process that.", "bot");
+      
+    } catch (error) {
+      typingDiv.remove();
+      addMessage("I'm having connection issues. Please try again.", "bot");
+    }
+  }
+  
+  function addMessage(message, sender) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${sender}-message`;
+    
+    const icon = document.createElement("i");
+    icon.className = sender === "bot" ? "fas fa-robot" : "fas fa-user";
+    
+    const content = document.createElement("div");
+    content.className = "message-content";
+    content.textContent = message;
+    
+    messageDiv.appendChild(icon);
+    messageDiv.appendChild(content);
+    
+    if (messagesContainer) {
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
     
-    const data = await response.json();
-    console.log("✅ Backend response via proxy:", data);
-    
-    return data.reply || "I'm having trouble thinking right now. Try again!";
-  } catch (error) {
-    console.error("❌ Connection error:", error);
-    throw error;
+    return messageDiv;
   }
-}
+});
