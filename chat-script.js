@@ -1,5 +1,6 @@
 // ====== Chat Page Script ======
 const BASE_URL = "https://askbot-backend-cfl7.onrender.com";
+
 let chatHistory = [];
 
 // DOM Elements for Chat Page
