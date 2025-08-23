@@ -308,7 +308,8 @@ function showNotification(msg, type = "success") {
   }, 3000);
 }
 // ====== Backend API Connection ======
-const BASE_URL = "https://askbot-2-o.onrender.com";
+const BASE_URL = "https://askbot-backend-cfl7.onrender.com";
+
 
 // Generate AI Response Function
 async function generateAIResponse(userInput) {
@@ -363,4 +364,5 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
