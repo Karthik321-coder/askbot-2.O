@@ -1,12 +1,9 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/robots.txt",
-      "destination": "/public/robots.txt"
-    },
-    {
-      "source": "/sitemap.xml", 
-      "destination": "/public/sitemap.xml"
+      "source": "/api/proxy/(.*)",
+      "destination": "https://askbot-backend-cfl7.onrender.com/$1"
     },
     {
       "source": "/(.*)",
