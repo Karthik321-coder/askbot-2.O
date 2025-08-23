@@ -12,6 +12,16 @@ const PORT = process.env.PORT || 10000; // ✅ Render default port
 app.use(cors());
 app.use(express.json());
 
+// Add this to your index.js CORS configuration
+app.use(cors({
+  origin: [
+    'http://localhost:10000',
+    'https://askbot-2-o.vercel.app',  // ✅ Add your Vercel domain
+    'https://*.vercel.app'            // ✅ Allow all Vercel preview deployments
+  ]
+}));
+
+
 // Ensure API_KEY exists
 if (!process.env.API_KEY) {
   console.error("❌ ERROR: API_KEY not found in .env file");
