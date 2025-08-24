@@ -2,24 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/home",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/index",
-      "destination": "/",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -29,7 +11,7 @@
           "value": "nosniff"
         },
         {
-          "key": "X-Frame-Options",
+          "key": "X-Frame-Options", 
           "value": "DENY"
         },
         {
@@ -47,20 +29,16 @@
       ]
     },
     {
-      "source": "/(.*\\.(png|jpg|ico|svg|webp))",
+      "source": "/(.*\\.(png|jpg|ico|svg|webp|gif|jpeg))",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
-        },
-        {
-          "key": "Expires",
-          "value": "31536000"
         }
       ]
     },
     {
-      "source": "/(.*\\.(js|css))",
+      "source": "/(.*\\.(js|css|woff|woff2|ttf|otf))",
       "headers": [
         {
           "key": "Cache-Control",
@@ -82,7 +60,7 @@
       ]
     },
     {
-      "source": "/sitemap.xml",
+      "source": "/sitemap.xml", 
       "headers": [
         {
           "key": "Content-Type",
@@ -93,6 +71,18 @@
           "value": "public, max-age=86400"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
     }
   ]
 }
