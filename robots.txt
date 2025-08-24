@@ -1,21 +1,40 @@
 User-agent: *
 Allow: /
 
-# Sitemap location  
+# Important pages
+Allow: /index.html
+Allow: /chat.html
+Allow: /404.html
+
+# Static assets
+Allow: /styles.css
+Allow: /script.js
+Allow: /chat-script.js
+Allow: /favicon.png
+Allow: /favicon.ico
+
+# SEO files
+Allow: /robots.txt
+Allow: /sitemap.xml
+
+# Block development and sensitive files
+Disallow: /public/
+Disallow: /.env
+Disallow: /package.json
+Disallow: /index.js
+Disallow: /vercel.json
+Disallow: /*.log
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /admin/
+Disallow: /api/
+
+# Sitemap location
 Sitemap: https://askbot-2-o.vercel.app/sitemap.xml
 
-# Allow AI crawlers for 2025 optimization
-User-agent: GPTBot
-Allow: /
+# Crawl delay to prevent server overload
+Crawl-delay: 1
 
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
+# Host preference (helps with canonicalization)
+Host: https://askbot-2-o.vercel.app
