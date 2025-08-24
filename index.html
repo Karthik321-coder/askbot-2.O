@@ -179,28 +179,36 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
-  <!-- Header / Navigation -->
-  <header class="header">
-    <nav class="nav">
-      <div class="nav-brand">
-        <i class="fas fa-magic"></i>
-        <span>AskBot</span>
-      </div>
-      <ul class="nav-menu">
+<!-- Replace your existing nav section -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+        AskBot
+    </div>
+    
+    <!-- Mobile hamburger menu (add this) -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <ul class="nav-menu" id="navMenu">
         <li><a href="#home" class="nav-link">Home</a></li>
         <li><a href="#features" class="nav-link">Features</a></li>
         <li><a href="#about" class="nav-link">About</a></li>
-      </ul>
-      <div class="nav-actions">
-        <button id="loginBtn" class="login-button">
-          <i class="fas fa-sign-in-alt"></i> Login
+    </ul>
+    
+    <div class="nav-actions">
+        <button class="login-button" id="loginBtn" aria-label="Login to AskBot">
+            <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+            <span class="btn-text">Login</span>
         </button>
-        <button id="logoutBtn" class="logout-button" style="display:none;">
-          <i class="fas fa-sign-out-alt"></i> Logout
+        <button class="logout-button" id="logoutBtn" style="display: none;" aria-label="Logout from AskBot">
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+            <span class="btn-text">Logout</span>
         </button>
-      </div>
-    </nav>
-  </header>
+    </div>
+</nav>
+
 
   <!-- Main Content -->
   <main>
@@ -487,6 +495,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
