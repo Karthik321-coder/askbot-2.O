@@ -1154,4 +1154,62 @@ body.dark-mode .header {
     }
 }
 
+/* Internal Navigation Styles */
+.internal-nav {
+    padding: 6rem 0;
+    background: var(--bg-primary);
+}
+
+.nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.nav-card {
+    background: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.nav-card h3 a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.nav-card p a {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+.related-links {
+    background: var(--bg-tertiary);
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+.related-links ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.related-links li a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.related-links li a:hover {
+    text-decoration: underline;
+}
+
+
+
 
