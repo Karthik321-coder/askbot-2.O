@@ -80,6 +80,36 @@
     <!-- 🔥 STYLESHEETS -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script>
+// Quick fix for chatbox and dark mode
+window.addEventListener('load', function() {
+    // Fix chatbox toggle
+    const toggle = document.getElementById('chatbotToggle');
+    const container = document.getElementById('chatbotContainer');
+    
+    if (toggle && container) {
+        toggle.onclick = () => container.classList.toggle('active');
+    }
+    
+    // Fix dark mode toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+        themeBtn.onclick = () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', 
+                document.body.classList.contains('dark-mode') ? 'dark' : 'light'
+            );
+        };
+    }
+    
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+});
+</script>
+
 </head>
 
 <body>
@@ -377,6 +407,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
