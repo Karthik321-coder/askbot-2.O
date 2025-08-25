@@ -7,35 +7,6 @@ let dataset = [];
 let chatHistory = []; // 🔥 Add this line to fix the issue
 
 
-// Mobile menu toggle functionality
-function setupMobileMenu() {
-    const mobileToggle = document.getElementById('mobileMenuToggle');
-    const navMenu = document.getElementById('navMenu');
-    
-    if (mobileToggle && navMenu) {
-        mobileToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('mobile-menu-open');
-            const isOpen = navMenu.classList.contains('mobile-menu-open');
-            mobileToggle.setAttribute('aria-expanded', isOpen);
-        });
-        
-        // Close menu when clicking nav links
-        navMenu.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('mobile-menu-open');
-                mobileToggle.setAttribute('aria-expanded', 'false');
-            });
-        });
-    }
-}
-
-// Add mobile menu setup to your initialization
-document.addEventListener("DOMContentLoaded", () => {
-    initializeApp();
-    setupMobileMenu(); // Add this line
-});
-
-
 const chatbotResponses = {
   greetings: [
     "Hello! How can I assist you today?",
@@ -393,6 +364,5 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
-
 
 
