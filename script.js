@@ -322,32 +322,37 @@ const BASE_URL = "https://askbot-backend-cfl7.onrender.com";
 
 
 // Generate AI Response Function
+// Generate AI Response using your Vercel backend
 async function generateAIResponse(userInput) {
-  try {
-    console.log("🤖 Sending to backend:", userInput);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
     
-    const response = await fetch(`${BASE_URL}/generate`, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        messages: [{ role: "user", content: userInput }] 
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+    try {
+        const response = await fetch('https://askbot-backend.vercel.app/generate', {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ 
+                messages: [{ role: "user", content: userInput }] 
+            }),
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
+    } catch (error) {
+        clearTimeout(timeoutId);
+        console.error("API Error:", error);
+        return "Sorry, I'm experiencing technical difficulties. Please try again.";
     }
-    
-    const data = await response.json();
-    console.log("✅ Backend response:", data);
-    
-    return data.reply || "I'm having trouble thinking right now. Try again!";
-  } catch (error) {
-    console.error("❌ Connection error:", error);
-    return "❌ Could not contact the bot. Please check your connection.";
-  }
 }
 
 // Missing Helper Functions
@@ -374,6 +379,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
