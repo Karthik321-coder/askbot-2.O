@@ -3,9 +3,7 @@ let isLoggedIn = false;
 let currentUser = '';
 let fuse;
 let dataset = [];
-
-let chatHistory = []; // 🔥 Add this line to fix the issue
-
+let chatHistory = [];
 
 const chatbotResponses = {
   greetings: [
@@ -46,40 +44,15 @@ const elements = {
   notification: document.getElementById('notification')
 };
 
+// ====== Backend Configuration ======
+const BASE_URL = "https://askbot-backend.vercel.app";
+let lastRequestTime = 0;
+const MIN_REQUEST_INTERVAL = 1000; // 1 second
+
 // ====== App Initialization ======
 document.addEventListener("DOMContentLoaded", () => {
   initializeApp();
 });
-
-
-// Track important events
-function trackEvent(eventName, parameters = {}) {
-  if (typeof gtag !== 'undefined') {
-    gtag('event', eventName, parameters);
-  }
-}
-
-// Track user login
-function trackLogin() {
-  trackEvent('login', { method: 'admin' });
-}
-
-// Track chat messages (add to your existing sendChatMessage function)
-function trackChatMessage() {
-  trackEvent('chat_message_sent', {
-    event_category: 'engagement',
-    event_label: 'ai_chat'
-  });
-}
-
-// Track upgrade attempts (for your freemium model)
-function trackUpgradeAttempt() {
-  trackEvent('upgrade_attempted', {
-    event_category: 'conversion',
-    current_tier: 'free'
-  });
-}
-
 
 function initializeApp() {
   setupEventListeners();
@@ -99,38 +72,50 @@ function loadDataset() {
         threshold: 0.4,
         includeScore: true
       });
+    })
+    .catch(err => {
+      console.log("Dataset not found, using API only");
     });
 }
 
 // ====== Event Listeners ======
 function setupEventListeners() {
+  // Login/Logout
   elements.loginBtn?.addEventListener("click", () => elements.loginModal.style.display = "block");
   elements.logoutBtn?.addEventListener("click", logout);
   elements.closeModal?.addEventListener("click", () => elements.loginModal.style.display = "none");
   elements.loginForm?.addEventListener("submit", handleLogin);
   elements.passwordToggle?.addEventListener("click", togglePassword);
+  
+  // Theme Toggle
   elements.themeToggle?.addEventListener("click", toggleTheme);
-
+  
+  // 🔥 FIXED: Start Chatting Button - Redirect to chat.html
+  elements.startChatting?.addEventListener("click", () => {
+    console.log('Redirecting to chat.html...');
+    window.location.href = 'chat.html';
+  });
+  
+  // Chatbot Toggle (for embedded popup)
   elements.chatbotToggle?.addEventListener("click", () => {
     elements.chatbotContainer.classList.toggle("active");
-    elements.messageInput.focus();
+    if (elements.messageInput) {
+      elements.messageInput.focus();
+    }
   });
-
-  elements.minimizeChat?.addEventListener("click", () => elements.chatbotContainer.classList.remove("active"));
+  
+  // Minimize Chat
+  elements.minimizeChat?.addEventListener("click", () => {
+    elements.chatbotContainer.classList.remove("active");
+  });
+  
+  // Send Message (for embedded chat)
   elements.sendMessage?.addEventListener("click", sendChatMessage);
   elements.messageInput?.addEventListener("keypress", e => {
     if (e.key === "Enter") sendChatMessage();
   });
-
-  elements.startChatting?.addEventListener("click", () => {
-    if (!isLoggedIn) {
-      elements.loginModal.style.display = "block";
-    }  else {
-    // Open new page in a new tab:
-    window.open("chat.html", "_blank", "noopener,noreferrer");
-  }
-  });
-
+  
+  // Close modal on outside click
   window.addEventListener("click", e => {
     if (e.target === elements.loginModal) {
       elements.loginModal.style.display = "none";
@@ -188,10 +173,12 @@ function toggleTheme() {
   const isDark = document.body.classList.contains("dark-mode");
   localStorage.setItem("theme", isDark ? "dark" : "light");
 
-  elements.themeToggle.style.transform = "scale(0.8)";
-  setTimeout(() => {
-    elements.themeToggle.style.transform = "scale(1)";
-  }, 150);
+  if (elements.themeToggle) {
+    elements.themeToggle.style.transform = "scale(0.8)";
+    setTimeout(() => {
+      elements.themeToggle.style.transform = "scale(1)";
+    }, 150);
+  }
 }
 
 function loadTheme() {
@@ -201,7 +188,7 @@ function loadTheme() {
   }
 }
 
-// ====== Chatbot Message Handling ======
+// ====== Chatbot Message Handling (for embedded chat) ======
 function addMessage(content, sender) {
   const msgDiv = document.createElement("div");
   msgDiv.className = `message ${sender}-message`;
@@ -211,8 +198,7 @@ function addMessage(content, sender) {
 
   const contentDiv = document.createElement("div");
   contentDiv.className = "message-content";
- contentDiv.innerHTML = parseMarkdown(content);
-
+  contentDiv.innerHTML = parseMarkdown(content);
 
   msgDiv.appendChild(icon);
   msgDiv.appendChild(contentDiv);
@@ -220,16 +206,17 @@ function addMessage(content, sender) {
   elements.chatbotMessages.scrollTop = elements.chatbotMessages.scrollHeight;
 }
 
-let lastRequestTime = 0;
-const MIN_REQUEST_INTERVAL = 1000; // 1 second
+// 🔥 FIXED: Corrected sendChatMessage function
+async function sendChatMessage() {
+  const input = elements.messageInput.value.trim();
+  if (!input) return;
 
-async function sendMessage() {
-    const now = Date.now();
-    if (now - lastRequestTime < MIN_REQUEST_INTERVAL) {
-        addMessage("Please wait a moment before sending another message.", "bot");
-        return;
-    }
-    lastRequestTime = now;
+  const now = Date.now();
+  if (now - lastRequestTime < MIN_REQUEST_INTERVAL) {
+    addMessage("Please wait a moment before sending another message.", "bot");
+    return;
+  }
+  lastRequestTime = now;
 
   // Show user message
   addMessage(input, "user");
@@ -237,23 +224,74 @@ async function sendMessage() {
   // Clear input field
   elements.messageInput.value = "";
 
-  // Show "Typing..."
+  // Show typing indicator
   const typingDiv = document.createElement("div");
-  typingDiv.className = "message bot-message";
-  typingDiv.textContent = "Typing...";
+  typingDiv.className = "message bot-message typing";
+  typingDiv.innerHTML = `
+    <i class="fas fa-robot"></i>
+    <div class="message-content">Typing...</div>
+  `;
   elements.chatbotMessages.appendChild(typingDiv);
   elements.chatbotMessages.scrollTop = elements.chatbotMessages.scrollHeight;
 
-  // Get bot response from backend
-  const reply = await generateAIResponse(input);
-
-  // Remove "Typing..."
-  typingDiv.remove();
-
-  // Show bot reply
-  addMessage(reply, "bot");
+  try {
+    // Get bot response from backend
+    const reply = await generateAIResponse(input);
+    
+    // Remove typing indicator
+    typingDiv.remove();
+    
+    // Show bot reply
+    addMessage(reply, "bot");
+  } catch (error) {
+    // Remove typing indicator
+    typingDiv.remove();
+    
+    // Show error message
+    addMessage("❌ Sorry, I'm having trouble connecting right now. Please try again.", "bot");
+    console.error("Chat error:", error);
+  }
 }
 
+// ====== Generate AI Response ======
+async function generateAIResponse(userInput) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+  
+  try {
+    const response = await fetch(`${BASE_URL}/generate`, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ 
+        messages: [{ role: "user", content: userInput }] 
+      }),
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
+  } catch (error) {
+    clearTimeout(timeoutId);
+    console.error("API Error:", error);
+    
+    if (error.name === 'AbortError') {
+      return "Response took too long. Please try a shorter message.";
+    }
+    
+    return "Sorry, I'm experiencing technical difficulties. Please try again.";
+  }
+}
+
+// ====== Utility Functions ======
 function parseMarkdown(text) {
   return text
     .replace(/^### (.*$)/gim, '<h3>$1</h3>')
@@ -266,91 +304,24 @@ function parseMarkdown(text) {
     .replace(/\n/g, '<br>');
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Try multiple ways to find the start button
-    let startButton = 
-        document.getElementById('startChatting') ||
-        document.getElementById('startBtn') ||
-        document.querySelector('.cta-primary') ||
-        document.querySelector('button[onclick*="startChatting"]') ||
-        Array.from(document.querySelectorAll('button')).find(btn => 
-            btn.textContent.includes('Start Chatting')
-        );
-    
-    if (startButton) {
-        console.log('✅ Found start button:', startButton);
-        
-        // Remove any existing onclick
-        startButton.removeAttribute('onclick');
-        
-        startButton.addEventListener('click', function() {
-            console.log('🚀 Universal handler: Start clicked!');
-            
-            const chatbox = document.getElementById('chatbotContainer');
-            if (chatbox) {
-                chatbox.classList.add('active');
-                chatbox.style.display = 'flex'; // Force show
-                console.log('✅ Chatbox activated');
-            }
-        });
-    } else {
-        console.error('❌ Could not find Start Chatting button with any method!');
-        console.log('Available buttons:', document.querySelectorAll('button'));
-    }
-});
-
-
-
-
-// ====== Generate AI-Like Response ======
-// Generate AI Response using your Vercel backend
-async function generateAIResponse(userInput) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-    
-    try {
-        const response = await fetch('https://askbot-backend.vercel.app/generate', {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({ 
-                messages: [{ role: "user", content: userInput }] 
-            }),
-            signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
-    } catch (error) {
-        clearTimeout(timeoutId);
-        console.error("API Error:", error);
-        return "Sorry, I'm experiencing technical difficulties. Please try again.";
-    }
-}
-
-
-// ====== Utility Functions ======
 function togglePassword() {
   const passwordField = document.getElementById("password");
-  if (passwordField.type === "password") {
-    passwordField.type = "text";
-    elements.passwordToggle.className = "fas fa-eye-slash password-toggle";
-  } else {
-    passwordField.type = "password";
-    elements.passwordToggle.className = "fas fa-eye password-toggle";
+  const toggleIcon = elements.passwordToggle;
+  
+  if (passwordField && toggleIcon) {
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      toggleIcon.className = "fas fa-eye-slash password-toggle";
+    } else {
+      passwordField.type = "password";
+      toggleIcon.className = "fas fa-eye password-toggle";
+    }
   }
 }
 
 function showNotification(msg, type = "success") {
   if (!elements.notification) return;
+  
   elements.notification.textContent = msg;
   elements.notification.className = `notification ${type}`;
   elements.notification.classList.add("show");
@@ -359,38 +330,28 @@ function showNotification(msg, type = "success") {
     elements.notification.classList.remove("show");
   }, 3000);
 }
-// ====== Backend API Connection ======
-const BASE_URL = "https://askbot-backend.vercel.app";
 
-// Missing Helper Functions
-function showNotification(message, type = "success") {
-  if (!elements.notification) return;
-  
-  elements.notification.textContent = message;
-  elements.notification.className = `notification ${type}`;
-  elements.notification.classList.add("show");
-  
-  setTimeout(() => {
-    elements.notification.classList.remove("show");
-  }, 3000);
-}
-
-function togglePassword() {
-  const passwordInput = document.getElementById("password");
-  const toggleIcon = elements.passwordToggle;
-  
-  if (passwordInput && toggleIcon) {
-    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
-    toggleIcon.classList.toggle("fa-eye");
-    toggleIcon.classList.toggle("fa-eye-slash");
+// ====== Analytics Functions ======
+function trackEvent(eventName, parameters = {}) {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', eventName, parameters);
   }
 }
 
+function trackLogin() {
+  trackEvent('login', { method: 'admin' });
+}
 
+function trackChatMessage() {
+  trackEvent('chat_message_sent', {
+    event_category: 'engagement',
+    event_label: 'ai_chat'
+  });
+}
 
-
-
-
-
-
+function trackUpgradeAttempt() {
+  trackEvent('upgrade_attempted', {
+    event_category: 'conversion',
+    current_tier: 'free'
+  });
+}
