@@ -277,6 +277,40 @@ function parseMarkdown(text) {
     .replace(/\n/g, '<br>');
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Try multiple ways to find the start button
+    let startButton = 
+        document.getElementById('startChatting') ||
+        document.getElementById('startBtn') ||
+        document.querySelector('.cta-primary') ||
+        document.querySelector('button[onclick*="startChatting"]') ||
+        Array.from(document.querySelectorAll('button')).find(btn => 
+            btn.textContent.includes('Start Chatting')
+        );
+    
+    if (startButton) {
+        console.log('✅ Found start button:', startButton);
+        
+        // Remove any existing onclick
+        startButton.removeAttribute('onclick');
+        
+        startButton.addEventListener('click', function() {
+            console.log('🚀 Universal handler: Start clicked!');
+            
+            const chatbox = document.getElementById('chatbotContainer');
+            if (chatbox) {
+                chatbox.classList.add('active');
+                chatbox.style.display = 'flex'; // Force show
+                console.log('✅ Chatbox activated');
+            }
+        });
+    } else {
+        console.error('❌ Could not find Start Chatting button with any method!');
+        console.log('Available buttons:', document.querySelectorAll('button'));
+    }
+});
+
+
 
 
 // ====== Generate AI-Like Response ======
@@ -436,6 +470,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
