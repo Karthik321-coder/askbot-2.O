@@ -51,17 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeApp();
 });
 
-function validateInput(input) {
-    if (!input || input.trim().length === 0) {
-        return "Please enter a message.";
-    }
-    
-    if (input.length > 1000) {
-        return "Message too long. Please keep it under 1000 characters.";
-    }
-    
-    return null; // Valid input
-}
 
 // Track important events
 function trackEvent(eventName, parameters = {}) {
@@ -347,28 +336,6 @@ async function generateAIResponse(userInput) {
     }
 }
 
-// Show typing indicator while waiting for response
-const showTyping = () => {
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'message bot-message typing';
-    typingDiv.innerHTML = `
-        <i class="fas fa-robot"></i>
-        <div class="message-content">
-            <span class="typing-dots">●●●</span> Thinking...
-        </div>
-    `;
-    chatMessages.appendChild(typingDiv);
-    return typingDiv;
-};
-
-// Add response time logging
-const startTime = Date.now();
-const response = await generateAIResponse(input);
-const responseTime = Date.now() - startTime;
-console.log(`Response time: ${responseTime}ms`);
-
-
-
 
 // ====== Utility Functions ======
 function togglePassword() {
@@ -393,58 +360,7 @@ function showNotification(msg, type = "success") {
   }, 3000);
 }
 // ====== Backend API Connection ======
-const BASE_URL = "https://askbot-backend-cfl7.onrender.com";
-
-async function generateAIResponseWithRetry(userInput, maxRetries = 2) {
-    for (let i = 0; i <= maxRetries; i++) {
-        try {
-            return await generateAIResponse(userInput);
-        } catch (error) {
-            if (i === maxRetries) {
-                throw error; // Final attempt failed
-            }
-            
-            // Wait before retry (exponential backoff)
-            await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)));
-        }
-    }
-}
-
-
-
-// Generate AI Response Function
-// Generate AI Response using your Vercel backend
-async function generateAIResponse(userInput) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-    
-    try {
-        const response = await fetch('https://askbot-backend.vercel.app/generate', {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({ 
-                messages: [{ role: "user", content: userInput }] 
-            }),
-            signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
-    } catch (error) {
-        clearTimeout(timeoutId);
-        console.error("API Error:", error);
-        return "Sorry, I'm experiencing technical difficulties. Please try again.";
-    }
-}
+const BASE_URL = "https://askbot-backend.vercel.app";
 
 // Missing Helper Functions
 function showNotification(message, type = "success") {
@@ -470,6 +386,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
