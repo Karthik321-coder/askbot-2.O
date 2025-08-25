@@ -219,9 +219,16 @@ function addMessage(content, sender) {
   elements.chatbotMessages.scrollTop = elements.chatbotMessages.scrollHeight;
 }
 
-async function sendChatMessage() {
-  const input = elements.messageInput.value.trim();
-  if (!input) return;
+let lastRequestTime = 0;
+const MIN_REQUEST_INTERVAL = 1000; // 1 second
+
+async function sendMessage() {
+    const now = Date.now();
+    if (now - lastRequestTime < MIN_REQUEST_INTERVAL) {
+        addMessage("Please wait a moment before sending another message.", "bot");
+        return;
+    }
+    lastRequestTime = now;
 
   // Show user message
   addMessage(input, "user");
@@ -293,6 +300,28 @@ async function generateAIResponse(userInput) {
         return "Sorry, I'm experiencing technical difficulties. Please try again.";
     }
 }
+
+// Show typing indicator while waiting for response
+const showTyping = () => {
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message bot-message typing';
+    typingDiv.innerHTML = `
+        <i class="fas fa-robot"></i>
+        <div class="message-content">
+            <span class="typing-dots">●●●</span> Thinking...
+        </div>
+    `;
+    chatMessages.appendChild(typingDiv);
+    return typingDiv;
+};
+
+// Add response time logging
+const startTime = Date.now();
+const response = await generateAIResponse(input);
+const responseTime = Date.now() - startTime;
+console.log(`Response time: ${responseTime}ms`);
+
+
 
 
 // ====== Utility Functions ======
@@ -379,6 +408,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
