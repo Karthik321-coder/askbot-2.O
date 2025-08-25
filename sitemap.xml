@@ -1,32 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     
-    <!-- Homepage -->
     <url>
         <loc>https://askbot-2-o.vercel.app/</loc>
         <lastmod>2025-08-24</lastmod>
-        <changefreq>weekly</changefreq>
+        <changefreq>daily</changefreq>
         <priority>1.0</priority>
         <image:image>
             <image:loc>https://askbot-2-o.vercel.app/social-preview.jpg</image:loc>
-            <image:title>AskBot AI Chatbot Interface</image:title>
-            <image:caption>Advanced AI-powered chatbot homepage</image:caption>
+            <image:title>AskBot AI Chatbot</image:title>
+            <image:caption>Advanced AI-powered chatbot interface</image:caption>
         </image:image>
     </url>
     
-    <!-- Chat page -->
     <url>
         <loc>https://askbot-2-o.vercel.app/chat.html</loc>
         <lastmod>2025-08-24</lastmod>
-        <changefreq>monthly</changefreq>
+        <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     
-    <!-- Features section -->
     <url>
         <loc>https://askbot-2-o.vercel.app/#features</loc>
         <lastmod>2025-08-24</lastmod>
@@ -34,7 +30,6 @@
         <priority>0.8</priority>
     </url>
     
-    <!-- About section -->
     <url>
         <loc>https://askbot-2-o.vercel.app/#about</loc>
         <lastmod>2025-08-24</lastmod>
