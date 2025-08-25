@@ -113,21 +113,6 @@ window.addEventListener('load', function() {
     <button id="startChatting" class="cta-primary" onclick="openChatbox()">
     <i class="fas fa-comments"></i> Start Chatting
 </button>
-
-<script>
-function openChatbox() {
-    console.log('Emergency chatbox open!');
-    const chatbox = document.getElementById('chatbotContainer');
-    if (chatbox) {
-        chatbox.classList.add('active');
-        chatbox.style.display = 'flex';
-    } else {
-        alert('Chatbox not found!');
-    }
-}
-</script>
-
-
 </head>
 
 <body>
@@ -425,6 +410,7 @@ function openChatbox() {
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
