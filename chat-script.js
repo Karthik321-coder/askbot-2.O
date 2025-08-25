@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const typingDiv = addMessage("Typing...", "bot");
     
     try {
-      const response = await fetch('https://askbot-backend-cfl7.onrender.com/generate', {
+      const response = await fetch('https://askbot-backend.vercel.app', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [{ role: 'user', content: input }] }),
