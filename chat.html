@@ -12,54 +12,39 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://askbot-2-o.vercel.app/chat.html">
     
-    <!-- 🔥 OPEN GRAPH -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Chat with AskBot AI - Real-Time Smart Conversations">
-    <meta property="og:description" content="Experience real-time AI conversations with AskBot powered by Google Gemini technology.">
-    <meta property="og:url" content="https://askbot-2-o.vercel.app/chat.html">
-    <meta property="og:locale" content="en_US">
-    
-    <!-- 🔥 TWITTER CARDS -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Chat with AskBot AI - Real-Time Smart Conversations">
-    <meta name="twitter:description" content="Start intelligent AI conversations with AskBot powered by Google Gemini.">
-    
-    <!-- 🔥 FAVICON -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    
-    <!-- 🔥 PWA MANIFEST -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#cd3e51">
-    
-    <!-- 🔥 STRUCTURED DATA -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "AskBot Chat Interface",
-        "description": "Interactive AI chat interface powered by Google Gemini technology",
-        "url": "https://askbot-2-o.vercel.app/chat.html",
-        "inLanguage": "en-US",
-        "isPartOf": {
-            "@type": "WebSite",
-            "name": "AskBot AI Assistant",
-            "url": "https://askbot-2-o.vercel.app"
-        },
-        "author": {
-            "@type": "Person",
-            "name": "Karthik",
-            "affiliation": "MSRIT Bangalore"
-        }
-    }
-    </script>
-    
     <!-- 🔥 STYLESHEETS -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <style>
+        /* 🔥 FIXED CSS VARIABLES */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --primary-color: #cd3e51;
+            --secondary-color: #667eea;
+            --gradient-primary: linear-gradient(135deg, #cd3e51, #f16371);
+            --gradient-secondary: linear-gradient(135deg, #667eea, #764ba2);
+            --border-color: #e9ecef;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --shadow-large: 0 8px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dark mode variables */
+        .dark-mode {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333;
+            --shadow-light: 0 2px 10px rgba(255, 255, 255, 0.1);
+            --shadow-medium: 0 4px 20px rgba(255, 255, 255, 0.1);
+            --shadow-large: 0 8px 40px rgba(255, 255, 255, 0.1);
+        }
+
         /* Chat-specific styles */
         body {
             margin: 0;
@@ -70,6 +55,7 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .chat-header {
@@ -136,6 +122,12 @@
             gap: 0.75rem;
             align-items: flex-start;
             max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .user-message {
@@ -176,6 +168,7 @@
             line-height: 1.5;
             box-shadow: var(--shadow-light);
             border: 1px solid var(--border-color);
+            word-wrap: break-word;
         }
         
         .user-message .message-content {
@@ -207,7 +200,8 @@
             font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
-            min-height: 44px; /* Touch-friendly */
+            min-height: 44px;
+            resize: none;
         }
         
         .message-input:focus {
@@ -229,7 +223,7 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-shadow: var(--shadow-medium);
-            min-width: 44px; /* Touch-friendly */
+            min-width: 44px;
         }
         
         .send-button:hover {
@@ -254,6 +248,16 @@
             font-size: 3rem;
             color: var(--primary-color);
             margin-bottom: 1rem;
+        }
+
+        /* Typing animation */
+        .typing .dots {
+            animation: typing 1.5s infinite;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0; }
+            30% { opacity: 1; }
         }
         
         /* Responsive design */
@@ -332,8 +336,8 @@
 
     <!-- Chat Script -->
     <script>
-        // ====== Chat Page Configuration ======
-        const BASE_URL = "https://askbot-2-o.onrender.com";
+        // 🔥 FIXED: Updated Backend URL to Vercel
+        const BASE_URL = "https://askbot-backend.vercel.app";
         let isTyping = false;
 
         // DOM Elements
@@ -390,17 +394,23 @@
             const typingMessage = addMessage("Typing...", "bot", true);
 
             try {
-                // Get AI response
+                // Get AI response with updated URL
                 const response = await generateAIResponse(input);
                 
                 // Remove typing indicator
-                typingMessage.remove();
+                if (typingMessage && typingMessage.parentNode) {
+                    typingMessage.remove();
+                }
                 
                 // Add bot response
                 addMessage(response, "bot");
             } catch (error) {
+                console.error('Chat error:', error);
+                
                 // Remove typing indicator
-                typingMessage.remove();
+                if (typingMessage && typingMessage.parentNode) {
+                    typingMessage.remove();
+                }
                 
                 // Show error message
                 addMessage("❌ Sorry, I'm having trouble connecting right now. Please try again.", "bot");
@@ -419,16 +429,16 @@
             
             const contentDiv = document.createElement("div");
             contentDiv.className = "message-content";
-            contentDiv.textContent = content;
+            
+            if (isTyping && sender === "bot") {
+                contentDiv.innerHTML = 'Thinking<span class="dots">...</span>';
+                messageDiv.classList.add("typing");
+            } else {
+                contentDiv.textContent = content;
+            }
             
             messageDiv.appendChild(icon);
             messageDiv.appendChild(contentDiv);
-            
-            // Add typing animation for bot
-            if (isTyping && sender === "bot") {
-                messageDiv.classList.add("typing");
-                contentDiv.innerHTML = 'Typing<span class="dots">...</span>';
-            }
             
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -450,27 +460,42 @@
             }
         }
 
-        // Generate AI Response
+        // 🔥 FIXED: Updated AI Response Function with new backend URL
         async function generateAIResponse(userInput) {
-            const response = await fetch(`${BASE_URL}/generate`, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ 
-                    messages: [{ role: "user", content: userInput }] 
-                })
-            });
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
             
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            try {
+                const response = await fetch(`${BASE_URL}/generate`, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({ 
+                        messages: [{ role: "user", content: userInput }] 
+                    }),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
+            } catch (error) {
+                clearTimeout(timeoutId);
+                
+                if (error.name === 'AbortError') {
+                    return "Response took too long. Please try a shorter message.";
+                }
+                
+                throw error;
             }
-            
-            const data = await response.json();
-            return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
         }
     </script>
 </body>
 </html>
-
-
