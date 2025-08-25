@@ -21,33 +21,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   
-  async function sendMessage() {
-    const input = messageInput?.value?.trim();
-    if (!input) return;
-    
+async function sendMessage() {
+    const input = messageInput.value.trim();
+    if (!input || isTyping) return;
+
+    // Add user message to chat
     addMessage(input, "user");
+    
+    // Clear input and show typing
     messageInput.value = "";
-    
-    const typingDiv = addMessage("Typing...", "bot");
-    
+    setTypingState(true);
+
+    // Show typing indicator
+    const typingMessage = addMessage("Typing...", "bot", true);
+
     try {
-      const response = await fetch('https://askbot-backend.vercel.app', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [{ role: 'user', content: input }] }),
-        mode: 'cors'
-      });
-      
-      const data = await response.json();
-      typingDiv.remove();
-      addMessage(data.reply || "Sorry, I couldn't process that.", "bot");
-      
+        // 🚀 Call your Vercel backend
+        const response = await generateAIResponse(input);
+        
+        // Remove typing indicator
+        if (typingMessage && typingMessage.parentNode) {
+            typingMessage.remove();
+        }
+        
+        // Add AI response
+        addMessage(response, "bot");
     } catch (error) {
-      typingDiv.remove();
-      addMessage("I'm having connection issues. Please try again.", "bot");
+        // Remove typing indicator and show error
+        if (typingMessage && typingMessage.parentNode) {
+            typingMessage.remove();
+        }
+        
+        addMessage("❌ Sorry, I'm having trouble connecting. Please try again.", "bot");
+        console.error("Chat error:", error);
     }
-  }
-  
+    
+    setTypingState(false);
+}
+
   function addMessage(message, sender) {
     const messageDiv = document.createElement("div");
     messageDiv.className = `message ${sender}-message`;
