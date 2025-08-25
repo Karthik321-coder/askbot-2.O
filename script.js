@@ -51,6 +51,18 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeApp();
 });
 
+function validateInput(input) {
+    if (!input || input.trim().length === 0) {
+        return "Please enter a message.";
+    }
+    
+    if (input.length > 1000) {
+        return "Message too long. Please keep it under 1000 characters.";
+    }
+    
+    return null; // Valid input
+}
+
 // Track important events
 function trackEvent(eventName, parameters = {}) {
   if (typeof gtag !== 'undefined') {
@@ -349,6 +361,22 @@ function showNotification(msg, type = "success") {
 // ====== Backend API Connection ======
 const BASE_URL = "https://askbot-backend-cfl7.onrender.com";
 
+async function generateAIResponseWithRetry(userInput, maxRetries = 2) {
+    for (let i = 0; i <= maxRetries; i++) {
+        try {
+            return await generateAIResponse(userInput);
+        } catch (error) {
+            if (i === maxRetries) {
+                throw error; // Final attempt failed
+            }
+            
+            // Wait before retry (exponential backoff)
+            await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)));
+        }
+    }
+}
+
+
 
 // Generate AI Response Function
 // Generate AI Response using your Vercel backend
@@ -408,6 +436,7 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
 
