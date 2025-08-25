@@ -1,22 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script type='text/javascript' src='//pl27480087.profitableratecpm.com/1f/86/31/1f86318ad6b7790565f94d122790f1c2.js'></script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8943301616317336"
-     crossorigin="anonymous"></script>
-    <script>
-    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Re Ms Fs Pe Rs Cs capture Ve calculateEventProperties Ds register register_once register_for_session unregister unregister_for_session zs getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Ls As createPersonProfile Ns Is Us opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing is_capturing clear_opt_in_out_capturing Os debug I js getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-    posthog.init('phc_aRS4Ffm8y84fd5imVsIE3CCCzZyz6dzf1gQUqQS7Sk5', {
-        api_host: 'https://us.i.posthog.com',
-        defaults: '2025-05-24',
-        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
-    })
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AskBot Chat - AI Assistant</title>
+    
+    <!-- 🔥 SEO META TAGS -->
+    <title>Chat with AskBot AI - Real-Time Smart Conversations</title>
+    <meta name="description" content="Start real-time conversations with AskBot AI assistant. Get intelligent answers instantly powered by Google Gemini technology.">
+    <meta name="keywords" content="AI chat, chatbot interface, real-time AI, Google Gemini, AskBot chat">
+    <meta name="author" content="Karthik - MSRIT Bangalore">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://askbot-2-o.vercel.app/chat.html">
+    
+    <!-- 🔥 OPEN GRAPH -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Chat with AskBot AI - Real-Time Smart Conversations">
+    <meta property="og:description" content="Experience real-time AI conversations with AskBot powered by Google Gemini technology.">
+    <meta property="og:url" content="https://askbot-2-o.vercel.app/chat.html">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- 🔥 TWITTER CARDS -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Chat with AskBot AI - Real-Time Smart Conversations">
+    <meta name="twitter:description" content="Start intelligent AI conversations with AskBot powered by Google Gemini.">
+    
+    <!-- 🔥 FAVICON -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <!-- 🔥 PWA MANIFEST -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#cd3e51">
+    
+    <!-- 🔥 STRUCTURED DATA -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "AskBot Chat Interface",
+        "description": "Interactive AI chat interface powered by Google Gemini technology",
+        "url": "https://askbot-2-o.vercel.app/chat.html",
+        "inLanguage": "en-US",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "AskBot AI Assistant",
+            "url": "https://askbot-2-o.vercel.app"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Karthik",
+            "affiliation": "MSRIT Bangalore"
+        }
+    }
+    </script>
+    
+    <!-- 🔥 STYLESHEETS -->
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <style>
         /* Chat-specific styles */
         body {
@@ -25,6 +67,9 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         .chat-header {
@@ -162,6 +207,7 @@
             font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
+            min-height: 44px; /* Touch-friendly */
         }
         
         .message-input:focus {
@@ -183,6 +229,7 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-shadow: var(--shadow-medium);
+            min-width: 44px; /* Touch-friendly */
         }
         
         .send-button:hover {
@@ -425,4 +472,5 @@
     </script>
 </body>
 </html>
+
 
