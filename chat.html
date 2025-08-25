@@ -1,54 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- SEO Meta Tags -->
-    <title>Chat with AskBot - AI Assistant | Real-time AI Conversations</title>
-    <meta name="description" content="Start chatting with AskBot AI assistant. Get real-time intelligent responses powered by Google Gemini AI technology.">
-    <meta name="keywords" content="AI chat, chatbot interface, real-time AI, Google Gemini, AskBot chat">
-    <meta name="author" content="Karthik - MSRIT Bangalore">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://askbot-2-o.vercel.app/chat.html">
-    
-    <!-- Favicon Links -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#cd3e51">
-    
-    <!-- 🔥 CRITICAL: Load main styles.css for dark mode variables -->
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <!-- 🌙 Dark Mode Detection Script (Run immediately to prevent flash) -->
+<script type='text/javascript' src='//pl27480087.profitableratecpm.com/1f/86/31/1f86318ad6b7790565f94d122790f1c2.js'></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8943301616317336"
+     crossorigin="anonymous"></script>
     <script>
-        (function() {
-            const savedTheme = localStorage.getItem("theme");
-            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            const isDark = savedTheme === "dark" || (!savedTheme && prefersDark);
-            
-            if (isDark) {
-                document.documentElement.classList.add("dark-mode");
-                document.body.classList.add("dark-mode");
-            }
-        })();
-    </script>
-    
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Re Ms Fs Pe Rs Cs capture Ve calculateEventProperties Ds register register_once register_for_session unregister unregister_for_session zs getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Ls As createPersonProfile Ns Is Us opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing is_capturing clear_opt_in_out_capturing Os debug I js getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_aRS4Ffm8y84fd5imVsIE3CCCzZyz6dzf1gQUqQS7Sk5', {
+        api_host: 'https://us.i.posthog.com',
+        defaults: '2025-05-24',
+        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+    })
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskBot Chat - AI Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Chat-specific styles with dark mode support */
+        /* Chat-specific styles */
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .chat-header {
@@ -59,7 +35,6 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: var(--shadow-medium);
-            position: relative;
         }
         
         .chat-header h1 {
@@ -89,27 +64,6 @@
             transform: translateY(-1px);
             color: white;
             text-decoration: none;
-        }
-        
-        /* 🌙 Theme Toggle Button in Header */
-        .theme-toggle-chat {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .theme-toggle-chat:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
         }
         
         .chat-container {
@@ -208,7 +162,6 @@
             font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
-            min-height: 44px;
         }
         
         .message-input:focus {
@@ -230,7 +183,6 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-shadow: var(--shadow-medium);
-            min-width: 44px;
         }
         
         .send-button:hover {
@@ -257,102 +209,59 @@
             margin-bottom: 1rem;
         }
         
-        /* Typing animation */
-        .typing .dots {
-            animation: typing 1.4s infinite;
-        }
-        
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-        
-        /* Screen reader only styles */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        
-        .sr-only:focus {
-            position: static;
-            width: auto;
-            height: auto;
-            padding: 0.5rem;
-            margin: 0;
-            overflow: visible;
-            clip: auto;
-            white-space: normal;
-            background: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 0.25rem;
-        }
-        
         /* Responsive design */
         @media (max-width: 768px) {
-            .chat-header { 
-                padding: 1rem; 
-                flex-wrap: wrap;
-                gap: 0.5rem;
+            .chat-header {
+                padding: 1rem;
             }
-            .chat-header h1 { font-size: 1.25rem; }
-            .back-to-home { 
-                padding: 0.4rem 0.8rem; 
-                font-size: 0.9rem; 
+            
+            .chat-header h1 {
+                font-size: 1.25rem;
             }
-            .theme-toggle-chat {
-                width: 40px;
-                height: 40px;
+            
+            .back-to-home {
+                padding: 0.4rem 0.8rem;
                 font-size: 0.9rem;
             }
-            .chat-messages { padding: 1rem; }
-            .chat-input-container { padding: 1rem; }
-            .message { max-width: 90%; }
-            .message-content { padding: 0.75rem 1rem; }
+            
+            .chat-messages {
+                padding: 1rem;
+            }
+            
+            .chat-input-container {
+                padding: 1rem;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .message-content {
+                padding: 0.75rem 1rem;
+            }
         }
     </style>
 </head>
-
 <body>
-    <!-- Skip navigation for accessibility -->
-    <a href="#main-content" class="sr-only">Skip to main content</a>
-    
-    <!-- Chat Header with Back Button and Theme Toggle -->
-    <header class="chat-header" role="banner">
+    <!-- Chat Header with Back Button -->
+    <header class="chat-header">
         <h1>
-            <i class="fas fa-robot" aria-hidden="true"></i>
+            <i class="fas fa-robot"></i>
             AskBot Chat
         </h1>
-        
-        <div style="display: flex; gap: 1rem; align-items: center;">
-            <!-- Theme Toggle Button -->
-            <button class="theme-toggle-chat" id="themeToggleChat" aria-label="Toggle dark/light theme">
-                <i class="fas fa-sun" id="sunIconChat" aria-hidden="true"></i>
-                <i class="fas fa-moon" id="moonIconChat" aria-hidden="true" style="display: none;"></i>
-            </button>
-            
-            <!-- Back to Home Button -->
-            <a href="index.html" class="back-to-home" aria-label="Return to homepage">
-                <i class="fas fa-home" aria-hidden="true"></i>
-                Back to Home
-            </a>
-        </div>
+        <a href="index.html" class="back-to-home">
+            <i class="fas fa-home"></i>
+            Back to Home
+        </a>
     </header>
 
     <!-- Main Chat Container -->
-    <main id="main-content" class="chat-container" role="main">
+    <main class="chat-container">
         <!-- Messages Area -->
-        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat conversation">
+        <div class="chat-messages" id="chatMessages">
             <div class="welcome-message">
-                <i class="fas fa-robot" aria-hidden="true"></i>
-                <h2>Welcome to AskBot Chat!</h2>
+                <i class="fas fa-robot"></i>
+                <h3>Welcome to AskBot Chat!</h3>
                 <p>I'm here to help answer your questions. Type a message below to get started.</p>
             </div>
         </div>
@@ -360,77 +269,24 @@
         <!-- Input Area -->
         <div class="chat-input-container">
             <div class="chat-input">
-                <label for="messageInput" class="sr-only">Enter your message</label>
                 <input 
                     type="text" 
                     id="messageInput" 
                     class="message-input" 
                     placeholder="Type your message here..."
                     autocomplete="off"
-                    aria-label="Enter your message"
-                    maxlength="1000"
                 >
-                <button id="sendButton" class="send-button" aria-label="Send message">
-                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                <button id="sendButton" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
         </div>
     </main>
 
-    <!-- 🌙 Dark Mode JavaScript -->
+    <!-- Chat Script -->
     <script>
-        // ====== DARK MODE FUNCTIONALITY ======
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem("theme");
-            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            const isDark = savedTheme === "dark" || (!savedTheme && prefersDark);
-            
-            updateThemeUI(isDark);
-        }
-        
-        function updateThemeUI(isDark) {
-            const body = document.body;
-            const html = document.documentElement;
-            const sunIcon = document.getElementById('sunIconChat');
-            const moonIcon = document.getElementById('moonIconChat');
-            
-            if (isDark) {
-                body.classList.add('dark-mode');
-                html.classList.add('dark-mode');
-                if (sunIcon) sunIcon.style.display = 'none';
-                if (moonIcon) moonIcon.style.display = 'block';
-            } else {
-                body.classList.remove('dark-mode');
-                html.classList.remove('dark-mode');
-                if (sunIcon) sunIcon.style.display = 'block';
-                if (moonIcon) moonIcon.style.display = 'none';
-            }
-        }
-        
-        function toggleTheme() {
-            const isDark = document.body.classList.contains('dark-mode');
-            const newTheme = isDark ? 'light' : 'dark';
-            
-            localStorage.setItem("theme", newTheme);
-            updateThemeUI(!isDark);
-        }
-        
-        // Initialize theme on page load
-        document.addEventListener("DOMContentLoaded", () => {
-            initializeTheme();
-            
-            // Setup theme toggle
-            const themeToggle = document.getElementById('themeToggleChat');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', toggleTheme);
-            }
-            
-            // Initialize chat functionality
-            initializeChat();
-        });
-        
-        // ====== CHAT FUNCTIONALITY ======
-        const BASE_URL = "https://askbot-backend-cfl7.onrender.com";
+        // ====== Chat Page Configuration ======
+        const BASE_URL = "https://askbot-2-o.onrender.com";
         let isTyping = false;
 
         // DOM Elements
@@ -438,28 +294,37 @@
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
 
+        // Initialize Chat
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeChat();
+            loadTheme();
+        });
+
         function initializeChat() {
             // Event listeners
-            if (sendButton) {
-                sendButton.addEventListener("click", sendMessage);
-            }
-            
-            if (messageInput) {
-                messageInput.addEventListener("keypress", (e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage();
-                    }
-                });
-                
-                // Focus on input
-                messageInput.focus();
-            }
+            sendButton.addEventListener("click", sendMessage);
+            messageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Focus on input
+            messageInput.focus();
             
             // Add initial bot greeting
             setTimeout(() => {
                 addMessage("Hello! I'm AskBot, your AI assistant. How can I help you today?", "bot");
             }, 1000);
+        }
+
+        // Load theme from localStorage
+        function loadTheme() {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+                document.body.classList.add("dark-mode");
+            }
         }
 
         // Send Message Function
@@ -482,21 +347,16 @@
                 const response = await generateAIResponse(input);
                 
                 // Remove typing indicator
-                if (typingMessage && typingMessage.parentNode) {
-                    typingMessage.remove();
-                }
+                typingMessage.remove();
                 
                 // Add bot response
                 addMessage(response, "bot");
             } catch (error) {
                 // Remove typing indicator
-                if (typingMessage && typingMessage.parentNode) {
-                    typingMessage.remove();
-                }
+                typingMessage.remove();
                 
                 // Show error message
                 addMessage("❌ Sorry, I'm having trouble connecting right now. Please try again.", "bot");
-                console.error("Chat error:", error);
             }
             
             setTypingState(false);
@@ -504,8 +364,6 @@
 
         // Add Message to Chat
         function addMessage(content, sender, isTyping = false) {
-            if (!messagesContainer) return null;
-            
             const messageDiv = document.createElement("div");
             messageDiv.className = `message ${sender}-message`;
             
@@ -534,52 +392,35 @@
         // Set typing state
         function setTypingState(typing) {
             isTyping = typing;
-            if (sendButton) sendButton.disabled = typing;
-            if (messageInput) messageInput.disabled = typing;
+            sendButton.disabled = typing;
+            messageInput.disabled = typing;
             
-            if (sendButton) {
-                if (typing) {
-                    sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                } else {
-                    sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
-                }
-            }
-            
-            if (messageInput && !typing) {
+            if (typing) {
+                sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            } else {
+                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
                 messageInput.focus();
             }
         }
 
         // Generate AI Response
         async function generateAIResponse(userInput) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000);
+            const response = await fetch(`${BASE_URL}/generate`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 
+                    messages: [{ role: "user", content: userInput }] 
+                })
+            });
             
-            try {
-                const response = await fetch(`${BASE_URL}/generate`, {
-                    method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify({ 
-                        messages: [{ role: "user", content: userInput }] 
-                    }),
-                    signal: controller.signal
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
-            } catch (error) {
-                clearTimeout(timeoutId);
-                throw error;
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
+            
+            const data = await response.json();
+            return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
         }
     </script>
 </body>
