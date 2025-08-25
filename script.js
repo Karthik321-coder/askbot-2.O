@@ -261,29 +261,39 @@ function parseMarkdown(text) {
 
 
 // ====== Generate AI-Like Response ======
-async function generateAIResponse(userMessage) {
-  chatHistory.push({ role: "user", content: userMessage });
-
-  try {
-    const res = await fetch("http://localhost:3001/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: chatHistory })
-    });
-
-    const data = await res.json();
-
-    if (data.reply) {
-      chatHistory.push({ role: "bot", content: data.reply });
-      return data.reply;
-    } else {
-      return "⚠️ I didn't get a response from Gemini.";
+// Generate AI Response using your Vercel backend
+async function generateAIResponse(userInput) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
+    try {
+        const response = await fetch('https://askbot-backend.vercel.app/generate', {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ 
+                messages: [{ role: "user", content: userInput }] 
+            }),
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
+    } catch (error) {
+        clearTimeout(timeoutId);
+        console.error("API Error:", error);
+        return "Sorry, I'm experiencing technical difficulties. Please try again.";
     }
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return "❌ Could not contact the bot.";
-  }
 }
+
 
 // ====== Utility Functions ======
 function togglePassword() {
@@ -364,5 +374,6 @@ function togglePassword() {
     toggleIcon.classList.toggle("fa-eye-slash");
   }
 }
+
 
 
