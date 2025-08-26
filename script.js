@@ -259,6 +259,9 @@ async function generateAIResponse(userInput) {
   const timeoutId = setTimeout(() => controller.abort(), 30000);
   
   try {
+    console.log('🚀 Sending request to:', `${BASE_URL}/generate`);
+    console.log('📤 Request body:', { messages: [{ role: "user", content: userInput }] });
+    
     const response = await fetch(`${BASE_URL}/generate`, {
       method: "POST",
       headers: { 
@@ -273,23 +276,49 @@ async function generateAIResponse(userInput) {
     
     clearTimeout(timeoutId);
     
+    console.log('📥 Response status:', response.status);
+    console.log('📥 Response headers:', response.headers);
+    
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('❌ Backend error response:', errorText);
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
     
     const data = await response.json();
-    return data.reply || "I'm having trouble understanding. Could you try rephrasing?";
-  } catch (error) {
-    clearTimeout(timeoutId);
-    console.error("API Error:", error);
+    console.log('✅ Backend response data:', data);
     
-    if (error.name === 'AbortError') {
-      return "Response took too long. Please try a shorter message.";
+    if (!data.reply) {
+      console.error('❌ No reply field in response:', data);
+      throw new Error('Invalid response format from backend');
     }
     
-    return "Sorry, I'm experiencing technical difficulties. Please try again.";
+    return data.reply;
+    
+  } catch (error) {
+    clearTimeout(timeoutId);
+    console.error("❌ API Error details:", error);
+    
+    if (error.name === 'AbortError') {
+      return "⏱️ Response took too long. Please try a shorter message.";
+    }
+    
+    if (error.message.includes('Failed to fetch')) {
+      return "🌐 Network error. Please check your internet connection.";
+    }
+    
+    if (error.message.includes('HTTP 400')) {
+      return "📝 Invalid message format. Please try again.";
+    }
+    
+    if (error.message.includes('HTTP 500')) {
+      return "🔧 Backend server error. Please try again in a moment.";
+    }
+    
+    return `💥 Error: ${error.message}`;
   }
 }
+
 
 // ====== Utility Functions ======
 function parseMarkdown(text) {
@@ -355,3 +384,4 @@ function trackUpgradeAttempt() {
     current_tier: 'free'
   });
 }
+
