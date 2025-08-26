@@ -90,9 +90,15 @@ function setupEventListeners() {
   // Theme Toggle
   elements.themeToggle?.addEventListener("click", toggleTheme);
   
-  // 🔥 FIXED: Start Chatting Button - Redirect to chat.html
+  // 🔥 FIXED: Start Chatting Button with Analytics
   elements.startChatting?.addEventListener("click", () => {
     console.log('Redirecting to chat.html...');
+    
+    // Track analytics event
+    if (window.va) {
+      window.va('track', 'StartChat', { location: 'homepage' });
+    }
+    
     window.location.href = 'chat.html';
   });
   
@@ -145,6 +151,11 @@ function login(username) {
   elements.logoutBtn.style.display = "flex";
   localStorage.setItem("isLoggedIn", "true");
   localStorage.setItem("currentUser", username);
+  
+  // Track login analytics
+  if (window.va) {
+    window.va('track', 'UserLogin', { method: 'admin' });
+  }
 }
 
 function logout() {
@@ -206,7 +217,7 @@ function addMessage(content, sender) {
   elements.chatbotMessages.scrollTop = elements.chatbotMessages.scrollHeight;
 }
 
-// 🔥 FIXED: Corrected sendChatMessage function
+// 🔥 FIXED: Corrected sendChatMessage function with Analytics
 async function sendChatMessage() {
   const input = elements.messageInput.value.trim();
   if (!input) return;
@@ -220,6 +231,14 @@ async function sendChatMessage() {
 
   // Show user message
   addMessage(input, "user");
+  
+  // Track analytics event
+  if (window.va) {
+    window.va('track', 'MessageSent', { 
+      messageLength: input.length,
+      timestamp: new Date().toISOString()
+    });
+  }
 
   // Clear input field
   elements.messageInput.value = "";
@@ -319,13 +338,12 @@ async function generateAIResponse(userInput) {
   }
 }
 
-
 // ====== Utility Functions ======
 function parseMarkdown(text) {
   return text
-    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    .replace(/^### (.*)$/gim, '<h3>$1</h3>')
+    .replace(/^## (.*)$/gim, '<h2>$1</h2>')
+    .replace(/^# (.*)$/gim, '<h1>$1</h1>')
     .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/gim, '<em>$1</em>')
     .replace(/`{3}([\s\S]*?)`{3}/gim, '<pre><code>$1</code></pre>')
@@ -362,8 +380,13 @@ function showNotification(msg, type = "success") {
 
 // ====== Analytics Functions ======
 function trackEvent(eventName, parameters = {}) {
+  // Support both gtag and Vercel Analytics
   if (typeof gtag !== 'undefined') {
     gtag('event', eventName, parameters);
+  }
+  
+  if (window.va) {
+    window.va('track', eventName, parameters);
   }
 }
 
@@ -384,4 +407,3 @@ function trackUpgradeAttempt() {
     current_tier: 'free'
   });
 }
-
