@@ -359,6 +359,9 @@
 
     <script>
         console.log('🚀 AskBot Free Chat loading...');
+        
+        // Replace with your actual backend URL
+        const BACKEND_URL = 'https://your-backend-app.vercel.app';
 
         // Initialize chat when page loads
         window.addEventListener('load', function() {
@@ -394,94 +397,67 @@
 
             console.log('✅ AskBot initialized successfully');
         }
-async function sendMessage() {
-    const userInput = document.getElementById('userInput');
-    const sendButton = document.getElementById('sendButton');
-    const message = userInput.value.trim();
 
-    if (!message) return;
+        async function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+            const message = userInput.value.trim();
 
-    userInput.disabled = true;
-    sendButton.disabled = true;
-    sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending';
+            if (!message) return;
 
-    addMessage('user', message);
-    userInput.value = '';
+            userInput.disabled = true;
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending';
 
-    const thinkingId = addMessage('bot', 'Thinking<span class="loading-dots"></span>', 'typing');
+            addMessage('user', message);
+            userInput.value = '';
 
-    try {
-        console.log('📤 Sending message:', message);
-        
-        // Replace with your actual backend URL
-        const BACKEND_URL = 'https://your-backend-app.vercel.app';
-        
-        const response = await fetch(`${BACKEND_URL}/generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                messages: [{ role: 'user', content: message }] 
-            })
-        });
+            const thinkingId = addMessage('bot', 'Thinking<span class="loading-dots"></span>', 'typing');
 
-        console.log('📡 Response status:', response.status);
-        console.log('📡 Response headers:', [...response.headers.entries()]);
-        
-        const responseText = await response.text();
-        console.log('📥 Raw response text:', responseText);
+            try {
+                console.log('📤 Sending message:', message);
+                
+                const response = await fetch(`${BACKEND_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: message,
+                        isPremium: false
+                    })
+                });
 
-        if (!response.ok) {
-            throw new Error(`Backend error ${response.status}: ${responseText}`);
+                console.log('📡 Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Backend error ${response.status}: ${await response.text()}`);
+                }
+
+                const data = await response.json();
+                console.log('📥 Response data:', data);
+
+                // Remove thinking indicator
+                document.getElementById(thinkingId)?.remove();
+
+                // Check for empty response
+                if (!data.reply || data.reply.trim() === '') {
+                    console.warn('⚠️ Empty reply from backend');
+                    addMessage('bot', '🤖 I received your message but couldn\'t generate a response. Please try again in a moment!');
+                } else {
+                    console.log('✅ Adding AI response');
+                    addMessage('bot', data.reply);
+                }
+
+            } catch (error) {
+                console.error('❌ Full error details:', error);
+                document.getElementById(thinkingId)?.remove();
+                addMessage('bot', `🚫 Sorry, I encountered an error: ${error.message}. Please try again!`);
+            } finally {
+                userInput.disabled = false;
+                sendButton.disabled = false;
+                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+                userInput.focus();
+            }
         }
-
-        let data;
-        try {
-            data = JSON.parse(responseText);
-            console.log('📥 Parsed response data:', data);
-        } catch (parseError) {
-            console.error('❌ JSON parse error:', parseError);
-            throw new Error('Invalid JSON response from backend');
-        }
-
-        // Remove thinking indicator
-        document.getElementById(thinkingId)?.remove();
-
-        // Check for empty response
-        if (!data.reply || data.reply.trim() === '') {
-            console.warn('⚠️ Empty reply from backend');
-            addMessage('bot', '🤖 I received your message but couldn\'t generate a response. This might be due to:\n\n• API key issues\n• Gemini API rate limits\n• Backend configuration problems\n\nPlease try again in a moment!');
-        } else {
-            console.log('✅ Adding AI response:', data.reply.substring(0, 100) + '...');
-            addMessage('bot', data.reply);
-        }
-
-    } catch (error) {
-        console.error('❌ Full error details:', error);
-        document.getElementById(thinkingId)?.remove();
-        addMessage('bot', `🚫 **Debug Info:**
-        
-**Error:** ${error.message}
-**Backend URL:** ${BACKEND_URL}/generate
-**Message sent:** "${message}"
-
-**Next steps:**
-1. Check browser console (F12) for detailed logs
-2. Verify your backend is running at the URL above
-3. Check your API_KEY in Vercel environment variables
-
-Try again or contact support! 🔄`);
-
-    } finally {
-        userInput.disabled = false;
-        sendButton.disabled = false;
-        sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
-        userInput.focus();
-    }
-}
-
-
-
-
 
         function addMessage(sender, text, className = '') {
             const chatBox = document.getElementById('chatBox');
