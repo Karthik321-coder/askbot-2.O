@@ -467,7 +467,7 @@
 
     // Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
     const RAZORPAY_KEY = 'rzp_test_XXXXXXXXXX'; // ← Your Razorpay Key ID (test/live)
-    const BACKEND_URL = 'https://your-backend-app.vercel.app'; // ← Your backend URL
+    const BACKEND_URL = 'https://askbot-backend.vercel.app/'; // ← Your backend URL
 
     document.addEventListener('DOMContentLoaded', function() {
         // Check existing access first
@@ -494,7 +494,7 @@
         console.log('💳 Initiating premium payment...');
         
         // Validate Razorpay key
-        if (!RAZORPAY_KEY || RAZORPAY_KEY === 'rzp_test_XXXXXXXXXX') {
+        if (!RAZORPAY_KEY || RAZORPAY_KEY === 'rzp_live_RBZzAH4aoPYBRg,osQX0hl8dZSzOLyYlxmohzKa') {
             alert('❌ Razorpay key not configured! Please add your actual Razorpay Key ID.');
             return;
         }
@@ -720,4 +720,5 @@
 
 </body>
 </html>
+
 
