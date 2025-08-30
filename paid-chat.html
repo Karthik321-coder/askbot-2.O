@@ -703,39 +703,10 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
     }
   }
 
-  <script>
-  // Drawer toggle logic (non-invasive)
-  (function(){
-    const fab = document.getElementById('featuresFab');
-    const drawer = document.getElementById('premiumDrawer');
-    const closeBtn = document.getElementById('featuresClose');
-    const backdrop = document.getElementById('featuresBackdrop');
-
-    function openDrawer(){
-      drawer.classList.add('open');
-      backdrop.classList.add('show');
-    }
-    function closeDrawer(){
-      drawer.classList.remove('open');
-      backdrop.classList.remove('show');
-    }
-
-    if (fab) fab.addEventListener('click', openDrawer);
-    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-    if (backdrop) backdrop.addEventListener('click', closeDrawer);
-
-    // Optional: hide FAB when typing to reduce clutter
-    const input = document.getElementById('messageInput');
-    if (input) {
-      input.addEventListener('focus', ()=> fab && (fab.style.opacity = .0, fab.style.pointerEvents='none'));
-      input.addEventListener('blur',  ()=> fab && (fab.style.opacity = 1,  fab.style.pointerEvents='auto'));
-    }
-  })();
-</script>
-
 </script>
 </body>
 </html>
+
 
 
 
