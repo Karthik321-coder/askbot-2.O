@@ -240,6 +240,32 @@ html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed
 
   /* Mobile */
   @media (max-width: 900px){ .premium-features{ display:none } }
+
+  /* Make the chat list truly scroll inside the flex column */
+.premium-chat-container {
+  min-height: 100dvh;                          /* dynamic viewport to avoid 100vh bugs */
+  min-height: calc(var(--vh, 1vh) * 100);      /* fallback for older browsers */
+  display: flex;
+  flex-direction: column;
+} /* refs: flex + mobile vh */ 
+
+.premium-messages {
+  flex: 1 1 auto;                               /* give it the remaining height */
+  min-height: 0;                                /* critical: release flex min-content size */
+  overflow-y: auto;                             /* the scrolling happens here */
+  -webkit-overflow-scrolling: touch;            /* smooth iOS scroll */
+  touch-action: pan-y;                          /* ensure touch scroll is allowed */
+} /* refs: flex overflow fix */ 
+
+.premium-input-container,
+.quick-prompts,
+.premium-chat-header { 
+  flex-shrink: 0;                               /* prevent toolbars from stealing height */
+} /* layout guard */ 
+
+/* If any global rule set overflow hidden on page, unblock it */
+html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed */
+
 </style>
 </head>
 <body>
@@ -326,8 +352,8 @@ html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed
   console.log('🚀 AskBot Premium loading...');
 
   // Config
-  const RAZORPAY_KEY = 'YOUR_RAZORPAY_KEY_ID'; // replace
-  const BACKEND_URL  = 'https://your-backend-app.vercel.app'; // replace
+  const RAZORPAY_KEY = 'rzp_live_RBZzAH4aoPYBRg'; // replace
+  const BACKEND_URL  = 'https://askbot-backend.vercel.app/'; // replace
   const PRICE_PAISE  = 1100; // ₹11
 
   // State
@@ -629,4 +655,5 @@ html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed
 </script>
 </body>
 </html>
+
 
