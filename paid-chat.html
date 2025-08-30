@@ -8,6 +8,27 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <style>
+  /* Make the messages pane actually scroll inside flex column */
+.premium-chat-container {
+  min-height: 100dvh;                 /* dynamic VH fixes mobile address bar issues */
+  min-height: calc(var(--vh, 1vh) * 100); /* fallback for older browsers */
+  display: flex;
+  flex-direction: column;
+}  /* [ref] */
+
+.premium-messages {
+  min-height: 0;                       /* critical: release flex child min-size */
+  overflow-y: auto;                    /* the scrolling happens here */
+  -webkit-overflow-scrolling: touch;   /* smoother iOS scroll */
+}  /* [ref] */
+
+.premium-input-container {
+  flex-shrink: 0;                      /* stop composer from stealing height */
+}  /* [ref] */
+
+/* If body got overflow hidden anywhere, override it */
+html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed */
+
   :root{
     --indigo:#667eea;
     --violet:#764ba2;
@@ -608,3 +629,4 @@
 </script>
 </body>
 </html>
+
