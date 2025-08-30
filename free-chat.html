@@ -6,134 +6,36 @@
     <title>AskBot - Free Chat</title>
     <link rel="stylesheet" href="styles2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
-    <!-- Back to Home Button -->
-    <a href="index.html" class="back-home">
-        <i class="fas fa-arrow-left"></i> Back to Home
-    </a>
-
-    <!-- Chat Interface (No Payment Required) -->
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2><i class="fas fa-comments"></i> AskBot Free Chat</h2>
-            <div class="time-remaining">Free Version</div>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="message bot">
-                👋 Hi! I'm AskBot Free. Ask me anything and I'll help you out!
-            </div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="messageInput" placeholder="Ask me anything...">
-            <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <script>
-        // Free Chat Functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            setupChat();
-        });
-
-        function setupChat() {
-            const sendBtn = document.getElementById('sendBtn');
-            const messageInput = document.getElementById('messageInput');
-
-            if (sendBtn) {
-                sendBtn.addEventListener('click', sendMessage);
-            }
-
-            if (messageInput) {
-                messageInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') sendMessage();
-                });
-            }
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (!message) return;
-
-            // Add user message
-            addMessageToChat('user', message);
-            input.value = '';
-            
-            // Show typing indicator
-            const typingId = addMessageToChat('bot', '💭 Thinking...', 'typing');
-
-            try {
-                // 🔥 CONNECT TO YOUR ASKBOT BACKEND HERE
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        message: message,
-                        isPremium: false // Free version
-                    })
-                });
-
-                if (!response.ok) throw new Error('Backend connection failed');
-                
-                const data = await response.json();
-                
-                // Remove typing indicator
-                document.getElementById(typingId)?.remove();
-                
-                // Add AI response
-                addMessageToChat('bot', data.response || data.reply || data.answer);
-
-            } catch (error) {
-                console.error('Backend error:', error);
-                document.getElementById(typingId)?.remove();
-                addMessageToChat('bot', 'Sorry, I\'m having trouble connecting to my brain 🧠. Please try again!');
-            }
-        }
-
-        function addMessageToChat(sender, message, className = '') {
-            const chatMessages = document.getElementById('chatMessages');
-            if (!chatMessages) return;
-
-            const messageDiv = document.createElement('div');
-            const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            messageDiv.id = messageId;
-            messageDiv.className = `message ${sender} ${className}`;
-            messageDiv.textContent = message;
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            return messageId;
-        }
-    </script>
-
-    <!-- Add this styling if styles2.css doesn't have these classes -->
+    
     <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+        }
+
         .back-home {
             position: fixed;
             top: 1rem;
             left: 1rem;
             background: rgba(255,255,255,0.95);
-            color: #cd3e51;
+            color: #667eea;
             padding: 0.75rem 1rem;
             border-radius: 25px;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
-            border: 2px solid #cd3e51;
+            border: 2px solid #667eea;
             transition: all 0.3s ease;
             z-index: 1000;
             backdrop-filter: blur(10px);
         }
 
         .back-home:hover {
-            background: #cd3e51;
+            background: #667eea;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(205,62,81,0.3);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
         }
 
         .chat-container {
@@ -142,6 +44,7 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            background: white;
         }
 
         .chat-header {
@@ -151,6 +54,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
         }
 
         .time-remaining {
@@ -177,6 +85,12 @@
             font-size: 1rem;
             line-height: 1.5;
             word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.user {
@@ -184,6 +98,7 @@
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 6px;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.2);
         }
 
         .message.bot {
@@ -192,11 +107,18 @@
             align-self: flex-start;
             border-bottom-left-radius: 6px;
             border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .message.typing {
             opacity: 0.7;
             font-style: italic;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
 
         .chat-input {
@@ -219,6 +141,7 @@
 
         .chat-input input:focus {
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
         }
 
         .chat-input button {
@@ -236,6 +159,168 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102,126,234,0.3);
         }
+
+        .chat-input button:active {
+            transform: translateY(0);
+        }
     </style>
+</head>
+<body>
+    <!-- Back to Home Button -->
+    <a href="index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <!-- Chat Interface -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2><i class="fas fa-comments"></i> AskBot Free Chat</h2>
+            <div class="time-remaining">Free Version</div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                👋 Hi! I'm AskBot Free. Ask me anything and I'll help you out!
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Ask me anything..." autocomplete="off">
+            <button type="button" id="sendBtn"><i class="fas fa-paper-plane"></i> Send</button>
+        </div>
+    </div>
+
+    <script>
+        console.log('Free chat script loading...');
+        
+        // Wait for DOM to load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing chat...');
+            initializeChat();
+        });
+
+        function initializeChat() {
+            const sendBtn = document.getElementById('sendBtn');
+            const messageInput = document.getElementById('messageInput');
+
+            if (!sendBtn) {
+                console.error('Send button not found!');
+                return;
+            }
+
+            if (!messageInput) {
+                console.error('Message input not found!');
+                return;
+            }
+
+            console.log('Elements found, adding event listeners...');
+
+            // Add click event to send button
+            sendBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Send button clicked');
+                sendMessage();
+            });
+
+            // Add enter key event to input
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    console.log('Enter key pressed');
+                    sendMessage();
+                }
+            });
+
+            console.log('Chat initialized successfully!');
+        }
+
+        async function sendMessage() {
+            console.log('sendMessage function called');
+            
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) {
+                console.log('Empty message, not sending');
+                return;
+            }
+
+            console.log('Sending message:', message);
+
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+
+            // Add typing indicator
+            const typingId = addMessage('bot', '💭 Thinking...', 'typing');
+
+            try {
+                // Try to connect to backend
+                console.log('Attempting to connect to backend...');
+                
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: message,
+                        isPremium: false 
+                    })
+                });
+
+                console.log('Backend response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`Backend error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Backend response data:', data);
+                
+                // Remove typing indicator
+                const typingElement = document.getElementById(typingId);
+                if (typingElement) typingElement.remove();
+                
+                // Add AI response
+                const aiResponse = data.response || data.reply || data.answer || 'I received your message but couldn\'t generate a response.';
+                addMessage('bot', aiResponse);
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Remove typing indicator
+                const typingElement = document.getElementById(typingId);
+                if (typingElement) typingElement.remove();
+                
+                // Add error message
+                addMessage('bot', `🤖 Sorry, I'm having trouble connecting to my brain! Here's a simple response: "${message}" - I understand you're asking about this. My backend isn't connected yet, but I'm working on getting smarter! 🧠`);
+            }
+        }
+
+        function addMessage(sender, message, className = '') {
+            const chatMessages = document.getElementById('chatMessages');
+            if (!chatMessages) {
+                console.error('Chat messages container not found');
+                return null;
+            }
+
+            const messageDiv = document.createElement('div');
+            const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+            
+            messageDiv.id = messageId;
+            messageDiv.className = `message ${sender} ${className}`;
+            messageDiv.textContent = message;
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            console.log('Message added:', sender, message);
+            return messageId;
+        }
+
+        // Test function - you can call this in browser console
+        function testChat() {
+            console.log('Testing chat functionality...');
+            addMessage('user', 'Test message');
+            addMessage('bot', 'Test response');
+        }
+    </script>
 </body>
 </html>
