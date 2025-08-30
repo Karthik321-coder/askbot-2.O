@@ -2,119 +2,328 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17510315433"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'AW-17510315433');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17510315433"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-17510315433');
+    </script>
     
+    <!-- PostHog -->
     <script>
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
     posthog.init('phc_TZDSo9wWWTaqenj0RTDGGASYVDRUz1DZcWMBzcBJIaS',{api_host:'https://us.i.posthog.com', defaults:'2025-05-24'})
-</script>
-    <script>
-    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Re Ms Fs Pe Rs Cs capture Ve calculateEventProperties Ds register register_once register_for_session unregister unregister_for_session zs getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Ls As createPersonProfile Ns Is Us opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing is_capturing clear_opt_in_out_capturing Os debug I js getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-    posthog.init('phc_TZDSo9wWWTaqenj0RTDGGASYVDRUz1DZcWMBzcBJIaS', {
-        api_host: 'https://us.i.posthog.com',
-        defaults: '2025-05-24',
-        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
-    })
-</script>
-
-    <!-- 🔄 Legacy URL redirect: /chat.html → /paid-chat.html -->
-    <script>
-    if (location.pathname === '/chat.html') {
-      location.replace('/paid-chat.html');
-    }
     </script>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskBot - AI Assistant | Free & Premium Chat</title>
     
-    <!-- 🔥 PRIMARY META TAGS -->
-    <title>AskBot AI Chatbot - Get Intelligent Answers</title>
-    <meta name="description" content="AskBot AI chatbot delivers intelligent answers using Google Gemini technology. Get instant, accurate responses for students and professionals.">
-    <meta name="keywords" content="AI chatbot, question answering bot, Google Gemini, artificial intelligence, MSRIT Bangalore">
-    <meta name="author" content="Karthik - MSRIT Bangalore">
-    
-    <!-- 🔥 SEO & INDEXING -->
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <meta name="googlebot" content="index, follow">
-    <link rel="canonical" href="https://askbot-2-o.vercel.app/">
-    
-    <!-- 🔥 OPEN GRAPH / SOCIAL MEDIA -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="AskBot AI Assistant - Smart Answers by Google Gemini">
-    <meta property="og:description" content="Get instant intelligent answers with AskBot AI assistant powered by Google Gemini technology.">
-    <meta property="og:url" content="https://askbot-2-o.vercel.app/">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:image" content="https://askbot-2-o.vercel.app/social-preview.jpg">
-    
-    <!-- 🔥 TWITTER CARDS -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="AskBot AI Assistant - Smart Answers by Google Gemini">
-    <meta name="twitter:description" content="Get instant, accurate answers with AskBot's AI technology powered by Google Gemini.">
-    
-    <!-- 🔥 FAVICON -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    
-    <!-- 🔥 PWA MANIFEST -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#cd3e51">
-         <script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-  </script>
-  <script defer src="https://cdn.vercel-analytics.com/v1/script.js"></script>
-    
-    <!-- 🔥 STRUCTURED DATA -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "AskBot AI Assistant",
-        "alternateName": "AskBot AI Chatbot",
-        "description": "Advanced AI-powered chatbot for intelligent question answering using Google Gemini technology",
-        "url": "https://askbot-2-o.vercel.app",
-        "applicationCategory": "AI Assistant",
-        "operatingSystem": "Web Browser",
-        "browserRequirements": "Requires JavaScript",
-        "softwareVersion": "2.0",
-        "inLanguage": "en-US",
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD",
-            "availability": "https://schema.org/InStock"
-        },
-        "creator": {
-            "@type": "Person",
-            "name": "Karthik",
-            "jobTitle": "Web Developer",
-            "affiliation": {
-                "@type": "EducationalOrganization",
-                "name": "MSRIT Bangalore"
-            }
-        },
-        "featureList": [
-            "Advanced AI Chatbot",
-            "Google Gemini Integration",
-            "Real-time Responses",
-            "Mobile Responsive Design",
-            "Dark Mode Support"
-        ]
-    }
-    </script>
-    
-    <!-- 🔥 STYLESHEETS -->
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* Advanced Side-by-Side Chat Layout */
+        .chat-container-wrapper {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .chat-section {
+            flex: 1;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 650px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chat-section:hover {
+            border-color: #cd3e51;
+            box-shadow: 0 15px 40px rgba(205,62,81,0.15);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #cd3e51 0%, #b8344a 100%);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 14px 14px 0 0;
+        }
+
+        .chat-status {
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .premium-locked .chat-status {
+            background: rgba(255,193,7,0.9);
+            color: #212529;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: linear-gradient(to bottom, #f8fafc 0%, #f1f5f9 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 1rem 1.2rem;
+            border-radius: 18px;
+            font-size: 1rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #cd3e51 0%, #b8344a 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 4px 12px rgba(205,62,81,0.3);
+        }
+
+        .message.bot {
+            background: white;
+            color: #374151;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .message.bot::before {
+            content: '🤖';
+            margin-right: 0.5rem;
+            font-size: 1.1em;
+        }
+
+        .message.typing {
+            font-style: italic;
+            opacity: 0.7;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 0 0 14px 14px;
+            gap: 0.75rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            border-color: #cd3e51;
+            box-shadow: 0 0 0 3px rgba(205,62,81,0.1);
+        }
+
+        .chat-input input:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+        }
+
+        .chat-input button {
+            background: linear-gradient(135deg, #cd3e51 0%, #b8344a 100%);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .chat-input button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(205,62,81,0.3);
+        }
+
+        .chat-input button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255,255,255,0.9);
+            color: #cd3e51;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(205,62,81,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-home:hover {
+            background: #cd3e51;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .premium-locked {
+            position: relative;
+        }
+
+        .premium-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
+        }
+
+        .premium-unlock {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .premium-unlock h3 {
+            color: #cd3e51;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .premium-unlock p {
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .unlock-btn {
+            background: linear-gradient(135deg, #cd3e51 0%, #b8344a 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(205,62,81,0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .chat-container-wrapper {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .chat-section {
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .chat-container-wrapper {
+                padding: 0 0.5rem;
+            }
+            .chat-header {
+                padding: 1rem;
+                font-size: 1.2rem;
+            }
+            .chat-messages {
+                padding: 1rem;
+            }
+            .message {
+                max-width: 90%;
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .welcome-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
 </head>
+
 <body>
-    <!-- Header / Navigation -->
+    <!-- Header -->
     <header class="header">
         <nav class="nav">
             <div class="nav-brand">
@@ -126,282 +335,265 @@
                 <li><a href="#features" class="nav-link">Features</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
             </ul>
-            <div class="nav-actions">
-                <button id="loginBtn" class="login-button">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-                <button id="logoutBtn" class="logout-button" style="display:none;">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
         </nav>
     </header>
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>
-                        Ask Any Question,
-                        <span class="gradient-text">Get Intelligent Answers</span>
-                    </h1>
+
+    <!-- Back to Home Button -->
+    <a href="#" class="back-home" onclick="scrollToTop()" style="display:none;" id="backHomeBtn">
+        <i class="fas fa-home"></i> Back to Home
+    </a>
+
+    <!-- Welcome Section -->
+    <section class="welcome-section" id="homeSection">
+        <h1>Choose Your AskBot Experience</h1>
+        <p>Start chatting for free or unlock premium features for unlimited access and priority responses</p>
+    </section>
+
+    <!-- Chat Container -->
+    <main class="chat-container-wrapper" id="chatContainer">
+        
+        <!-- Free Chat Section -->
+        <section class="chat-section" id="freeChat">
+            <div class="chat-header">
+                <span><i class="fas fa-comments"></i> Free Chat</span>
+                <span class="chat-status">Free Version</span>
+            </div>
+            <div class="chat-messages" id="freeChatMessages">
+                <div class="message bot">
+                    Welcome to AskBot Free! Ask me anything and I'll help you out. 🚀
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="freeMessageInput" placeholder="Ask me anything...">
+                <button id="freeSendBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </section>
+
+        <!-- Premium Chat Section -->
+        <section class="chat-section premium-locked" id="premiumChat">
+            <div class="chat-header">
+                <span><i class="fas fa-star"></i> Premium Chat</span>
+                <span class="chat-status" id="premiumStatus">🔒 Locked</span>
+            </div>
+            <div class="chat-messages" id="premiumChatMessages"></div>
+            <div class="chat-input">
+                <input type="text" id="premiumMessageInput" placeholder="Unlock premium to chat..." disabled>
+                <button id="premiumSendBtn" disabled><i class="fas fa-lock"></i></button>
+            </div>
+            
+            <!-- Premium Overlay -->
+            <div class="premium-overlay" id="premiumOverlay">
+                <div class="premium-unlock">
+                    <h3>🚀 Premium Features</h3>
                     <p>
-                        Powered by advanced AI technology, AskBot provides accurate,
-                        instant answers to all your questions.
+                        ✅ Unlimited questions<br>
+                        ✅ Priority responses<br>
+                        ✅ 24/7 availability<br>
+                        ✅ Advanced AI capabilities
                     </p>
-                    <!-- ✅ FIXED: Changed from button to link -->
-                    <a href="paid-chat.html" class="cta-primary">
-                        <i class="fas fa-comments"></i> Start Chatting
-                        <!-- For free version -->
-<a href="free-chat.html" class="cta-primary">
-    <i class="fas fa-comments"></i> Start Chatting (Free)
-</a>
-
-<!-- For premium version -->
-<a href="paid-chat.html" class="cta-secondary">
-    <i class="fas fa-star"></i> Premium Chat (₹49)
-</a>
-
+                    <a href="paid-chat.html" class="unlock-btn">
+                        Unlock for ₹49
                     </a>
                 </div>
-                <div class="hero-visual">
-                    <div class="floating-elements">
-                        <div class="float-element"><i class="fas fa-brain"></i></div>
-                        <div class="float-element"><i class="fas fa-lightbulb"></i></div>
-                        <div class="float-element"><i class="fas fa-rocket"></i></div>
-                    </div>
-                </div>
             </div>
         </section>
-        <!-- How It Works Section -->
-        <section class="how-it-works">
-            <div class="container">
-                <h2 class="section-title">How AskBot Works</h2>
-                <p>
-                    AskBot leverages advanced natural language processing and state-of-the-art machine learning algorithms to interpret user queries and deliver contextually relevant responses. Our AI analyzes both the content and intent of each question, using real-time data processing to generate instant and accurate answers across diverse subjects—technology, education, business, science, and more.
-                </p>
-                
-                <h3>Key Features</h3>
-                <ul class="features-list">
-                    <li>Instant, intelligent responses powered by Google's Gemini AI</li>
-                    <li>Multi-language support for global accessibility, reaching users from all backgrounds</li>
-                    <li>Context-aware conversations—AskBot can remember previous interactions in a chat session for more personalized responses</li>
-                    <li>Easy integration with your favorite apps and platforms, expanding AskBot's functionality beyond the chat page</li>
-                    <li>Robust privacy: AskBot never stores your messages outside your device, protecting your personal data</li>
-                    <li>Optimized for speed, security, and reliability on both desktop and mobile devices</li>
-                </ul>
-                
-                <h3>Who Can Benefit from AskBot?</h3>
-                <p>
-                    Whether you're a student at <a href="https://msrit.edu" target="_blank" rel="noopener">MSRIT Bangalore</a> tackling tough assignments, a developer seeking instant technical guidance, or a business professional in need of fast, reliable insights, AskBot adapts to your needs. Teachers, learners, and curious minds all find value in its 24/7 availability and ever-growing knowledge base.
-                </p>
-                
-                <h3>Built with Modern Technologies</h3>
-                <p>
-                    AskBot is engineered using the latest web standards including <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener">HTML5</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener">CSS3</a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a>, and deployed with an advanced tech stack—<a href="https://reactjs.org" target="_blank" rel="noopener">React</a>, <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a>, Express, and Google's Generative AI, hosted securely on <a href="https://vercel.com" target="_blank" rel="noopener">Vercel</a>. Every aspect is designed for seamless performance, accessibility, and modern user experience, making AskBot a pioneering conversational AI project for 2025 and beyond.
-                </p>
-                
-                <div class="cta-section">
-                    <a href="#features" class="cta-secondary">Explore all features</a>
-                    <a href="#about" class="cta-secondary">Meet the developer</a>
-                    <a href="https://msrit.edu" rel="noopener" target="_blank" class="cta-secondary">MSRIT Bangalore</a>
-                </div>
-                
-                <!-- Images with Alt Text -->
-                <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='%23667eea'/><text x='50%' y='50%' text-anchor='middle' dy='.3em' fill='white' font-size='24'>🤖</text></svg>" 
-                     alt="AskBot AI chatbot interface - intelligent question answering system" 
-                     width="100" height="100">
-                
-                <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='%23f16371'/><text x='50%' y='50%' text-anchor='middle' dy='.3em' fill='white' font-size='16'>MSRIT</text></svg>" 
-                     alt="MSRIT Bangalore logo - M.S. Ramaiah Institute of Technology" 
-                     width="100" height="100">
-            </div>
-        </section>
-        <!-- FAQ Section -->
-        <section class="faq" itemscope itemtype="https://schema.org/FAQPage">
-            <div class="container">
-                <h2>Frequently Asked Questions About Our AI Assistant</h2>
-                
-                <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                    <h3 itemprop="name">How does the AI assistant provide intelligent answers?</h3>
-                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                        <div itemprop="text">Our AI assistant uses advanced Google Gemini technology to analyze your questions and deliver intelligent answers through natural language processing.</div>
-                    </div>
-                </div>
-                
-                <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                    <h3 itemprop="name">Is the chat service really available 24/7?</h3>
-                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                        <div itemprop="text">Yes! Our AI assistant provides 24/7 chat support, ensuring you get intelligent answers whenever you need them.</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Features -->
-        <section id="features" class="features">
-            <div class="container">
-                <h2 class="section-title">Powerful AI Features</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <h3>Advanced AI Chatbot</h3>
-                        <p>Get intelligent responses using cutting-edge NLP technology.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <h3>Responsive Design</h3>
-                        <p>Perfect experience across all devices with an adaptive interface.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-moon"></i>
-                        </div>
-                        <h3>Dark Mode Support</h3>
-                        <p>Eye-friendly theme that adapts to your preference and system.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- About -->
-        <section id="about" class="about">
-            <div class="container">
-                <div class="about-content">
-                    <div class="about-card">
-                        <div class="about-avatar">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <div class="about-info">
-                            <h3>Karthik</h3>
-                            <p><strong>Education:</strong> Currently pursuing BTech at MSRIT Bangalore, specializing in modern web technologies and software engineering principles.</p>
-                            <p><strong>Expertise:</strong> Passionate web developer with expertise in HTML5, CSS3, JavaScript, React, and modern UI/UX design patterns.</p>
-                            <p><strong>Projects:</strong> Created innovative web applications including this interactive AI chatbot with advanced features and user experience.</p>
-                            <p><strong>Passion:</strong> Dedicated to creating beautiful, functional websites that solve real-world problems and enhance user experiences.</p>
-                            <div class="tech-stack">
-                                <span class="tech-badge">HTML5</span>
-                                <span class="tech-badge">CSS3</span>
-                                <span class="tech-badge">JavaScript</span>
-                                <span class="tech-badge">React</span>
-                                <span class="tech-badge">Node.js</span>
-                                <span class="tech-badge">AI/ML</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+
     </main>
-    <!-- Social Section -->
-    <section class="social-section">
+
+    <!-- Your existing sections (features, about, etc.) -->
+    <section id="features" class="features">
         <div class="container">
-            <h2 class="section-title">Connect With AskBot</h2>
-            <div class="social-links" role="list" aria-label="Social media links">
-                <a href="https://github.com/Karthik321-coder/askbot-2.O" class="social-link github" aria-label="View on GitHub" role="listitem" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-github" aria-hidden="true"></i>
-                </a>
-            </div>
+            <h2 class="section-title">Powerful AI Features</h2>
+            <!-- Your existing features content -->
         </div>
     </section>
-    <!-- Internal Navigation Section -->
-    <section class="internal-nav">
+
+    <section id="about" class="about">
         <div class="container">
-            <h2 class="section-title">Explore AskBot</h2>
-            <div class="nav-grid">
-                <div class="nav-card">
-                    <h3><a href="#features">AI Features</a></h3>
-                    <p>Discover our <a href="#features">advanced AI chatbot capabilities</a> and intelligent response system.</p>
-                </div>
-                <div class="nav-card">
-                    <h3><a href="#about">About Developer</a></h3>
-                    <p>Learn about <a href="#about">Karthik, the developer</a> behind AskBot and his expertise in AI technology.</p>
-                </div>
-                <!-- ✅ FIXED: Cleaned up the confusing nav-card -->
-                <div class="nav-card">
-                    <h3><a href="paid-chat.html">Start Chatting</a></h3>
-                    <p>Try our <a href="paid-chat.html">intelligent AI assistant</a> and experience smart conversations.</p>
-                </div>
-            </div>
-            <div class="related-links">
-                <h3>Related Topics</h3>
-                <ul>
-                    <li><a href="#features">AI Technology</a> - Advanced natural language processing</li>
-                    <li><a href="#about">Web Development</a> - Modern JavaScript and Node.js</li>
-                    <!-- ✅ FIXED: Updated chat link -->
-                    <li><a href="paid-chat.html">Chat Interface</a> - Real-time AI interactions</li>
-                    <li><a href="#features">Machine Learning</a> - Google Gemini AI integration</li>
-                </ul>
-            </div>
+            <!-- Your existing about content -->
         </div>
     </section>
-    <!-- Chatbot Container -->
-    <div class="chatbot-container" id="chatbotContainer">
-        <div class="chatbot-header">
-            <div class="chatbot-title">
-                <i class="fas fa-robot"></i>
-                <span>AskBot</span>
-            </div>
-            <button id="minimizeChat" class="chatbot-minimize">
-                <i class="fas fa-minus"></i>
-            </button>
-        </div>
-        <div class="chatbot-messages" id="chatbotMessages">
-            <div class="message bot-message">
-                <i class="fas fa-robot"></i>
-                <div class="message-content">
-                    Hi! I'm AskBot. Ask me anything!
-                </div>
-            </div>
-        </div>
-        <div class="chatbox-input">
-            <input type="text" id="messageInput" placeholder="Type your question..." />
-            <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-    <!-- Chatbot Toggle Button -->
-    <button class="chatbot-toggle" id="chatbotToggle">
-        <i class="fas fa-comments"></i>
-    </button>
-    <!-- Theme Toggle -->
-    <div class="theme-toggle" id="theme-toggle">
-        <i class="fas fa-sun" id="sun-icon"></i>
-        <i class="fas fa-moon" id="moon-icon"></i>
-    </div>
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <div class="login-container">
-                <div class="login-header">
-                    <h2>Welcome Back</h2>
-                    <p>Sign in to access AI-powered answers</p>
-                </div>
-                <form id="loginForm">
-                    <div class="input-group">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="username" placeholder="Username" required />
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="password" placeholder="Password" required />
-                        <i class="fas fa-eye password-toggle" id="passwordToggle"></i>
-                    </div>
-                    <button type="submit" class="login-btn">Sign In</button>
-                    <div class="demo-credentials">
-                        <p><strong>Demo:</strong> admin / admin123</p>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Notification -->
-    <div class="notification" id="notification"></div>
-    <!-- Scripts -->
+
+    <script>
+        // Check if user has premium access
+        let premiumAccess = false;
+        
+        // Check localStorage for premium access
+        const accessData = localStorage.getItem('askbot_access');
+        if (accessData) {
+            const { expiry } = JSON.parse(accessData);
+            if (new Date() < new Date(expiry)) {
+                premiumAccess = true;
+                unlockPremiumChat();
+            }
+        }
+
+        // Free Chat Functionality with AskBot Backend
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFreeChat();
+            if (premiumAccess) {
+                setupPremiumChat();
+            }
+            
+            // Show back to home button when scrolled
+            window.addEventListener('scroll', function() {
+                const backBtn = document.getElementById('backHomeBtn');
+                if (window.scrollY > 300) {
+                    backBtn.style.display = 'block';
+                } else {
+                    backBtn.style.display = 'none';
+                }
+            });
+        });
+
+        function setupFreeChat() {
+            const sendBtn = document.getElementById('freeSendBtn');
+            const messageInput = document.getElementById('freeMessageInput');
+
+            sendBtn.addEventListener('click', sendFreeMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendFreeMessage();
+            });
+        }
+
+        async function sendFreeMessage() {
+            const input = document.getElementById('freeMessageInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage('freeChatMessages', 'user', message);
+            input.value = '';
+            
+            const typingId = addMessage('freeChatMessages', 'bot', 'Thinking...', 'typing');
+
+            try {
+                // 🔥 CONNECT TO YOUR ASKBOT BACKEND
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: message, 
+                        isPremium: false 
+                    })
+                });
+
+                if (!response.ok) throw new Error('Backend error');
+                
+                const data = await response.json();
+                removeTyping('freeChatMessages');
+                addMessage('freeChatMessages', 'bot', data.response || data.reply || data.answer);
+
+            } catch (error) {
+                console.error('Backend error:', error);
+                removeTyping('freeChatMessages');
+                addMessage('freeChatMessages', 'bot', 'Sorry, I\'m having trouble connecting. Please try again.');
+            }
+        }
+
+        function unlockPremiumChat() {
+            const overlay = document.getElementById('premiumOverlay');
+            const input = document.getElementById('premiumMessageInput');
+            const button = document.getElementById('premiumSendBtn');
+            const status = document.getElementById('premiumStatus');
+
+            overlay.style.display = 'none';
+            input.disabled = false;
+            input.placeholder = 'Ask me anything (Premium)...';
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            status.innerHTML = '⭐ Premium Active';
+            
+            addMessage('premiumChatMessages', 'bot', '🎉 Welcome to AskBot Premium! You have unlimited access and priority responses!');
+            setupPremiumChat();
+        }
+
+        function setupPremiumChat() {
+            const sendBtn = document.getElementById('premiumSendBtn');
+            const messageInput = document.getElementById('premiumMessageInput');
+
+            sendBtn.addEventListener('click', sendPremiumMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendPremiumMessage();
+            });
+        }
+
+        async function sendPremiumMessage() {
+            const input = document.getElementById('premiumMessageInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage('premiumChatMessages', 'user', message);
+            input.value = '';
+            
+            const typingId = addMessage('premiumChatMessages', 'bot', 'Thinking...', 'typing');
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: message, 
+                        isPremium: true 
+                    })
+                });
+
+                const data = await response.json();
+                removeTyping('premiumChatMessages');
+                addMessage('premiumChatMessages', 'bot', data.response || data.reply || data.answer);
+
+            } catch (error) {
+                removeTyping('premiumChatMessages');
+                addMessage('premiumChatMessages', 'bot', 'Sorry, something went wrong.');
+            }
+        }
+
+        // Helper Functions
+        function addMessage(containerId, sender, message, className = '') {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const messageDiv = document.createElement('div');
+            const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            messageDiv.id = messageId;
+            messageDiv.className = `message ${sender} ${className}`;
+            messageDiv.textContent = message;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            
+            return messageId;
+        }
+
+        function removeTyping(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const typingElements = container.querySelectorAll('.typing');
+            typingElements.forEach(el => el.remove());
+        }
+
+        function scrollToTop() {
+            document.getElementById('homeSection').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Check premium access periodically
+        setInterval(function() {
+            const accessData = localStorage.getItem('askbot_access');
+            if (accessData && !premiumAccess) {
+                const { expiry } = JSON.parse(accessData);
+                if (new Date() < new Date(expiry)) {
+                    premiumAccess = true;
+                    unlockPremiumChat();
+                }
+            }
+        }, 5000);
+    </script>
+
+    <!-- Your existing scripts -->
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
     <script src="script.js"></script>
 </body>
 </html>
-
