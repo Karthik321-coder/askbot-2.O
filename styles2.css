@@ -1,0 +1,10 @@
+/* --- Pay-wall colours --- */
+.pay-btn{
+  background:linear-gradient(90deg,#5A31F4,#845EF7);
+  color:#fff;border:none;border-radius:6px;
+  padding:14px 28px;font-size:1.1rem;cursor:pointer;
+  box-shadow:0 3px 10px rgba(0,0,0,.2);
+  transition:transform .15s;
+}
+.pay-btn:hover{transform:translateY(-2px);}
+.card{max-width:420px;margin:12vh auto;text-align:center}
