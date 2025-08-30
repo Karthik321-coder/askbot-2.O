@@ -307,6 +307,37 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
   .premium-features { width: 88vw; }
 }
 
+  /* Move Features button to top-left, above chat */
+.features-fab {
+  position: fixed;
+  left: 1.2rem;           /* was right: 1.2rem */
+  top: 1.2rem;            /* was bottom: 1.2rem */
+  z-index: 1200;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: linear-gradient(135deg, #22d3ee 0%, #8b5cf6 100%);
+  color: #0b1020;
+  box-shadow: 0 16px 28px rgba(139,92,246,.35);
+}
+
+/* Avoid overlapping the Back-to-Home pill on small screens */
+@media (max-width: 900px) {
+  .features-fab { top: 4.4rem; left: 1rem; }   /* drops just below your back-home link */
+}
+
+/* If you prefer it inline inside the header on large screens */
+@media (min-width: 1100px) {
+  .features-fab.header-slot {
+    position: absolute;
+    top: 0.9rem; left: 1.2rem;
+  }
+}
+
+
 </style>
 </head>
 <body>
@@ -736,6 +767,7 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
 
 </body>
 </html>
+
 
 
 
