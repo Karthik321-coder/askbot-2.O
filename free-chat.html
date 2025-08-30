@@ -394,87 +394,52 @@
 
             console.log('✅ AskBot initialized successfully');
         }
-
-        async function sendMessage() {
+async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
     const message = userInput.value.trim();
 
-    if (!message) {
-        userInput.focus();
-        return;
-    }
-
-    console.log('📤 Sending to AskBot backend:', message);
+    if (!message) return;
 
     // Disable input while processing
     userInput.disabled = true;
     sendButton.disabled = true;
     sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending';
 
-    // Add user message
     addMessage('user', message);
     userInput.value = '';
 
-    // Add thinking indicator
     const thinkingId = addMessage('bot', 'Thinking<span class="loading-dots"></span>', 'typing');
 
     try {
         // 🔥 FIXED: Call /generate endpoint (matches your backend)
-        console.log('🌐 Connecting to AskBot backend...');
-        
-        const response = await fetch('/generate', {  // ← Changed from /api/index to /generate
+        const response = await fetch('/generate', {  // ← Changed from /api/index
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                messages: [  // ← Changed to match your backend format
-                    { role: 'user', content: message }
-                ]
+                messages: [{ role: 'user', content: message }]  // ← Your backend format
             })
         });
 
-        console.log('📡 Backend response status:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`Backend error: ${response.status} ${response.statusText}`);
-        }
+        if (!response.ok) throw new Error(`Backend error: ${response.status}`);
 
         const data = await response.json();
-        console.log('📥 Backend response:', data);
-
-        // Remove thinking indicator
         document.getElementById(thinkingId)?.remove();
-
-        // Add AI response (backend returns {reply: text})
-        const aiResponse = data.reply || 'I received your message but couldn\'t generate a response.';
-        addMessage('bot', aiResponse);
+        
+        // Your backend returns { reply: "..." }
+        addMessage('bot', data.reply || 'No response from AI');
 
     } catch (error) {
-        console.error('❌ AskBot backend error:', error);
-        
-        // Remove thinking indicator
         document.getElementById(thinkingId)?.remove();
-        
-        // Add error message
-        addMessage('bot', `🚫 Sorry, I couldn't connect to my AI brain right now. This might be because:
-
-• The backend server is starting up (try again in 30 seconds)
-• Network connectivity issue  
-• Server is temporarily overloaded
-
-**Error:** ${error.message}
-
-Please try sending your message again! 🔄`);
+        addMessage('bot', `🚫 Connection failed: ${error.message}. Please try again! 🔄`);
     } finally {
-        // Re-enable input
         userInput.disabled = false;
         sendButton.disabled = false;
         sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
         userInput.focus();
     }
 }
+
 
 
         function addMessage(sender, text, className = '') {
