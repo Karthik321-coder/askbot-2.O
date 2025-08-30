@@ -1,156 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AskBot - Free Chat</title>
-    <link rel="stylesheet" href="styles2.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
+    <title>Working Chat Test</title>
     <style>
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; height: 100vh; }
-        .back-home { position: fixed; top: 1rem; left: 1rem; z-index: 1000; background: #667eea; color: white; padding: 0.75rem 1rem; border-radius: 25px; text-decoration: none; font-weight: 600; }
-        .chat-container { max-width: 800px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; background: white; }
-        .chat-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 1.5rem; background: #f8fafc; display: flex; flex-direction: column; gap: 1rem; }
-        .message { max-width: 80%; padding: 1rem 1.2rem; border-radius: 18px; font-size: 1rem; line-height: 1.5; animation: fadeIn 0.3s ease; }
-        .message.user { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; align-self: flex-end; border-bottom-right-radius: 6px; }
-        .message.bot { background: white; color: #374151; align-self: flex-start; border-bottom-left-radius: 6px; border: 1px solid #e5e7eb; }
-        .message.typing { opacity: 0.7; font-style: italic; }
-        .chat-input { display: flex; padding: 1.5rem; background: white; border-top: 1px solid #e5e7eb; gap: 0.75rem; }
-        .chat-input input { flex: 1; border: 2px solid #e5e7eb; border-radius: 25px; padding: 0.8rem 1.2rem; font-size: 1rem; outline: none; }
-        .chat-input input:focus { border-color: #667eea; }
-        .chat-input button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; padding: 0.8rem 1.5rem; border-radius: 25px; cursor: pointer; font-size: 1rem; }
-        .chat-input button:hover { transform: translateY(-2px); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .chat-box { border: 1px solid #ddd; height: 300px; overflow-y: auto; padding: 15px; margin-bottom: 15px; background: #f9f9f9; }
+        .message { margin: 8px 0; padding: 8px; border-radius: 8px; }
+        .user { background: #007bff; color: white; text-align: right; }
+        .bot { background: #e9ecef; }
+        .input-area { display: flex; gap: 10px; }
+        .input-area input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .input-area button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .input-area button:hover { background: #0056b3; }
+        .status { color: green; font-weight: bold; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-home">← Back to Home</a>
-
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2>🤖 AskBot Free Chat</h2>
-            <div>Free Version</div>
-        </div>
-        <!-- ✅ IMPORTANT: This ID must be 'chatMessages' to match your JS -->
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input">
-            <!-- ✅ IMPORTANT: This ID must be 'messageInput' to match your JS -->
-            <input type="text" id="messageInput" placeholder="Type your message..." autocomplete="off">
-            <!-- ✅ IMPORTANT: This ID must be 'sendBtn' to match your JS -->
-            <button type="button" id="sendBtn"><i class="fas fa-paper-plane"></i> Send</button>
-        </div>
+    <h1>AskBot Chat Test</h1>
+    <div id="status" class="status">Loading...</div>
+    <div id="chatBox" class="chat-box">
+        <div class="message bot">👋 Hi! I'm AskBot. Type a message to test!</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Type your message here..." />
+        <button id="sendButton" type="button">Send</button>
     </div>
 
-    <!-- ✅ Link your JavaScript file -->
     <script>
-        // Your exact JavaScript code (inline for testing)
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ DOM loaded, initializing chat...');
-            
-            // Add welcome message
-            setTimeout(() => {
-                addMessageToChat('bot', '👋 Hi! I\'m AskBot. Ask me anything!');
-            }, 500);
-            
-            // Setup chat functionality
-            setupChat();
+        console.log('🚀 Script loading...');
+
+        // Wait for page to fully load
+        window.addEventListener('load', function() {
+            console.log('✅ Page fully loaded');
+            document.getElementById('status').textContent = '✅ Ready to chat!';
+            initializeChat();
         });
 
-        function setupChat() {
-            const sendBtn = document.getElementById('sendBtn');
-            const messageInput = document.getElementById('messageInput');
+        function initializeChat() {
+            console.log('🔧 Initializing chat...');
             
-            console.log('🔍 Send button found:', !!sendBtn);
-            console.log('🔍 Input found:', !!messageInput);
-            
-            if (sendBtn) {
-                sendBtn.addEventListener('click', function() {
-                    console.log('🔴 Send button clicked!');
+            const sendButton = document.getElementById('sendButton');
+            const userInput = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+
+            // Check if elements exist
+            if (!sendButton) {
+                console.error('❌ Send button not found!');
+                return;
+            }
+            if (!userInput) {
+                console.error('❌ Input field not found!');
+                return;
+            }
+            if (!chatBox) {
+                console.error('❌ Chat box not found!');
+                return;
+            }
+
+            console.log('✅ All elements found');
+
+            // Add click event to send button
+            sendButton.onclick = function() {
+                console.log('🔴 SEND BUTTON CLICKED!');
+                sendMessage();
+            };
+
+            // Add Enter key support
+            userInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    console.log('🔴 ENTER KEY PRESSED!');
                     sendMessage();
-                });
-            }
-            
-            if (messageInput) {
-                messageInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        console.log('🔴 Enter key pressed!');
-                        sendMessage();
-                    }
-                });
-            }
-            
-            console.log('✅ Event listeners attached');
+                }
+            };
+
+            console.log('✅ Event listeners attached successfully');
+
+            // Test function you can call in console
+            window.testSend = function() {
+                userInput.value = 'Test message';
+                sendMessage();
+            };
         }
 
-        async function sendMessage() {
-            console.log('📤 sendMessage function called');
-            
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
+        function sendMessage() {
+            console.log('📤 sendMessage() function called');
+
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+
             if (!message) {
-                console.log('⚠️ Empty message');
+                console.log('⚠️ Empty message, not sending');
+                alert('Please type a message first!');
                 return;
             }
-            
-            console.log('📝 Sending message:', message);
-            
-            addMessageToChat('user', message);
-            input.value = '';
-            
-            // Show typing indicator
-            const typingId = addMessageToChat('bot', '💭 Thinking...', 'typing');
-            
-            try {
-                // ← CONNECT TO YOUR BACKEND HERE
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        message: message,
-                        isPremium: false  // Free version
-                    })
-                });
-                
-                if (!response.ok) throw new Error('Network error');
-                
-                const data = await response.json();
-                
-                // Remove typing indicator
-                document.getElementById(typingId)?.remove();
-                
-                // Add AI response
-                addMessageToChat('bot', data.response || data.reply || data.answer);
-                
-            } catch (error) {
-                console.log('❌ Backend error:', error);
-                document.getElementById(typingId)?.remove();
-                addMessageToChat('bot', `🤖 I received: "${message}". My backend isn't connected yet, but I'm working on it! Try the premium version for full AI power.`);
-            }
+
+            console.log('📝 Message to send:', message);
+
+            // Add user message to chat
+            addMessage('user', message);
+            userInput.value = '';
+
+            // Add bot response
+            setTimeout(() => {
+                addMessage('bot', `🤖 You said: "${message}". Chat is working! 🎉`);
+            }, 1000);
         }
 
-        function addMessageToChat(sender, message, className = '') {
-            const chatMessages = document.getElementById('chatMessages');
-            if (!chatMessages) {
-                console.error('❌ chatMessages container not found');
-                return;
-            }
-            
+        function addMessage(sender, text) {
+            const chatBox = document.getElementById('chatBox');
             const messageDiv = document.createElement('div');
-            const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            messageDiv.id = messageId;
-            messageDiv.className = `message ${sender} ${className}`;
-            messageDiv.textContent = message;
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            console.log(`💬 Added ${sender} message:`, message);
-            return messageId;
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            console.log(`💬 Added ${sender} message:`, text);
         }
+
+        // Debug info
+        console.log('📋 Debug info:');
+        console.log('- Browser:', navigator.userAgent.split(' ')[0]);
+        console.log('- JavaScript enabled:', typeof console !== 'undefined');
     </script>
 </body>
 </html>
