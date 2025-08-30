@@ -6,61 +6,21 @@
     <title>AskBot - Free Chat</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-            background: #f8fafc;
-            height: 100vh;
-        }
-        .back-home {
-            position: fixed; top: 1rem; left: 1rem; z-index: 1000;
-            background: #667eea; color: white; padding: 0.75rem 1rem;
-            border-radius: 25px; text-decoration: none; font-weight: 600;
-        }
-        .chat-container {
-            max-width: 800px; margin: 0 auto; height: 100vh;
-            display: flex; flex-direction: column; background: white;
-        }
-        .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; padding: 1.5rem; display: flex;
-            justify-content: space-between; align-items: center;
-        }
-        .chat-messages {
-            flex: 1; overflow-y: auto; padding: 1.5rem;
-            background: #f8fafc; display: flex; flex-direction: column; gap: 1rem;
-        }
-        .message {
-            max-width: 80%; padding: 1rem 1.2rem; border-radius: 18px;
-            font-size: 1rem; line-height: 1.5; animation: fadeIn 0.3s ease;
-        }
-        .message.user {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; align-self: flex-end; border-bottom-right-radius: 6px;
-        }
-        .message.bot {
-            background: white; color: #374151; align-self: flex-start;
-            border-bottom-left-radius: 6px; border: 1px solid #e5e7eb;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; height: 100vh; }
+        .back-home { position: fixed; top: 1rem; left: 1rem; z-index: 1000; background: #667eea; color: white; padding: 0.75rem 1rem; border-radius: 25px; text-decoration: none; font-weight: 600; }
+        .chat-container { max-width: 800px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; background: white; }
+        .chat-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 1.5rem; background: #f8fafc; display: flex; flex-direction: column; gap: 1rem; }
+        .message { max-width: 80%; padding: 1rem 1.2rem; border-radius: 18px; font-size: 1rem; line-height: 1.5; animation: fadeIn 0.3s ease; }
+        .message.user { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; align-self: flex-end; border-bottom-right-radius: 6px; }
+        .message.bot { background: white; color: #374151; align-self: flex-start; border-bottom-left-radius: 6px; border: 1px solid #e5e7eb; }
         .message.typing { opacity: 0.7; font-style: italic; }
-        .chat-input {
-            display: flex; padding: 1.5rem; background: white;
-            border-top: 1px solid #e5e7eb; gap: 0.75rem;
-        }
-        .chat-input input {
-            flex: 1; border: 2px solid #e5e7eb; border-radius: 25px;
-            padding: 0.8rem 1.2rem; font-size: 1rem; outline: none;
-        }
+        .chat-input { display: flex; padding: 1.5rem; background: white; border-top: 1px solid #e5e7eb; gap: 0.75rem; }
+        .chat-input input { flex: 1; border: 2px solid #e5e7eb; border-radius: 25px; padding: 0.8rem 1.2rem; font-size: 1rem; outline: none; }
         .chat-input input:focus { border-color: #667eea; }
-        .chat-input button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none; color: white; padding: 0.8rem 1.5rem;
-            border-radius: 25px; cursor: pointer; font-size: 1rem;
-        }
+        .chat-input button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; padding: 0.8rem 1.5rem; border-radius: 25px; cursor: pointer; font-size: 1rem; }
         .chat-input button:hover { transform: translateY(-2px); }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -77,43 +37,48 @@
             </div>
         </div>
         <div class="chat-input">
-            <input type="text" id="messageInput" placeholder="Type your message...">
-            <button id="sendBtn">Send</button>
+            <input type="text" id="messageInput" placeholder="Type your message..." autocomplete="off">
+            <button type="button" id="sendBtn">Send</button>
         </div>
     </div>
 
     <script>
         console.log('🚀 Free chat loading...');
         
-        // Wait for page to load completely
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ DOM loaded, setting up chat...');
-            setupChat();
-        });
-
-        function setupChat() {
+            console.log('✅ DOM loaded');
+            
             const sendBtn = document.getElementById('sendBtn');
             const messageInput = document.getElementById('messageInput');
 
-            // Check if elements exist
             if (!sendBtn || !messageInput) {
                 console.error('❌ Elements not found!');
                 return;
             }
 
-            console.log('✅ Elements found, adding listeners...');
+            console.log('✅ Elements found');
 
-            // Add event listeners
-            sendBtn.onclick = sendMessage;
-            messageInput.onkeypress = function(e) {
-                if (e.key === 'Enter') sendMessage();
-            };
+            // Send button click
+            sendBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('🔴 Send button clicked!');
+                sendMessage();
+            });
 
-            console.log('✅ Chat ready!');
-        }
+            // Enter key press
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    console.log('🔴 Enter key pressed!');
+                    sendMessage();
+                }
+            });
+
+            console.log('✅ Event listeners attached');
+        });
 
         function sendMessage() {
-            console.log('📤 Send button clicked');
+            console.log('📤 sendMessage function called');
             
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
@@ -123,55 +88,42 @@
                 return;
             }
 
-            console.log('📝 Sending:', message);
+            console.log('📝 Message:', message);
 
-            // Add user message immediately
+            // Add user message
             addMessage('user', message);
             input.value = '';
 
-            // Show thinking
+            // Add thinking message
             const thinkingId = addMessage('bot', '💭 Thinking...', 'typing');
 
-            // Try to send to backend
-            sendToBackend(message, thinkingId);
+            // Try backend connection
+            connectToBackend(message, thinkingId);
         }
 
-        async function sendToBackend(message, thinkingId) {
+        async function connectToBackend(message, thinkingId) {
             try {
                 console.log('🌐 Connecting to backend...');
                 
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        message: message,
-                        isPremium: false 
-                    })
+                    body: JSON.stringify({ message: message, isPremium: false })
                 });
 
-                console.log('📡 Response status:', response.status);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
                 const data = await response.json();
                 console.log('📥 Backend response:', data);
                 
-                // Remove thinking message
                 document.getElementById(thinkingId)?.remove();
-                
-                // Add AI response
-                addMessage('bot', data.response || data.reply || data.answer || 'I got your message!');
+                addMessage('bot', data.response || data.reply || data.answer);
 
             } catch (error) {
                 console.log('❌ Backend error:', error);
                 
-                // Remove thinking message
                 document.getElementById(thinkingId)?.remove();
-                
-                // Show fallback response
-                addMessage('bot', `🤖 I see you asked: "${message}". My backend isn't connected yet, but I'm working on getting smarter! Try the premium version for full AI power.`);
+                addMessage('bot', `🤖 I got your message: "${message}". My backend isn't connected yet, but I'm working on it! Try the premium version for full AI functionality.`);
             }
         }
 
@@ -187,15 +139,8 @@
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
             
-            console.log(`💬 Added ${sender} message:`, text);
+            console.log(`💬 Added ${sender}: ${text}`);
             return messageId;
-        }
-
-        // Test function - type testChat() in console to verify
-        function testChat() {
-            console.log('🧪 Testing chat...');
-            addMessage('user', 'Test message');
-            addMessage('bot', 'Test response received!');
         }
     </script>
 </body>
