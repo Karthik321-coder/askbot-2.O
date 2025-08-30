@@ -266,6 +266,47 @@ html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed
 /* If any global rule set overflow hidden on page, unblock it */
 html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed */
 
+
+  /* Keep chat readable by reserving space on large screens */
+@media (min-width: 1100px) {
+  .premium-messages { padding-right: 16px; } /* content first; drawer overlays */
+}
+
+/* Floating action button to toggle the features drawer */
+.features-fab {
+  position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 1200;
+  width: 56px; height: 56px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer; border: none;
+  background: linear-gradient(135deg, #22d3ee 0%, #8b5cf6 100%);
+  color: #0b1020; box-shadow: 0 18px 36px rgba(139,92,246,.35);
+}
+
+/* Off-canvas drawer for premium features */
+.premium-features {
+  position: fixed; top: 0; right: 0; height: 100dvh; width: min(320px, 86vw);
+  transform: translateX(100%); transition: transform .25s ease;
+  background: rgba(17,24,39,.9); color: #e5e7eb; z-index: 1150;
+  border-left: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(16px);
+  padding: 1rem 1rem 1.2rem;
+}
+.premium-features.open { transform: translateX(0); }
+
+.premium-features .drawer-head {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: .6rem;
+}
+.premium-features .drawer-head h4 { margin: 0; color: #feca57; }
+
+.features-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,.35);
+  backdrop-filter: blur(2px); z-index: 1140; display: none;
+}
+.features-backdrop.show { display: block; }
+
+/* Hide drawer on small screens unless opened via FAB */
+@media (max-width: 900px) {
+  .premium-features { width: 88vw; }
+}
+
 </style>
 </head>
 <body>
@@ -332,18 +373,27 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
     </div>
   </div>
 
-  <!-- Sidebar features -->
-  <div class="premium-features">
+<!-- Off‑canvas Premium Features Drawer -->
+<div class="premium-features" id="premiumDrawer">
+  <div class="drawer-head">
     <h4><i class="fas fa-crown"></i> Premium Features</h4>
-    <ul>
-      <li><i class="fas fa-infinity"></i> Unlimited Questions</li>
-      <li><i class="fas fa-rocket"></i> Priority Processing</li>
-      <li><i class="fas fa-brain"></i> Advanced AI Model</li>
-      <li><i class="fas fa-clock"></i> 24/7 Availability</li>
-      <li><i class="fas fa-history"></i> Chat History</li>
-    </ul>
+    <button id="featuresClose" class="tool-btn" style="border-radius:10px"><i class="fa-solid fa-xmark"></i></button>
   </div>
+  <ul style="list-style:none; padding:0; display:grid; gap:.5rem; font-size:.95rem;">
+    <li><i class="fas fa-infinity"></i> Unlimited Questions</li>
+    <li><i class="fas fa-rocket"></i> Priority Processing</li>
+    <li><i class="fas fa-brain"></i> Advanced AI Model</li>
+    <li><i class="fas fa-clock"></i> 24/7 Availability</li>
+    <li><i class="fas fa-history"></i> Chat History</li>
+  </ul>
 </div>
+<div class="features-backdrop" id="featuresBackdrop"></div>
+
+<!-- Floating Action Button to open drawer -->
+<button class="features-fab" id="featuresFab" aria-label="Premium features">
+  <i class="fa-solid fa-star"></i>
+</button>
+
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -652,8 +702,40 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
       setTimeout(()=> s.remove(), dur+100);
     }
   }
+
+  <script>
+  // Drawer toggle logic (non-invasive)
+  (function(){
+    const fab = document.getElementById('featuresFab');
+    const drawer = document.getElementById('premiumDrawer');
+    const closeBtn = document.getElementById('featuresClose');
+    const backdrop = document.getElementById('featuresBackdrop');
+
+    function openDrawer(){
+      drawer.classList.add('open');
+      backdrop.classList.add('show');
+    }
+    function closeDrawer(){
+      drawer.classList.remove('open');
+      backdrop.classList.remove('show');
+    }
+
+    if (fab) fab.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+    // Optional: hide FAB when typing to reduce clutter
+    const input = document.getElementById('messageInput');
+    if (input) {
+      input.addEventListener('focus', ()=> fab && (fab.style.opacity = .0, fab.style.pointerEvents='none'));
+      input.addEventListener('blur',  ()=> fab && (fab.style.opacity = 1,  fab.style.pointerEvents='auto'));
+    }
+  })();
+</script>
+
 </script>
 </body>
 </html>
+
 
 
