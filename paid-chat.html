@@ -9,7 +9,7 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     
     <style>
-        /* Advanced Payment Interface Styling */
+        /* Your existing advanced payment styling remains the same */
         .advanced-payment-container {
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -18,18 +18,6 @@
             justify-content: center;
             padding: 2rem;
             position: relative;
-            overflow: hidden;
-        }
-
-        .advanced-payment-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
         }
 
         .advanced-payment-card {
@@ -40,101 +28,16 @@
             max-width: 500px;
             width: 100%;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            position: relative;
-            z-index: 1;
             animation: slideUp 0.8s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .premium-header {
-            text-align: center;
-            margin-bottom: 2rem;
         }
 
         .premium-header h1 {
             font-size: 2.5rem;
-            margin-bottom: 0.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             font-weight: 800;
-        }
-
-        .premium-header .subtitle {
-            color: #666;
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .premium-features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
-            border-radius: 15px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .feature-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .feature-text {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .pricing-section {
             text-align: center;
-            margin: 2rem 0;
-            padding: 2rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-            border-radius: 20px;
-            border: 2px solid rgba(102, 126, 234, 0.1);
-        }
-
-        .price-display {
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .price-duration {
-            font-size: 1.2rem;
-            color: #666;
-            font-weight: 600;
         }
 
         .advanced-pay-button {
@@ -149,124 +52,9 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0 1rem 0;
-            position: relative;
-            overflow: hidden;
         }
 
-        .advanced-pay-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .advanced-pay-button:hover::before {
-            left: 100%;
-        }
-
-        .advanced-pay-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
-        }
-
-        .security-badges {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            margin-top: 1.5rem;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .security-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .floating-elements {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .floating-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .floating-circle:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-circle:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            top: 60%;
-            right: 15%;
-            animation-delay: 2s;
-        }
-
-        .floating-circle:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            bottom: 20%;
-            left: 15%;
-            animation-delay: 4s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* Back to Home for Payment Page */
-        .back-home {
-            position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            color: #667eea;
-            padding: 0.8rem 1.2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .back-home:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        /* Simple Chat Interface (keeping original colors) */
+        /* Chat interface styling */
         .chat-container {
             max-width: 800px;
             margin: 0 auto;
@@ -336,10 +124,6 @@
             outline: none;
         }
 
-        .chat-input input:focus {
-            border-color: #667eea;
-        }
-
         .chat-input button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -355,21 +139,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .advanced-payment-card {
-                padding: 2rem 1.5rem;
-                margin: 1rem;
-            }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-            .premium-features-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
+        .back-home {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
 
-            .price-display {
-                font-size: 3rem;
-            }
+        .back-home:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
         }
     </style>
 </head>
@@ -379,81 +173,35 @@
         <i class="fas fa-arrow-left"></i> Back to Home
     </a>
 
-    <!-- Advanced Payment Section (shown first) -->
+    <!-- Advanced Payment Section -->
     <div id="paymentSection" class="advanced-payment-container">
-        <!-- Floating Background Elements -->
-        <div class="floating-elements">
-            <div class="floating-circle"></div>
-            <div class="floating-circle"></div>
-            <div class="floating-circle"></div>
-        </div>
-
         <div class="advanced-payment-card">
             <div class="premium-header">
                 <h1><i class="fas fa-crown"></i> AskBot Premium</h1>
-                <p class="subtitle">Unlock unlimited AI-powered conversations</p>
+                <p>Unlock unlimited AI-powered conversations</p>
             </div>
 
-            <div class="premium-features-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-infinity"></i>
-                    </div>
-                    <div class="feature-text">Unlimited Questions</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <div class="feature-text">Priority Responses</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="feature-text">No Rate Limits</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="feature-text">24/7 Availability</div>
-                </div>
-            </div>
-
-            <div class="pricing-section">
-                <div class="price-display">₹49</div>
-                <div class="price-duration">24-Hour Access Pass</div>
+            <div style="text-align: center; margin: 2rem 0;">
+                <div style="font-size: 4rem; font-weight: 900; color: #667eea;">₹49</div>
+                <div style="font-size: 1.2rem; color: #666;">24-Hour Access Pass</div>
             </div>
 
             <button id="payButton" class="advanced-pay-button">
                 <i class="fas fa-credit-card"></i>
                 Pay Securely with UPI / Card
-                <i class="fas fa-arrow-right"></i>
             </button>
 
-            <div class="security-badges">
-                <div class="security-badge">
-                    <i class="fas fa-lock"></i>
-                    <span>SSL Secured</span>
-                </div>
-                <div class="security-badge">
-                    <i class="fas fa-shield"></i>
-                    <span>Razorpay Protected</span>
-                </div>
-                <div class="security-badge">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Instant Access</span>
-                </div>
+            <div style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                🔒 Secure payment powered by Razorpay
             </div>
         </div>
     </div>
 
-    <!-- Simple Chat Section (hidden initially, keeping original design) -->
+    <!-- Simple Chat Section -->
     <div id="chatSection" class="chat-container" style="display:none;">
         <div class="chat-header">
             <h2><i class="fas fa-crown"></i> AskBot Premium Chat</h2>
-            <div class="time-remaining" id="timeRemaining">24:00:00</div>
+            <div id="timeRemaining">24:00:00</div>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input">
@@ -462,21 +210,40 @@
         </div>
     </div>
 
-<script>
-    console.log('🚀 Testing Razorpay payment...');
+    <script>
+        console.log('🚀 AskBot Premium loading...');
 
-    // REPLACE WITH YOUR ACTUAL RAZORPAY KEY
-    const RAZORPAY_KEY = ''; // ← Must be your real key!
+        // Configuration - REPLACE THESE
+        const RAZORPAY_KEY = 'rzp_live_RBZzAH4aoPYBRg,osQX0hl8dZSzOLyYlxmohzKa'; // ← Your Razorpay Key ID
+        const BACKEND_URL = 'https://askbot-backend.vercel.app/'; // ← Your backend URL
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const payButton = document.getElementById('payButton');
-        
-        payButton.addEventListener('click', function() {
-            console.log('💳 Pay button clicked');
-            
-            // Validate key first
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingAccess();
+            setupPaymentButton();
+        });
+
+        function checkExistingAccess() {
+            const accessData = localStorage.getItem('askbot_premium_access');
+            if (accessData) {
+                const { expiry } = JSON.parse(accessData);
+                if (new Date() < new Date(expiry)) {
+                    showChatInterface();
+                    return;
+                }
+                localStorage.removeItem('askbot_premium_access');
+            }
+        }
+
+        function setupPaymentButton() {
+            const payButton = document.getElementById('payButton');
+            payButton.addEventListener('click', processPayment);
+        }
+
+        function processPayment() {
+            console.log('💳 Processing payment...');
+
             if (!RAZORPAY_KEY || RAZORPAY_KEY.includes('YOUR_KEY_HERE')) {
-                alert('❌ Please add your actual Razorpay Key ID first!');
+                alert('❌ Please configure your Razorpay Key ID first!');
                 return;
             }
 
@@ -484,53 +251,226 @@
                 key: RAZORPAY_KEY,
                 amount: 4900, // ₹49 in paise
                 currency: 'INR',
-                name: 'AskBot Premium Test',
-                description: '24-Hour Access Test',
+                name: 'AskBot Premium',
+                description: '24-Hour Premium AI Access',
+                image: '/favicon.ico',
                 
-                handler: function (response) {
-                    console.log('✅ Payment Success:', response);
-                    alert('🎉 Payment Successful! ID: ' + response.razorpay_payment_id);
-                    
-                    // Hide payment, show chat
-                    document.getElementById('paymentSection').style.display = 'none';
-                    document.getElementById('chatSection').style.display = 'flex';
+                handler: function(response) {
+                    console.log('✅ Payment successful:', response);
+                    handlePaymentSuccess(response);
                 },
                 
                 prefill: {
-                    name: 'Test User',
-                    email: 'test@example.com',
+                    name: 'Premium User',
+                    email: 'user@example.com',
                     contact: '9999999999'
                 },
                 
-                theme: {
-                    color: '#667eea'
+                theme: { color: '#667eea' },
+                
+                modal: {
+                    ondismiss: function() {
+                        console.log('Payment cancelled');
+                    }
                 }
             };
 
             try {
-                const rzp = new Razorpay(options);
+                const razorpay = new Razorpay(options);
                 
-                // Handle payment failures
-                rzp.on('payment.failed', function (response) {
-                    console.error('❌ Payment Failed:', response.error);
-                    alert('❌ Payment Failed: ' + (response.error.description || 'Unknown error'));
+                razorpay.on('payment.failed', function(response) {
+                    console.error('❌ Payment failed:', response.error);
+                    alert('❌ Payment Failed: ' + response.error.description);
                 });
 
-                rzp.open();
-                
+                razorpay.open();
+
             } catch (error) {
-                console.error('❌ Razorpay Error:', error);
-                alert('❌ Payment system error: ' + error.message);
+                console.error('❌ Payment error:', error);
+                alert('❌ Payment system error. Please try again.');
             }
-        });
-    });
-</script>
+        }
 
+        function handlePaymentSuccess(paymentResponse) {
+            // Store premium access locally (frontend only)
+            const accessData = {
+                paymentId: paymentResponse.razorpay_payment_id,
+                accessToken: generateAccessToken(),
+                isPremium: true,
+                grantedAt: new Date().toISOString(),
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+            };
+            
+            localStorage.setItem('askbot_premium_access', JSON.stringify(accessData));
+            
+            // Update payment button
+            const payButton = document.getElementById('payButton');
+            payButton.innerHTML = '<i class="fas fa-check"></i> Payment Successful! Loading Chat...';
+            payButton.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            
+            // Show chat after delay
+            setTimeout(() => {
+                showChatInterface();
+            }, 2000);
+        }
 
+        function generateAccessToken() {
+            return 'premium_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function showChatInterface() {
+            document.getElementById('paymentSection').style.display = 'none';
+            document.getElementById('chatSection').style.display = 'flex';
+            initializePremiumChat();
+        }
+
+        function initializePremiumChat() {
+            console.log('🎉 Initializing premium chat...');
+            startCountdownTimer();
+            
+            setTimeout(() => {
+                addMessage('bot', '🎉 Welcome to AskBot Premium! You now have unlimited access to advanced AI capabilities for the next 24 hours. Ask me anything!');
+            }, 1000);
+            
+            setupChatHandlers();
+        }
+
+        function setupChatHandlers() {
+            const sendBtn = document.getElementById('sendBtn');
+            const messageInput = document.getElementById('messageInput');
+
+            sendBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            messageInput.focus();
+        }
+
+        // 🔒 SECURE CHAT FUNCTION - Only sends to backend for AI response
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const message = messageInput.value.trim();
+
+            if (!message) return;
+
+            // Check premium access
+            const accessData = localStorage.getItem('askbot_premium_access');
+            if (!accessData) {
+                alert('❌ Premium access required. Please make payment first.');
+                return;
+            }
+
+            const { accessToken, expiresAt } = JSON.parse(accessData);
+            if (new Date() > new Date(expiresAt)) {
+                alert('❌ Your 24-hour premium access has expired. Please renew.');
+                localStorage.removeItem('askbot_premium_access');
+                location.reload();
+                return;
+            }
+
+            // Disable input
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending';
+
+            addMessage('user', message);
+            messageInput.value = '';
+
+            const thinkingId = addMessage('bot', '💭 Premium AI thinking...', 'typing');
+
+            try {
+                // 🚀 SECURE API CALL - Only sends message, receives reply
+                const response = await fetch(`${BACKEND_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`, // Send access token for verification
+                        'X-Premium-Access': 'true'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        isPremium: true,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Backend error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Remove thinking indicator
+                document.getElementById(thinkingId)?.remove();
+                
+                // Add AI response
+                addMessage('bot', data.reply || data.response || 'Sorry, I couldn\'t generate a response.');
+
+            } catch (error) {
+                console.error('❌ Chat error:', error);
+                document.getElementById(thinkingId)?.remove();
+                addMessage('bot', '🚫 I encountered an issue connecting to my AI brain. Please try again in a moment.');
+            } finally {
+                // Re-enable input
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+                messageInput.focus();
+            }
+        }
+
+        function addMessage(sender, text, className = '') {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            const messageId = 'msg_' + Date.now();
+            
+            messageDiv.id = messageId;
+            messageDiv.className = `message ${sender} ${className}`;
+            messageDiv.textContent = text;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageId;
+        }
+
+        function startCountdownTimer() {
+            const accessData = localStorage.getItem('askbot_premium_access');
+            if (!accessData) return;
+
+            const { expiresAt } = JSON.parse(accessData);
+            const timeRemainingElement = document.getElementById('timeRemaining');
+
+            const updateTimer = () => {
+                const now = new Date();
+                const timeLeft = new Date(expiresAt) - now;
+
+                if (timeLeft <= 0) {
+                    timeRemainingElement.textContent = 'Expired';
+                    localStorage.removeItem('askbot_premium_access');
+                    alert('Your 24-hour premium access has expired. Redirecting to payment page...');
+                    setTimeout(() => location.reload(), 2000);
+                    return;
+                }
+
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                timeRemainingElement.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            };
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        console.log('✅ AskBot Premium ready!');
+    </script>
 </body>
 </html>
-
-
-
-
-
