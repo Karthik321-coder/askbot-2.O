@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskBot - Free Chat</title>
+    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- Back to Home Button -->
+    <a href="index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <!-- Chat Interface (No Payment Required) -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2><i class="fas fa-comments"></i> AskBot Free Chat</h2>
+            <div class="time-remaining">Free Version</div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                👋 Hi! I'm AskBot Free. Ask me anything and I'll help you out!
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Ask me anything...">
+            <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // Free Chat Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            setupChat();
+        });
+
+        function setupChat() {
+            const sendBtn = document.getElementById('sendBtn');
+            const messageInput = document.getElementById('messageInput');
+
+            if (sendBtn) {
+                sendBtn.addEventListener('click', sendMessage);
+            }
+
+            if (messageInput) {
+                messageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') sendMessage();
+                });
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addMessageToChat('user', message);
+            input.value = '';
+            
+            // Show typing indicator
+            const typingId = addMessageToChat('bot', '💭 Thinking...', 'typing');
+
+            try {
+                // 🔥 CONNECT TO YOUR ASKBOT BACKEND HERE
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: message,
+                        isPremium: false // Free version
+                    })
+                });
+
+                if (!response.ok) throw new Error('Backend connection failed');
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                document.getElementById(typingId)?.remove();
+                
+                // Add AI response
+                addMessageToChat('bot', data.response || data.reply || data.answer);
+
+            } catch (error) {
+                console.error('Backend error:', error);
+                document.getElementById(typingId)?.remove();
+                addMessageToChat('bot', 'Sorry, I\'m having trouble connecting to my brain 🧠. Please try again!');
+            }
+        }
+
+        function addMessageToChat(sender, message, className = '') {
+            const chatMessages = document.getElementById('chatMessages');
+            if (!chatMessages) return;
+
+            const messageDiv = document.createElement('div');
+            const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            messageDiv.id = messageId;
+            messageDiv.className = `message ${sender} ${className}`;
+            messageDiv.textContent = message;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageId;
+        }
+    </script>
+
+    <!-- Add this styling if styles2.css doesn't have these classes -->
+    <style>
+        .back-home {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255,255,255,0.95);
+            color: #cd3e51;
+            padding: 0.75rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 2px solid #cd3e51;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-home:hover {
+            background: #cd3e51;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(205,62,81,0.3);
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .time-remaining {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 1rem 1.2rem;
+            border-radius: 18px;
+            font-size: 1rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message.bot {
+            background: white;
+            color: #374151;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .message.typing {
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1.5rem;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            gap: 0.75rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            border-color: #667eea;
+        }
+
+        .chat-input button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+        }
+    </style>
+</body>
+</html>
