@@ -412,33 +412,66 @@ async function sendMessage() {
     const thinkingId = addMessage('bot', 'Thinking<span class="loading-dots"></span>', 'typing');
 
     try {
-        // 🔥 FIXED: Call /generate endpoint (matches your backend)
-        const response = await fetch('/generate', {  // ← Changed from /api/index
+        console.log('📤 Sending to AskBot backend:', message);
+        
+        // 🔥 REPLACE WITH YOUR ACTUAL BACKEND URL
+        const BACKEND_URL = 'https://askbot-backend.vercel.app/'; // ← Change this to your backend URL!
+        
+        // Call your /generate endpoint with the exact format your backend expects
+        const response = await fetch(`${BACKEND_URL}/generate`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
-                messages: [{ role: 'user', content: message }]  // ← Your backend format
+                messages: [  // ← Your backend expects this format
+                    { role: 'user', content: message }
+                ]
             })
         });
 
-        if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+        console.log('📡 Backend response status:', response.status);
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => null);
+            throw new Error(`Backend error ${response.status}: ${errorData?.error || response.statusText}`);
+        }
 
         const data = await response.json();
+        console.log('📥 Backend response:', data);
+
+        // Remove thinking indicator
         document.getElementById(thinkingId)?.remove();
-        
-        // Your backend returns { reply: "..." }
-        addMessage('bot', data.reply || 'No response from AI');
+
+        // Your backend returns { reply: "AI response" }
+        const aiResponse = data.reply || 'No response from AI';
+        addMessage('bot', aiResponse);
 
     } catch (error) {
+        console.error('❌ Connection error:', error);
+        
         document.getElementById(thinkingId)?.remove();
-        addMessage('bot', `🚫 Connection failed: ${error.message}. Please try again! 🔄`);
+        
+        addMessage('bot', `🚫 **Connection Failed:** ${error.message}
+
+**Debug Steps:**
+1. **Test Backend:** [Click here](${BACKEND_URL}/generate) to check if your backend is running
+2. **Check API Key:** Make sure your Google AI API_KEY is set in Vercel environment variables
+3. **Check Console:** Press F12 to see detailed error messages
+
+**Backend URL:** \`${BACKEND_URL}/generate\`
+
+Please try again! 🔄`);
+
     } finally {
+        // Re-enable input
         userInput.disabled = false;
         sendButton.disabled = false;
         sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
         userInput.focus();
     }
 }
+
 
 
 
