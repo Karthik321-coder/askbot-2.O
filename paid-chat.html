@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AskBot Premium Chat</title>
-    <link rel="stylesheet" href="styles2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     
@@ -380,8 +379,8 @@
         console.log('🚀 AskBot Premium loading...');
 
         // 🔑 Your configuration - REPLACE THESE
-        const RAZORPAY_KEY = 'rzp_live_RBZzAH4aoPYBRg'; // ← Put your real Razorpay key here!
-        const BACKEND_URL = 'https://askbot-backend.vercel.app/'; // ← Your backend URL
+        const RAZORPAY_KEY = 'YOUR_RAZORPAY_KEY_ID'; // ← Put your real Razorpay key here!
+        const BACKEND_URL = 'https://your-backend-app.vercel.app'; // ← Your backend URL
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log('✅ DOM loaded, setting up payment...');
@@ -396,7 +395,7 @@
                 console.log('💳 Pay button clicked!');
                 
                 // Validate key
-                if (!RAZORPAY_KEY || RAZORPAY_KEY.trim() === '') {
+                if (!RAZORPAY_KEY || RAZORPAY_KEY.trim() === '' || RAZORPAY_KEY === 'YOUR_RAZORPAY_KEY_ID') {
                     alert('❌ Please add your actual Razorpay Key ID first!');
                     return;
                 }
@@ -639,4 +638,3 @@
     </script>
 </body>
 </html>
-
