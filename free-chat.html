@@ -396,85 +396,86 @@
         }
 
         async function sendMessage() {
-            const userInput = document.getElementById('userInput');
-            const sendButton = document.getElementById('sendButton');
-            const message = userInput.value.trim();
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+    const message = userInput.value.trim();
 
-            if (!message) {
-                userInput.focus();
-                return;
-            }
+    if (!message) {
+        userInput.focus();
+        return;
+    }
 
-            console.log('📤 Sending to AskBot backend:', message);
+    console.log('📤 Sending to AskBot backend:', message);
 
-            // Disable input while processing
-            userInput.disabled = true;
-            sendButton.disabled = true;
-            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending';
+    // Disable input while processing
+    userInput.disabled = true;
+    sendButton.disabled = true;
+    sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending';
 
-            // Add user message
-            addMessage('user', message);
-            userInput.value = '';
+    // Add user message
+    addMessage('user', message);
+    userInput.value = '';
 
-            // Add thinking indicator
-            const thinkingId = addMessage('bot', 'Thinking<span class="loading-dots"></span>', 'typing');
+    // Add thinking indicator
+    const thinkingId = addMessage('bot', 'Thinking<span class="loading-dots"></span>', 'typing');
 
-            try {
-                // 🔥 CONNECT TO YOUR ASKBOT BACKEND
-                console.log('🌐 Connecting to AskBot backend...');
-                
-                const response = await fetch('/api/index', {  // ← Your Vercel backend endpoint
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        isPremium: false,
-                        model: 'gemini-pro'  // or whatever model you're using
-                    })
-                });
+    try {
+        // 🔥 FIXED: Call /generate endpoint (matches your backend)
+        console.log('🌐 Connecting to AskBot backend...');
+        
+        const response = await fetch('/generate', {  // ← Changed from /api/index to /generate
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                messages: [  // ← Changed to match your backend format
+                    { role: 'user', content: message }
+                ]
+            })
+        });
 
-                console.log('📡 Backend response status:', response.status);
+        console.log('📡 Backend response status:', response.status);
 
-                if (!response.ok) {
-                    throw new Error(`Backend error: ${response.status} ${response.statusText}`);
-                }
+        if (!response.ok) {
+            throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+        }
 
-                const data = await response.json();
-                console.log('📥 Backend response:', data);
+        const data = await response.json();
+        console.log('📥 Backend response:', data);
 
-                // Remove thinking indicator
-                document.getElementById(thinkingId)?.remove();
+        // Remove thinking indicator
+        document.getElementById(thinkingId)?.remove();
 
-                // Add AI response
-                const aiResponse = data.response || data.reply || data.answer || data.message || 'I received your message but couldn\'t generate a response.';
-                addMessage('bot', aiResponse);
+        // Add AI response (backend returns {reply: text})
+        const aiResponse = data.reply || 'I received your message but couldn\'t generate a response.';
+        addMessage('bot', aiResponse);
 
-            } catch (error) {
-                console.error('❌ AskBot backend error:', error);
-                
-                // Remove thinking indicator
-                document.getElementById(thinkingId)?.remove();
-                
-                // Add error message with retry option
-                addMessage('bot', `🚫 Sorry, I couldn't connect to my AI brain right now. This might be because:
+    } catch (error) {
+        console.error('❌ AskBot backend error:', error);
+        
+        // Remove thinking indicator
+        document.getElementById(thinkingId)?.remove();
+        
+        // Add error message
+        addMessage('bot', `🚫 Sorry, I couldn't connect to my AI brain right now. This might be because:
 
 • The backend server is starting up (try again in 30 seconds)
-• Network connectivity issue
+• Network connectivity issue  
 • Server is temporarily overloaded
 
 **Error:** ${error.message}
 
 Please try sending your message again! 🔄`);
-            } finally {
-                // Re-enable input
-                userInput.disabled = false;
-                sendButton.disabled = false;
-                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
-                userInput.focus();
-            }
-        }
+    } finally {
+        // Re-enable input
+        userInput.disabled = false;
+        sendButton.disabled = false;
+        sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+        userInput.focus();
+    }
+}
+
 
         function addMessage(sender, text, className = '') {
             const chatBox = document.getElementById('chatBox');
