@@ -214,8 +214,8 @@
         console.log('🚀 AskBot Premium loading...');
 
         // Configuration - REPLACE THESE
-        const RAZORPAY_KEY = 'rzp_live_RBZzAH4aoPYBRg,osQX0hl8dZSzOLyYlxmohzKa'; // ← Your Razorpay Key ID
-        const BACKEND_URL = 'https://askbot-backend.vercel.app/'; // ← Your backend URL
+        const RAZORPAY_KEY = 'rzp_test_YOUR_KEY_HERE'; // ← Your Razorpay Key ID
+        const BACKEND_URL = 'https://your-backend-app.vercel.app'; // ← Your backend URL
 
         document.addEventListener('DOMContentLoaded', function() {
             checkExistingAccess();
@@ -239,41 +239,36 @@
             payButton.addEventListener('click', processPayment);
         }
 
-        function processPayment() {
-            console.log('💳 Processing payment...');
+        // ✅ CORRECT: Frontend payment without backend API calls
+const options = {
+    key: 'rzp_live_RBZzAH4aoPYBRg', // ← Only your KEY ID (not secret)
+    amount: 4900, // ₹49 in paise
+    currency: 'INR',
+    name: 'AskBot Premium',
+    description: '24-Hour Premium Access',
+    
+    handler: function(response) {
+        console.log('Payment successful:', response.razorpay_payment_id);
+        // Grant premium access locally
+        localStorage.setItem('premium_access', JSON.stringify({
+            paymentId: response.razorpay_payment_id,
+            expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        }));
+        // Show chat interface
+        showPremiumChat();
+    },
+    
+    prefill: {
+        name: 'User Name',
+        email: 'user@example.com',
+        contact: '9999999999'
+    },
+    
+    theme: { color: '#667eea' }
+};
 
-            if (!RAZORPAY_KEY || RAZORPAY_KEY.includes('YOUR_KEY_HERE')) {
-                alert('❌ Please configure your Razorpay Key ID first!');
-                return;
-            }
-
-            const options = {
-                key: RAZORPAY_KEY,
-                amount: 4900, // ₹49 in paise
-                currency: 'INR',
-                name: 'AskBot Premium',
-                description: '24-Hour Premium AI Access',
-                image: '/favicon.ico',
-                
-                handler: function(response) {
-                    console.log('✅ Payment successful:', response);
-                    handlePaymentSuccess(response);
-                },
-                
-                prefill: {
-                    name: 'Premium User',
-                    email: 'user@example.com',
-                    contact: '9999999999'
-                },
-                
-                theme: { color: '#667eea' },
-                
-                modal: {
-                    ondismiss: function() {
-                        console.log('Payment cancelled');
-                    }
-                }
-            };
+const razorpay = new Razorpay(options);
+razorpay.open(); // This won't show auth popup
 
             try {
                 const razorpay = new Razorpay(options);
