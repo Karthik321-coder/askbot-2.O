@@ -1116,36 +1116,43 @@ function addMessage(sender, text, withActions=false){
     div.className = `premium-message ${sender}`;
     
     if(sender === 'bot') {
-        // Initialize marked if not already done
-        if (typeof marked !== 'undefined') {
-            marked.setOptions({
-                highlight: function(code, lang) {
-                    if (typeof hljs !== 'undefined' && lang && hljs.getLanguage(lang)) {
-                        return hljs.highlight(code, { language: lang }).value;
-                    }
-                    return code;
-                },
-                breaks: true,
-                gfm: true
-            });
-            
-            // Render markdown for bot messages
-            div.innerHTML = marked(text);
-            
-            // Apply syntax highlighting after rendering
-            setTimeout(() => {
-                div.querySelectorAll('pre code').forEach((block) => {
-                    if (typeof hljs !== 'undefined') {
-                        hljs.highlightElement(block);
-                    }
+        // Check if markdown libraries are loaded
+        if (typeof marked !== 'undefined' && typeof hljs !== 'undefined') {
+            try {
+                // Configure marked
+                marked.setOptions({
+                    highlight: function(code, lang) {
+                        if (lang && hljs.getLanguage(lang)) {
+                            return hljs.highlight(code, { language: lang }).value;
+                        }
+                        return hljs.highlightAuto(code).value;
+                    },
+                    breaks: true,
+                    gfm: true
                 });
-            }, 50);
+                
+                // Render markdown
+                div.innerHTML = marked(text);
+                
+                // Apply syntax highlighting
+                setTimeout(() => {
+                    div.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                }, 50);
+                
+            } catch (e) {
+                console.error('Markdown processing error:', e);
+                // Fallback to simple text processing
+                div.innerHTML = text.replace(/\n/g,'<br>');
+            }
         } else {
-            // Fallback if marked is not loaded
+            console.warn('Markdown libraries not loaded, using fallback');
+            // Fallback: simple text with line breaks
             div.innerHTML = text.replace(/\n/g,'<br>');
         }
     } else {
-        // Plain text for user messages
+        // User messages as plain text
         div.textContent = text;
     }
     
@@ -1335,6 +1342,7 @@ function addMessage(sender, text, withActions=false){
 
 </body>
 </html>
+
 
 
 
