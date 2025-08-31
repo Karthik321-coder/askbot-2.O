@@ -6,9 +6,12 @@
 <title>AskBot Premium Chat</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+
+ 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
 <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
 
 
 <style>
@@ -976,6 +979,87 @@ body{
 .premium-message .hljs-attr { color: #c792ea; }
 .premium-message .hljs-title { color: #82aaff; font-weight: 600; }
 
+ /* Message formatting for ChatGPT-like appearance */
+.premium-message {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+/* Code blocks with dark theme */
+.premium-message pre {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-family: 'Courier New', 'SF Mono', Monaco, monospace;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Inline code styling */
+.premium-message code {
+    background-color: rgba(175, 184, 193, 0.2);
+    color: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.premium-message pre code {
+    background: none !important;
+    color: inherit !important;
+    padding: 0;
+    border: none;
+}
+
+/* Headers */
+.premium-message h1, .premium-message h2, .premium-message h3 {
+    color: #f1f5f9;
+    margin: 20px 0 12px 0;
+    font-weight: 600;
+}
+
+.premium-message h2 { font-size: 1.3em; }
+.premium-message h3 { font-size: 1.1em; }
+
+/* Lists */
+.premium-message ul, .premium-message ol {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.premium-message li {
+    margin: 6px 0;
+    line-height: 1.5;
+}
+
+/* Paragraphs */
+.premium-message p {
+    margin: 12px 0;
+    line-height: 1.6;
+}
+
+/* Strong text */
+.premium-message strong {
+    color: #f1f5f9;
+    font-weight: 600;
+}
+
+/* Syntax highlighting */
+.premium-message .hljs-keyword { color: #c792ea; }
+.premium-message .hljs-string { color: #c3e88d; }
+.premium-message .hljs-comment { color: #546e7a; font-style: italic; }
+.premium-message .hljs-number { color: #f78c6c; }
+.premium-message .hljs-function { color: #82aaff; }
+.premium-message .hljs-built_in { color: #ffcb6b; }
+.premium-message .hljs-variable { color: #eeffff; }
+
+
 
 
 
@@ -1236,7 +1320,7 @@ function addMessage(sender, text, withActions=false){
         // Check if markdown libraries are loaded
         if (typeof marked !== 'undefined' && typeof hljs !== 'undefined') {
             try {
-                // Configure marked with better options
+                // Configure marked
                 marked.setOptions({
                     highlight: function(code, lang) {
                         if (lang && hljs.getLanguage(lang)) {
@@ -1245,21 +1329,13 @@ function addMessage(sender, text, withActions=false){
                         return hljs.highlightAuto(code).value;
                     },
                     breaks: true,
-                    gfm: true,
-                    tables: true,
-                    sanitize: false
+                    gfm: true
                 });
                 
-                // Process the markdown
-                let processedText = text;
-                
-                // Ensure proper paragraph breaks
-                processedText = processedText.replace(/\n\n/g, '\n\n');
-                
                 // Render markdown
-                div.innerHTML = marked(processedText);
+                div.innerHTML = marked(text);
                 
-                // Apply syntax highlighting
+                // Apply syntax highlighting after a brief delay
                 setTimeout(() => {
                     div.querySelectorAll('pre code').forEach((block) => {
                         hljs.highlightElement(block);
@@ -1267,21 +1343,17 @@ function addMessage(sender, text, withActions=false){
                 }, 10);
                 
             } catch (e) {
-                console.error('Markdown processing error:', e);
-                // Fallback with better line break handling
-                div.innerHTML = text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+                console.error('Markdown error:', e);
+                // Fallback
+                div.innerHTML = text.replace(/\n/g,'<br>');
             }
         } else {
-            console.warn('Markdown libraries not loaded, using enhanced fallback');
-            // Enhanced fallback with paragraph detection
-            let processedText = text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
-            if (!processedText.startsWith('<p>')) {
-                processedText = '<p>' + processedText + '</p>';
-            }
-            div.innerHTML = processedText;
+            console.warn('Markdown libraries not loaded');
+            // Simple fallback
+            div.innerHTML = text.replace(/\n/g,'<br>');
         }
     } else {
-        // User messages as plain text
+        // User messages
         div.textContent = text;
     }
     
@@ -1299,6 +1371,7 @@ function addMessage(sender, text, withActions=false){
     wrap.scrollTop = wrap.scrollHeight;
     return div;
 }
+
 
 
 
@@ -1471,6 +1544,7 @@ function addMessage(sender, text, withActions=false){
 
 </body>
 </html>
+
 
 
 
