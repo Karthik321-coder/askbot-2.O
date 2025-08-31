@@ -6,7 +6,7 @@
 <title>AskBot Premium Chat</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
 <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
@@ -816,6 +816,52 @@ body{
 .premium-message .hljs-function { color: #82aaff; }
 
 
+  /* Code block styling - add this to your existing CSS */
+.premium-message pre {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.premium-message code {
+    background-color: rgba(175, 184, 193, 0.2);
+    color: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.premium-message pre code {
+    background: none !important;
+    color: inherit !important;
+    padding: 0;
+    border: none;
+}
+
+/* Headers in messages */
+.premium-message h1, .premium-message h2, .premium-message h3 {
+    color: #f1f5f9;
+    margin: 16px 0 8px 0;
+    font-weight: 600;
+}
+
+/* Syntax highlighting */
+.premium-message .hljs-keyword { color: #c792ea; }
+.premium-message .hljs-string { color: #c3e88d; }
+.premium-message .hljs-comment { color: #546e7a; }
+.premium-message .hljs-number { color: #f78c6c; }
+.premium-message .hljs-function { color: #82aaff; }
+
+
+
 </style>
 </head>
 <body>
@@ -1070,31 +1116,34 @@ function addMessage(sender, text, withActions=false){
     div.className = `premium-message ${sender}`;
     
     if(sender === 'bot') {
-        // Configure marked for bot messages
-        marked.setOptions({
-            highlight: function(code, lang) {
-                if (lang && hljs.getLanguage(lang)) {
-                    return hljs.highlight(code, { language: lang }).value;
-                }
-                return hljs.highlightAuto(code).value;
-            },
-            breaks: true,
-            gfm: true
-        });
-        
-        // Render markdown for bot messages
-        try {
+        // Initialize marked if not already done
+        if (typeof marked !== 'undefined') {
+            marked.setOptions({
+                highlight: function(code, lang) {
+                    if (typeof hljs !== 'undefined' && lang && hljs.getLanguage(lang)) {
+                        return hljs.highlight(code, { language: lang }).value;
+                    }
+                    return code;
+                },
+                breaks: true,
+                gfm: true
+            });
+            
+            // Render markdown for bot messages
             div.innerHTML = marked(text);
-        } catch (e) {
+            
+            // Apply syntax highlighting after rendering
+            setTimeout(() => {
+                div.querySelectorAll('pre code').forEach((block) => {
+                    if (typeof hljs !== 'undefined') {
+                        hljs.highlightElement(block);
+                    }
+                });
+            }, 50);
+        } else {
+            // Fallback if marked is not loaded
             div.innerHTML = text.replace(/\n/g,'<br>');
         }
-        
-        // Highlight code after rendering
-        setTimeout(() => {
-            div.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightElement(block);
-            });
-        }, 10);
     } else {
         // Plain text for user messages
         div.textContent = text;
@@ -1114,6 +1163,7 @@ function addMessage(sender, text, withActions=false){
     wrap.scrollTop = wrap.scrollHeight;
     return div;
 }
+
 
 
   function addTypingIndicator(){
@@ -1285,6 +1335,7 @@ function addMessage(sender, text, withActions=false){
 
 </body>
 </html>
+
 
 
 
