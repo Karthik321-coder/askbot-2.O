@@ -337,6 +337,26 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
   }
 }
 
+  /* Always-visible Back to Home pill */
+.back-home {
+  position: fixed;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  left: calc(12px + env(safe-area-inset-left, 0px));
+  z-index: 3000;                /* higher than any drawer/backdrop/header */
+  background: rgba(255,255,255,0.95);
+  color: #667eea;
+  padding: 0.8rem 1.2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid rgba(165,180,252,0.35);
+}
+
+/* If a backdrop exists, keep it below the link */
+.features-backdrop { z-index: 2000; }   /* example overlay */
+/* Or ensure any drawer/backdrop has a lower z-index than 3000 */
+
+
 
 </style>
 </head>
@@ -767,6 +787,7 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
 
 </body>
 </html>
+
 
 
 
