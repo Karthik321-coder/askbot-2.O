@@ -1,4 +1,10 @@
 {
+  {
+"$schema": "https://openapi.vercel.sh/vercel.json",
+"git": { "deploymentEnabled": false }
+}
+
+
   "headers":[
     {"source":"/(.*)","headers":[
       {"key":"Content-Security-Policy",
