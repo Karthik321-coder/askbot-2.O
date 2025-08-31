@@ -861,6 +861,123 @@ body{
 .premium-message .hljs-function { color: #82aaff; }
 
 
+ /* Enhanced message formatting */
+.premium-message {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+/* Improved code block styling */
+.premium-message pre {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-family: 'Courier New', 'SF Mono', Monaco, monospace;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.premium-message code {
+    background-color: rgba(175, 184, 193, 0.2);
+    color: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', 'SF Mono', Monaco, monospace;
+    font-size: 0.9em;
+}
+
+.premium-message pre code {
+    background: none !important;
+    color: inherit !important;
+    padding: 0;
+    border: none;
+    font-size: 14px;
+}
+
+/* Better headers */
+.premium-message h1, .premium-message h2, .premium-message h3, .premium-message h4 {
+    color: #f1f5f9;
+    margin: 24px 0 16px 0;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.premium-message h1 { 
+    font-size: 1.5em; 
+    border-bottom: 2px solid rgba(148, 163, 184, 0.3); 
+    padding-bottom: 8px; 
+}
+.premium-message h2 { 
+    font-size: 1.3em; 
+    color: #c7d2fe; 
+}
+.premium-message h3 { 
+    font-size: 1.1em; 
+    color: #c7d2fe; 
+}
+
+/* Better lists */
+.premium-message ul, .premium-message ol {
+    margin: 16px 0;
+    padding-left: 24px;
+}
+
+.premium-message li {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+/* Better paragraphs */
+.premium-message p {
+    margin: 12px 0;
+    line-height: 1.6;
+}
+
+/* Blockquotes */
+.premium-message blockquote {
+    border-left: 4px solid #60a5fa;
+    background: rgba(59, 130, 246, 0.1);
+    margin: 16px 0;
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #c7d2fe;
+}
+
+/* Strong and emphasis */
+.premium-message strong {
+    color: #f1f5f9;
+    font-weight: 600;
+}
+
+.premium-message em {
+    color: #c7d2fe;
+    font-style: italic;
+}
+
+/* Better spacing for bot messages */
+.premium-message.bot {
+    padding: 20px 24px;
+}
+
+/* Improved syntax highlighting */
+.premium-message .hljs-keyword { color: #c792ea; font-weight: 500; }
+.premium-message .hljs-string { color: #c3e88d; }
+.premium-message .hljs-comment { color: #546e7a; font-style: italic; }
+.premium-message .hljs-number { color: #f78c6c; }
+.premium-message .hljs-function { color: #82aaff; }
+.premium-message .hljs-built_in { color: #ffcb6b; }
+.premium-message .hljs-variable { color: #eeffff; }
+.premium-message .hljs-attr { color: #c792ea; }
+.premium-message .hljs-title { color: #82aaff; font-weight: 600; }
+
+
+
 
 </style>
 </head>
@@ -1119,7 +1236,7 @@ function addMessage(sender, text, withActions=false){
         // Check if markdown libraries are loaded
         if (typeof marked !== 'undefined' && typeof hljs !== 'undefined') {
             try {
-                // Configure marked
+                // Configure marked with better options
                 marked.setOptions({
                     highlight: function(code, lang) {
                         if (lang && hljs.getLanguage(lang)) {
@@ -1128,28 +1245,40 @@ function addMessage(sender, text, withActions=false){
                         return hljs.highlightAuto(code).value;
                     },
                     breaks: true,
-                    gfm: true
+                    gfm: true,
+                    tables: true,
+                    sanitize: false
                 });
                 
+                // Process the markdown
+                let processedText = text;
+                
+                // Ensure proper paragraph breaks
+                processedText = processedText.replace(/\n\n/g, '\n\n');
+                
                 // Render markdown
-                div.innerHTML = marked(text);
+                div.innerHTML = marked(processedText);
                 
                 // Apply syntax highlighting
                 setTimeout(() => {
                     div.querySelectorAll('pre code').forEach((block) => {
                         hljs.highlightElement(block);
                     });
-                }, 50);
+                }, 10);
                 
             } catch (e) {
                 console.error('Markdown processing error:', e);
-                // Fallback to simple text processing
-                div.innerHTML = text.replace(/\n/g,'<br>');
+                // Fallback with better line break handling
+                div.innerHTML = text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
             }
         } else {
-            console.warn('Markdown libraries not loaded, using fallback');
-            // Fallback: simple text with line breaks
-            div.innerHTML = text.replace(/\n/g,'<br>');
+            console.warn('Markdown libraries not loaded, using enhanced fallback');
+            // Enhanced fallback with paragraph detection
+            let processedText = text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+            if (!processedText.startsWith('<p>')) {
+                processedText = '<p>' + processedText + '</p>';
+            }
+            div.innerHTML = processedText;
         }
     } else {
         // User messages as plain text
@@ -1342,6 +1471,7 @@ function addMessage(sender, text, withActions=false){
 
 </body>
 </html>
+
 
 
 
