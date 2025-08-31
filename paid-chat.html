@@ -733,6 +733,48 @@ body{
             box-shadow: 0 10px 28px rgba(59, 130, 246, 0.35);
         }
 
+  /* Put the header in a positioning context */
+.premium-chat-header {
+  position: relative; /* allows absolute children to anchor to the header */
+  z-index: 100;       /* below Back to Home pill, above content */
+}
+
+/* Back to Home: first, at true safe top-left inside the header */
+.back-home {
+  position: absolute;
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  left: calc(12px + env(safe-area-inset-left, 0px));
+  z-index: 3000; /* stay above any header shine/backdrop */
+}
+
+/* Premium Features button: immediately to the right of Back to Home */
+.features-fab {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  /* move to the right of the back-home pill; adjust gap as needed */
+  left: calc(12px + 168px + env(safe-area-inset-left, 0px)); /* 168px ≈ pill width; tweak if needed */
+  z-index: 2500;
+  width: 44px; height: 44px;  /* slightly smaller to sit neatly beside the pill */
+}
+
+/* Ensure the title starts after the controls (padding creates a “rail” on the left) */
+.premium-chat-header .premium-title {
+  padding-left: 240px; /* must be > back-home width + fab + gap */
+}
+
+/* On narrower screens, reduce the reserved rail and auto-wrap if needed */
+@media (max-width: 900px) {
+  .features-fab {
+    left: calc(12px + 150px + env(safe-area-inset-left, 0px));
+    top: calc(56px + env(safe-area-inset-top, 0px)); /* drop slightly if the pill grows two-line */
+  }
+  .premium-chat-header .premium-title { padding-left: 210px; }
+}
+
+/* Keep the drawer/backdrop lower than Back to Home */
+.features-backdrop { z-index: 1140; }
+
+
 
 </style>
 </head>
@@ -1170,6 +1212,7 @@ body{
 
 </body>
 </html>
+
 
 
 
