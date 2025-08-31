@@ -356,6 +356,147 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
 .features-backdrop { z-index: 2000; }   /* example overlay */
 /* Or ensure any drawer/backdrop has a lower z-index than 3000 */
 
+/* ====== PREMIUM VISUALS: ADDITIVE LAYER (NO STRUCTURAL CHANGES) ====== */
+
+/* 1) Global aurora overlays (soft, animated color fields) */
+body::after{
+  content:'';
+  position:fixed; inset:-20vmax; pointer-events:none; z-index:-1;
+  background:
+    radial-gradient(40vmax 25vmax at 15% 10%, rgba(34,211,238,.18), transparent 60%),
+    radial-gradient(45vmax 30vmax at 85% 20%, rgba(139,92,246,.20), transparent 60%),
+    radial-gradient(45vmax 35vmax at 30% 85%, rgba(250,204,21,.12), transparent 60%);
+  filter: blur(30px) saturate(105%);
+  animation: auroraFlow 22s ease-in-out infinite alternate;
+}
+@keyframes auroraFlow{
+  0%{ transform: translate3d(0,0,0) rotate(0deg) }
+  50%{ transform: translate3d(2vmax,-1vmax,0) rotate(10deg) }
+  100%{ transform: translate3d(-2vmax,1vmax,0) rotate(-8deg) }
+}
+
+/* 2) Header: animated gradient and diagonal shine sweep */
+.premium-chat-header{
+  background:
+    linear-gradient(135deg, rgba(30,58,138,.62), rgba(76,29,149,.62));
+  background-size: 180% 180%;
+  animation: headGrad 12s ease-in-out infinite;
+  position: relative;
+}
+@keyframes headGrad{
+  0%{ background-position: 0% 50% }
+  50%{ background-position: 100% 50% }
+  100%{ background-position: 0% 50% }
+}
+.premium-chat-header::after{
+  content:'';
+  position:absolute; inset:-20% -40% 70% -40%;
+  background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,.20) 45%, transparent 60%);
+  transform: translateX(-120%) skewX(-12deg);
+  animation: shine 3.6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes shine{
+  0%{ transform: translateX(-130%) skewX(-12deg) }
+  45%,55%{ transform: translateX(130%) skewX(-12deg) }
+  100%{ transform: translateX(130%) skewX(-12deg) }
+}
+
+/* 3) Elevated glass containers & payment card glow */
+.advanced-payment-card,
+.chat-container{
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+/* 4) CTA buttons: premium breathing + ripple hover */
+.advanced-pay-button,
+.premium-send-btn,
+.features-fab,
+.tool-btn,
+.chip{
+  position: relative;
+  isolation: isolate;
+}
+.advanced-pay-button::before,
+.premium-send-btn::before,
+.features-fab::before{
+  content:'';
+  position:absolute; inset:-2px; border-radius:inherit;
+  background: conic-gradient(from 160deg, rgba(34,211,238,.35), rgba(139,92,246,.35), rgba(240,147,251,.35), rgba(34,211,238,.35));
+  filter: blur(8px);
+  opacity:.0; transition:.25s ease; z-index:-1;
+}
+.advanced-pay-button:hover::before,
+.premium-send-btn:hover::before,
+.features-fab:hover::before{ opacity:.7 }
+.advanced-pay-button,
+.premium-send-btn{ animation: breathe 3.2s ease-in-out infinite; }
+@keyframes breathe{
+  0%,100%{ transform: translateY(0); box-shadow: 0 12px 24px rgba(139,92,246,.28) }
+  50%{ transform: translateY(-1px); box-shadow: 0 18px 34px rgba(34,211,238,.30) }
+}
+
+/* 5) Quick prompt chips: subtle pulse on hover */
+.chip{ transition: transform .15s ease, filter .2s ease; }
+.chip:hover{ transform: translateY(-1px) scale(1.02) }
+
+/* 6) Scrollbar neon accent (WebKit) */
+.premium-messages::-webkit-scrollbar-track{ background: rgba(148,163,184,.10) }
+.premium-messages::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #22d3ee, #8b5cf6);
+  border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
+}
+
+/* 7) Message bubbles: glossy highlight & accent borders for readability */
+.premium-message.user{
+  box-shadow: 0 16px 36px rgba(139,92,246,.35);
+  background-image: linear-gradient(135deg, #22d3ee 0%, #8b5cf6 100%);
+}
+.premium-message.user::after{
+  content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 40%);
+  mix-blend-mode: screen; opacity:.55;
+}
+.premium-message.bot{
+  border: 1px solid rgba(148,163,184,.22);
+  box-shadow: 0 14px 28px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.035);
+}
+
+/* 8) Composer field: stronger focus ring & glow */
+.premium-input input:focus{
+  border-color:#60a5fa;
+  box-shadow: 0 0 0 8px rgba(59,130,246,.14), 0 10px 28px rgba(34,211,238,.15);
+}
+
+/* 9) Countdown ring: luminous pulse */
+.timer-ring{ box-shadow: 0 0 0 2px rgba(255,255,255,.06), 0 0 24px rgba(34,211,238,.25) }
+#timeRemaining{ text-shadow: 0 2px 12px rgba(34,211,238,.25) }
+
+/* 10) Toast: neon border and soft elevation */
+.toast{
+  border: 1px solid rgba(165,180,252,.28);
+  box-shadow: 0 14px 28px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.04);
+}
+
+/* 11) Drawer & backdrop: denser blur for text readability over busy BG */
+.premium-features{
+  backdrop-filter: blur(18px);
+  border-left: 1px solid rgba(255,255,255,.14);
+}
+.features-backdrop{ backdrop-filter: blur(3px) }
+
+/* 12) Header badge & ring micro-interactions */
+.premium-badge{ transition: transform .2s ease, filter .2s ease }
+.premium-badge:hover{ transform: translateY(-1px); filter: saturate(1.08) }
+
+/* 13) Accessibility tuning: slightly dim white text on dark for comfort */
+body{ color: #E8ECF3 } /* dimmed from pure white, per dark mode readability */
+.premium-message.bot{ color: #E7EBF2 } /* maintain contrast on glass */
+
+/* ====== END PREMIUM VISUALS ====== */
 
 
 </style>
@@ -794,6 +935,7 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
 
 </body>
 </html>
+
 
 
 
