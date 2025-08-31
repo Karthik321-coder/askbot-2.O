@@ -774,6 +774,36 @@ body{
 /* Keep the drawer/backdrop lower than Back to Home */
 .features-backdrop { z-index: 1140; }
 
+  /* Code block styling */
+.message-content pre {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0;
+    overflow-x: auto;
+}
+
+.message-content code {
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+}
+
+/* Separate chat messages properly */
+.chat-message {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.bot-message {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+}
+
+
 
 
 </style>
@@ -1212,6 +1242,7 @@ body{
 
 </body>
 </html>
+
 
 
 
