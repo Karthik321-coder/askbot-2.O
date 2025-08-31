@@ -6,6 +6,10 @@
 <title>AskBot Premium Chat</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
 
 <style>
   /* Make the messages pane actually scroll inside flex column */
@@ -774,36 +778,42 @@ body{
 /* Keep the drawer/backdrop lower than Back to Home */
 .features-backdrop { z-index: 1140; }
 
-  /* Code block styling */
-.message-content pre {
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    margin: 10px 0;
-    overflow-x: auto;
-}
-
-.message-content code {
-    background-color: #f4f4f4;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-family: 'Courier New', monospace;
-}
-
-/* Separate chat messages properly */
-.chat-message {
-    margin-bottom: 15px;
-    padding: 10px;
+  /* Code block styling for ChatGPT-like appearance */
+.premium-message pre {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #334155;
     border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-.bot-message {
-    background-color: #f8f9fa;
-    border-left: 4px solid #007bff;
+.premium-message code {
+    background-color: rgba(175, 184, 193, 0.2);
+    color: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
 }
 
+.premium-message pre code {
+    background: none !important;
+    color: inherit !important;
+    padding: 0;
+    border: none;
+}
 
+/* Syntax highlighting */
+.premium-message .hljs-keyword { color: #c792ea; }
+.premium-message .hljs-string { color: #c3e88d; }
+.premium-message .hljs-comment { color: #546e7a; }
+.premium-message .hljs-number { color: #f78c6c; }
+.premium-message .hljs-function { color: #82aaff; }
 
 
 </style>
@@ -1054,24 +1064,57 @@ body{
     }
   }
 
-  function addMessage(sender, text, withActions=false){
+function addMessage(sender, text, withActions=false){
     const wrap = document.getElementById('chatMessages');
     const div  = document.createElement('div');
     div.className = `premium-message ${sender}`;
-    div.innerHTML = text.replace(/\n/g,'<br>');
-    if(withActions){
-      const actions = document.createElement('div');
-      actions.className='msg-actions';
-      actions.innerHTML=`
-        <button class="action-btn" title="Copy" onclick="copyText(this)"><i class="fa-regular fa-copy"></i></button>
-        <button class="action-btn" title="Regenerate" onclick="regenerateLast()"><i class="fa-solid fa-rotate"></i></button>
-      `;
-      div.appendChild(actions);
+    
+    if(sender === 'bot') {
+        // Configure marked for bot messages
+        marked.setOptions({
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    return hljs.highlight(code, { language: lang }).value;
+                }
+                return hljs.highlightAuto(code).value;
+            },
+            breaks: true,
+            gfm: true
+        });
+        
+        // Render markdown for bot messages
+        try {
+            div.innerHTML = marked(text);
+        } catch (e) {
+            div.innerHTML = text.replace(/\n/g,'<br>');
+        }
+        
+        // Highlight code after rendering
+        setTimeout(() => {
+            div.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        }, 10);
+    } else {
+        // Plain text for user messages
+        div.textContent = text;
     }
+    
+    if(withActions){
+        const actions = document.createElement('div');
+        actions.className='msg-actions';
+        actions.innerHTML=`
+            <button class="action-btn" title="Copy" onclick="copyText(this)"><i class="fa-regular fa-copy"></i></button>
+            <button class="action-btn" title="Regenerate" onclick="regenerateLast()"><i class="fa-solid fa-rotate"></i></button>
+        `;
+        div.appendChild(actions);
+    }
+    
     wrap.appendChild(div);
     wrap.scrollTop = wrap.scrollHeight;
     return div;
-  }
+}
+
 
   function addTypingIndicator(){
     const wrap = document.getElementById('chatMessages');
@@ -1242,6 +1285,7 @@ body{
 
 </body>
 </html>
+
 
 
 
