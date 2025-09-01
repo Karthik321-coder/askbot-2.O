@@ -1090,7 +1090,89 @@ body{
 }
 
 
+ /* File upload styles */
+.file-preview-area {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(15,23,42,.5);
+}
 
+.attached-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(59,130,246,.15);
+  border: 1px solid rgba(59,130,246,.3);
+  border-radius: 8px;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  max-width: 200px;
+}
+
+.file-item .file-icon {
+  color: #60a5fa;
+  font-size: 1.1rem;
+}
+
+.file-item .file-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-item .file-size {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.file-item .remove-file {
+  cursor: pointer;
+  color: #ef4444;
+  padding: 2px;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+.file-item .remove-file:hover {
+  background: rgba(239,68,68,.2);
+}
+
+.message-image {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 8px;
+  margin: 8px 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.message-image:hover {
+  transform: scale(1.02);
+}
+
+.message-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255,255,255,.1);
+  border-radius: 6px;
+  margin: 4px 0;
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.message-file:hover {
+  background: rgba(255,255,255,.15);
+}
 
 
 </style>
@@ -1154,13 +1236,21 @@ body{
         <button class="tool-btn" id="btnCopyLast"><i class="fa-regular fa-copy"></i> Copy last</button>
         <button class="tool-btn" id="btnRegen"><i class="fa-solid fa-rotate-right"></i> Regenerate</button>
         <button class="tool-btn" id="btnClear"><i class="fa-regular fa-trash-can"></i> Clear</button>
+        <button class="tool-btn" id="btnAttach" title="Attach files, images"><i class="fa-solid fa-paperclip"></i> Attach</button>
+
       </div>
       <div class="tool-group">
         <button class="tool-btn" id="btnExport"><i class="fa-regular fa-file-lines"></i> Export</button>
         <button class="tool-btn" id="btnHistory"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
       </div>
     </div>
+   <!-- File preview area (add this after composer-toolbar) -->
+<div class="file-preview-area" id="filePreview" style="display: none;">
+  <div class="attached-files" id="attachedFiles"></div>
+</div>
+
     <div class="premium-input">
+     <input type="file" id="fileInput" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.csv,.xlsx" style="display: none;">
       <input type="text" id="messageInput" placeholder="Ask me anything... I’m your premium AI assistant! ✨" autocomplete="off">
       <button type="button" id="sendBtn" class="premium-send-btn"><i class="fas fa-paper-plane"></i> Send</button>
     </div>
@@ -1574,6 +1664,7 @@ function addMessage(sender, text, withActions=false){
 
 </body>
 </html>
+
 
 
 
