@@ -1375,14 +1375,7 @@ function initializePremiumChat(){
   // Remove this line completely:
   // loadHistory();
 }
-
-  function initializePremiumChat(){
-    startCountdownTimer();
-    setTimeout(()=> addMessage('bot', '🎉 Welcome to AskBot Premium! I\'m your advanced AI assistant with unlimited access to cutting-edge capabilities. Ask me anything!'), 700);
-    setupChatHandlers();
-    loadHistory();
-  }
-
+ 
   function setupChatHandlers(){
     const sendBtn = document.getElementById('sendBtn');
     const input   = document.getElementById('messageInput');
@@ -1926,6 +1919,7 @@ function cleanupHistory() {
 
 </body>
 </html>
+
 
 
 
