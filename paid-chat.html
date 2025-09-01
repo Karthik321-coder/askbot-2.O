@@ -1300,6 +1300,7 @@ body{
     checkExistingAccess();
     setupPaymentButton();
     setupUIExtras();
+    cleanupHistory();
   });
 
   // Payment
@@ -1361,18 +1362,20 @@ body{
 function initializePremiumChat(){
   startCountdownTimer();
   
-  // Clear the chat display on initialization (but keep history in localStorage)
+  // Clear the chat display on initialization (keep history in localStorage)
   document.getElementById('chatMessages').innerHTML = '';
   
-  // Don't show welcome message automatically - let it be clean
-  // Comment out or remove this line:
+  // DON'T show welcome message automatically - keep it completely clean
+  // Remove this line completely:
   // setTimeout(()=> addMessage('bot', '🎉 Welcome to AskBot Premium!...'), 700);
   
   setupChatHandlers();
-  // Don't auto-load history on initialization
-  // Comment out or remove this line:
+  
+  // DON'T auto-load history on initialization
+  // Remove this line completely:
   // loadHistory();
 }
+
   function initializePremiumChat(){
     startCountdownTimer();
     setTimeout(()=> addMessage('bot', '🎉 Welcome to AskBot Premium! I\'m your advanced AI assistant with unlimited access to cutting-edge capabilities. Ask me anything!'), 700);
@@ -1583,11 +1586,12 @@ function addMessage(sender, text, withActions=false){
     sendMessage();
   }
 function clearChat(){
-  // Only clear the display, don't touch localStorage
+  // Only clear the display, don't remove from localStorage
   document.getElementById('chatMessages').innerHTML='';
   toast('Chat display cleared');
-  // Remove this line: persistHistory(true);
+  // Don't call persistHistory(true) - this removes history permanently
 }
+
 
   function exportChat(){
     const text = Array.from(document.querySelectorAll('#chatMessages .premium-message'))
@@ -1638,7 +1642,7 @@ function loadHistory(){
     historyHeader.innerHTML = '📚 <strong>Chat History Loaded</strong> - Previous conversations restored';
     wrap.appendChild(historyHeader);
     
-    // Load all historical messages
+    // Load ONLY the actual historical messages (no duplicate welcome messages)
     arr.forEach(m => {
       const div = document.createElement('div');
       div.className = `premium-message ${m.role}`;
@@ -1661,6 +1665,7 @@ function loadHistory(){
     toast('Error loading chat history');
   }
 }
+
 
 
   // Countdown with ring
@@ -1887,11 +1892,41 @@ function fileToBase64(file) {
 }
 
 
+   // Add this function to remove duplicate welcome messages from history
+function cleanupHistory() {
+  const key = 'askbot_premium_chat_history';
+  const raw = localStorage.getItem(key);
+  
+  if (!raw) return;
+  
+  try {
+    const arr = JSON.parse(raw);
+    
+    // Remove duplicate welcome messages
+    const welcomeText = '🎉 Welcome to AskBot Premium!';
+    const cleanedHistory = arr.filter((msg, index) => {
+      // Keep only the first welcome message, remove duplicates
+      if (msg.role === 'bot' && msg.html.includes(welcomeText)) {
+        return arr.findIndex(m => m.role === 'bot' && m.html.includes(welcomeText)) === index;
+      }
+      return true;
+    });
+    
+    localStorage.setItem(key, JSON.stringify(cleanedHistory));
+    console.log('History cleaned up - removed duplicate welcome messages');
+    
+  } catch(e) {
+    console.warn('Failed to cleanup history:', e);
+  }
+}
+
+
    
 </script>
 
 </body>
 </html>
+
 
 
 
