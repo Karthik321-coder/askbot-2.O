@@ -1358,6 +1358,21 @@ body{
   }
 
   // Chat
+function initializePremiumChat(){
+  startCountdownTimer();
+  
+  // Clear the chat display on initialization (but keep history in localStorage)
+  document.getElementById('chatMessages').innerHTML = '';
+  
+  // Don't show welcome message automatically - let it be clean
+  // Comment out or remove this line:
+  // setTimeout(()=> addMessage('bot', '🎉 Welcome to AskBot Premium!...'), 700);
+  
+  setupChatHandlers();
+  // Don't auto-load history on initialization
+  // Comment out or remove this line:
+  // loadHistory();
+}
   function initializePremiumChat(){
     startCountdownTimer();
     setTimeout(()=> addMessage('bot', '🎉 Welcome to AskBot Premium! I\'m your advanced AI assistant with unlimited access to cutting-edge capabilities. Ask me anything!'), 700);
@@ -1420,14 +1435,37 @@ input.value='';
 
 
     const thinkingId = addTypingIndicator();
-    lastRequestBody = { message: msg, isPremium: true };
+  // Prepare request with files
+lastRequestBody = { 
+  message: msg, 
+  isPremium: true,
+  hasFiles: filesToSend.length > 0,
+  fileCount: filesToSend.length
+};
 
-    try{
-      const endpoint = filesToSend.length > 0 ? '/api/chat/vision' : '/api/chat';
-      const res = await fetch(`${BACKEND_URL}${endpoint}`, {
- 
-        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(lastRequestBody)
-      });
+// Convert files to base64 for sending (if any files)
+if (filesToSend.length > 0) {
+  try {
+    const filesData = await Promise.all(filesToSend.map(async fileData => ({
+      name: fileData.name,
+      type: fileData.type,
+      size: fileData.size,
+      data: await fileToBase64(fileData.file)
+    })));
+    lastRequestBody.files = filesData;
+  } catch (fileError) {
+    console.error('File processing error:', fileError);
+    toast('Error processing files. Please try again.');
+    return;
+  }
+}
+
+try{
+  const endpoint = filesToSend.length > 0 ? '/api/chat/vision' : '/api/chat';
+  const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(lastRequestBody)
+  });
+
       if(!res.ok){
         const text = await res.text().catch(()=> '');
         throw new Error(`Backend error ${res.status}${text?': '+text:''}`);
@@ -1544,11 +1582,13 @@ function addMessage(sender, text, withActions=false){
     document.getElementById('messageInput').value = lastRequestBody.message;
     sendMessage();
   }
-  function clearChat(){
-    document.getElementById('chatMessages').innerHTML='';
-    persistHistory(true);
-    toast('Chat cleared');
-  }
+function clearChat(){
+  // Only clear the display, don't touch localStorage
+  document.getElementById('chatMessages').innerHTML='';
+  toast('Chat display cleared');
+  // Remove this line: persistHistory(true);
+}
+
   function exportChat(){
     const text = Array.from(document.querySelectorAll('#chatMessages .premium-message'))
       .map(el => (el.classList.contains('user')?'You: ':'AI: ') + el.innerText.trim())
@@ -1566,28 +1606,62 @@ function addMessage(sender, text, withActions=false){
       .map(el => ({ role: el.classList.contains('user')?'user':'bot', html: el.innerHTML }));
     localStorage.setItem(key, JSON.stringify(items));
   }
-  function loadHistory(){
-    const key = 'askbot_premium_chat_history';
-    const raw = localStorage.getItem(key);
-    if(!raw) return toast('No saved history');
-    try{
-      const arr = JSON.parse(raw);
-      const wrap = document.getElementById('chatMessages'); wrap.innerHTML='';
-      arr.forEach(m => {
-        const div = document.createElement('div');
-        div.className = `premium-message ${m.role}`;
-        div.innerHTML = m.html;
-        if(m.role==='bot'){
-          const actions=document.createElement('div'); actions.className='msg-actions';
-          actions.innerHTML=`<button class="action-btn" title="Copy" onclick="copyText(this)"><i class="fa-regular fa-copy"></i></button>`;
-          div.appendChild(actions);
-        }
-        wrap.appendChild(div);
-      });
-      wrap.scrollTop = wrap.scrollHeight;
-      toast('History loaded');
-    }catch(e){ console.warn(e); }
+function loadHistory(){
+  const key = 'askbot_premium_chat_history';
+  const raw = localStorage.getItem(key);
+  
+  if(!raw) {
+    toast('No saved chat history found');
+    return;
   }
+  
+  try{
+    const arr = JSON.parse(raw);
+    if(arr.length === 0) {
+      toast('Chat history is empty');
+      return;
+    }
+    
+    const wrap = document.getElementById('chatMessages'); 
+    wrap.innerHTML = ''; // Clear current display
+    
+    // Add a header to indicate this is loaded history
+    const historyHeader = document.createElement('div');
+    historyHeader.style.cssText = `
+      text-align: center; 
+      padding: 12px; 
+      color: #a5b4fc; 
+      font-size: 0.9rem; 
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 16px;
+    `;
+    historyHeader.innerHTML = '📚 <strong>Chat History Loaded</strong> - Previous conversations restored';
+    wrap.appendChild(historyHeader);
+    
+    // Load all historical messages
+    arr.forEach(m => {
+      const div = document.createElement('div');
+      div.className = `premium-message ${m.role}`;
+      div.innerHTML = m.html;
+      
+      if(m.role==='bot'){
+        const actions = document.createElement('div'); 
+        actions.className = 'msg-actions';
+        actions.innerHTML = `<button class="action-btn" title="Copy" onclick="copyText(this)"><i class="fa-regular fa-copy"></i></button>`;
+        div.appendChild(actions);
+      }
+      wrap.appendChild(div);
+    });
+    
+    wrap.scrollTop = wrap.scrollHeight;
+    toast(`Loaded ${arr.length} messages from history`);
+    
+  } catch(e) { 
+    console.warn('History load error:', e); 
+    toast('Error loading chat history');
+  }
+}
+
 
   // Countdown with ring
   function startCountdownTimer(){
@@ -1802,11 +1876,23 @@ function openImagePreview(url, name) {
   document.body.appendChild(modal);
 }
 
+   // Helper function to convert file to base64
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+
    
 </script>
 
 </body>
 </html>
+
 
 
 
