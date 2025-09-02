@@ -1429,9 +1429,9 @@ body::after {
   let lastUserMessage = '';
   let lastBotMessage  = '';
   let lastRequestBody = null;
-  let attachedFiles = []; // Add this line
+  let attachedFiles = [];
+  let voiceAssistant; // Global voice assistant variable
  
-
   document.addEventListener('DOMContentLoaded', () => {
     checkExistingAccess();
     setupPaymentButton();
@@ -1479,10 +1479,14 @@ body::after {
   function checkExistingAccess(){
     const accessData = localStorage.getItem('askbot_premium_access');
     if(accessData){
-      const { expiresAt } = JSON.parse(accessData);
-      if(new Date() < new Date(expiresAt)){
-        showPremiumChat();
-        return;
+      try {
+        const { expiresAt } = JSON.parse(accessData);
+        if(new Date() < new Date(expiresAt)){
+          showPremiumChat();
+          return;
+        }
+      } catch(e) {
+        console.error('Access data parsing error:', e);
       }
       localStorage.removeItem('askbot_premium_access');
     }
@@ -1495,22 +1499,22 @@ body::after {
   }
 
   // Chat
-function initializePremiumChat(){
-  startCountdownTimer();
-  
-  // Clear the chat display on initialization (keep history in localStorage)
-  document.getElementById('chatMessages').innerHTML = '';
-  
-  // DON'T show welcome message automatically - keep it completely clean
-  // Remove this line completely:
-  // setTimeout(()=> addMessage('bot', '🎉 Welcome to AskBot Premium!...'), 700);
-  
-  setupChatHandlers();
-  
-  // DON'T auto-load history on initialization
-  // Remove this line completely:
-  // loadHistory();
-}
+  function initializePremiumChat(){
+    startCountdownTimer();
+    document.getElementById('chatMessages').innerHTML = '';
+    setupChatHandlers();
+    
+    // Initialize voice assistant after a short delay
+    setTimeout(() => {
+      try {
+        voiceAssistant = new AdvancedVoiceAssistant();
+        toast('🎤 Voice Assistant Ready! Click the microphone to start.');
+      } catch(error) {
+        console.error('Voice assistant initialization error:', error);
+        toast('Voice assistant not available in this browser');
+      }
+    }, 1000);
+  }
  
   function setupChatHandlers(){
     const sendBtn = document.getElementById('sendBtn');
@@ -1533,10 +1537,8 @@ function initializePremiumChat(){
     document.getElementById('btnClear').onclick    = clearChat;
     document.getElementById('btnExport').onclick   = exportChat;
     document.getElementById('btnHistory').onclick  = loadHistory;
-   // Add these two lines to your existing setupChatHandlers function
     document.getElementById('btnAttach').onclick = () => document.getElementById('fileInput').click();
     document.getElementById('fileInput').addEventListener('change', handleFileSelect);
-
   }
 
   async function sendMessage(){
@@ -1545,7 +1547,6 @@ function initializePremiumChat(){
     const msg     = input.value.trim();
     if(!msg && attachedFiles.length === 0) return;
 
-
     // Access check
     const accessData = localStorage.getItem('askbot_premium_access');
     if(!accessData){ alert('❌ Premium access required.'); return; }
@@ -1553,50 +1554,49 @@ function initializePremiumChat(){
     input.disabled = true; sendBtn.disabled=true;
     sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing';
 
-   lastUserMessage = msg;
+    lastUserMessage = msg;
 
-// Add user message with files
-addUserMessageWithFiles(msg, [...attachedFiles]);
+    // Add user message with files
+    addUserMessageWithFiles(msg, [...attachedFiles]);
 
-// Clear attached files after sending
-const filesToSend = [...attachedFiles];
-attachedFiles = [];
-updateFilePreview();
-
-input.value='';
-
+    // Clear attached files after sending
+    const filesToSend = [...attachedFiles];
+    attachedFiles = [];
+    updateFilePreview();
+    input.value='';
 
     const thinkingId = addTypingIndicator();
-  // Prepare request with files
-lastRequestBody = { 
-  message: msg, 
-  isPremium: true,
-  hasFiles: filesToSend.length > 0,
-  fileCount: filesToSend.length
-};
+    
+    // Prepare request with files
+    lastRequestBody = { 
+      message: msg, 
+      isPremium: true,
+      hasFiles: filesToSend.length > 0,
+      fileCount: filesToSend.length
+    };
 
-// Convert files to base64 for sending (if any files)
-if (filesToSend.length > 0) {
-  try {
-    const filesData = await Promise.all(filesToSend.map(async fileData => ({
-      name: fileData.name,
-      type: fileData.type,
-      size: fileData.size,
-      data: await fileToBase64(fileData.file)
-    })));
-    lastRequestBody.files = filesData;
-  } catch (fileError) {
-    console.error('File processing error:', fileError);
-    toast('Error processing files. Please try again.');
-    return;
-  }
-}
+    // Convert files to base64 for sending (if any files)
+    if (filesToSend.length > 0) {
+      try {
+        const filesData = await Promise.all(filesToSend.map(async fileData => ({
+          name: fileData.name,
+          type: fileData.type,
+          size: fileData.size,
+          data: await fileToBase64(fileData.file)
+        })));
+        lastRequestBody.files = filesData;
+      } catch (fileError) {
+        console.error('File processing error:', fileError);
+        toast('Error processing files. Please try again.');
+        return;
+      }
+    }
 
-try{
-  const endpoint = filesToSend.length > 0 ? '/api/chat/vision' : '/api/chat';
-  const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(lastRequestBody)
-  });
+    try{
+      const endpoint = filesToSend.length > 0 ? '/api/chat/vision' : '/api/chat';
+      const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(lastRequestBody)
+      });
 
       if(!res.ok){
         const text = await res.text().catch(()=> '');
@@ -1619,69 +1619,79 @@ try{
     }
   }
 
-function addMessage(sender, text, withActions=false){
+  function addMessage(sender, text, withActions=false){
     const wrap = document.getElementById('chatMessages');
     const div  = document.createElement('div');
     div.className = `premium-message ${sender}`;
     
     if(sender === 'bot') {
-        // Check if markdown libraries are loaded
-        if (typeof marked !== 'undefined' && typeof hljs !== 'undefined') {
-            try {
-                // Configure marked
-                marked.setOptions({
-                    highlight: function(code, lang) {
-                        if (lang && hljs.getLanguage(lang)) {
-                            return hljs.highlight(code, { language: lang }).value;
-                        }
-                        return hljs.highlightAuto(code).value;
-                    },
-                    breaks: true,
-                    gfm: true
-                });
-                
-                // Render markdown
-                div.innerHTML = marked(text);
-                
-                // Apply syntax highlighting after a brief delay
-                setTimeout(() => {
-                    div.querySelectorAll('pre code').forEach((block) => {
-                        hljs.highlightElement(block);
-                    });
-                }, 10);
-                
-            } catch (e) {
-                console.error('Markdown error:', e);
-                // Fallback
-                div.innerHTML = text.replace(/\n/g,'<br>');
-            }
-        } else {
-            console.warn('Markdown libraries not loaded');
-            // Simple fallback
-            div.innerHTML = text.replace(/\n/g,'<br>');
+      // Check if markdown libraries are loaded
+      if (typeof marked !== 'undefined' && typeof hljs !== 'undefined') {
+        try {
+          // Configure marked
+          marked.setOptions({
+            highlight: function(code, lang) {
+              if (lang && hljs.getLanguage(lang)) {
+                return hljs.highlight(code, { language: lang }).value;
+              }
+              return hljs.highlightAuto(code).value;
+            },
+            breaks: true,
+            gfm: true
+          });
+          
+          // Render markdown
+          div.innerHTML = marked(text);
+          
+          // Apply syntax highlighting after a brief delay
+          setTimeout(() => {
+            div.querySelectorAll('pre code').forEach((block) => {
+              hljs.highlightElement(block);
+            });
+          }, 10);
+          
+        } catch (e) {
+          console.error('Markdown error:', e);
+          // Fallback
+          div.innerHTML = text.replace(/\n/g,'<br>');
         }
+      } else {
+        console.warn('Markdown libraries not loaded');
+        // Simple fallback
+        div.innerHTML = text.replace(/\n/g,'<br>');
+      }
     } else {
-        // User messages
-        div.textContent = text;
+      // User messages
+      div.textContent = text;
     }
     
     if(withActions){
-        const actions = document.createElement('div');
-        actions.className='msg-actions';
-        actions.innerHTML=`
-            <button class="action-btn" title="Copy" onclick="copyText(this)"><i class="fa-regular fa-copy"></i></button>
-            <button class="action-btn" title="Regenerate" onclick="regenerateLast()"><i class="fa-solid fa-rotate"></i></button>
-        `;
-        div.appendChild(actions);
+      const actions = document.createElement('div');
+      actions.className='msg-actions';
+      actions.innerHTML=`
+        <button class="action-btn" title="Copy" onclick="copyText(this)"><i class="fa-regular fa-copy"></i></button>
+        <button class="action-btn" title="Regenerate" onclick="regenerateLast()"><i class="fa-solid fa-rotate"></i></button>
+      `;
+      
+      // Add speak button for bot messages if voice assistant is available
+      if (sender === 'bot' && voiceAssistant) {
+        const speakBtn = document.createElement('button');
+        speakBtn.className = 'action-btn';
+        speakBtn.title = 'Speak this message';
+        speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        speakBtn.onclick = () => voiceAssistant.speak(text);
+        actions.appendChild(speakBtn);
+        
+        div.classList.add('voice-response');
+      }
+      
+      div.appendChild(actions);
     }
     
     wrap.appendChild(div);
     wrap.scrollTop = wrap.scrollHeight;
     return div;
-}
-
-
-
+  }
 
   function addTypingIndicator(){
     const wrap = document.getElementById('chatMessages');
@@ -1696,6 +1706,7 @@ function addMessage(sender, text, withActions=false){
     wrap.appendChild(div); wrap.scrollTop = wrap.scrollHeight;
     return id;
   }
+  
   function removeTypingIndicator(id){ const el=document.getElementById(id); if(el) el.remove(); }
 
   // Toolbar actions
@@ -1703,24 +1714,24 @@ function addMessage(sender, text, withActions=false){
     if(!lastBotMessage){ return toast('No AI message to copy'); }
     navigator.clipboard.writeText(lastBotMessage).then(()=> toast('Copied to clipboard'));
   }
+  
   function copyText(btn){
     const msg = btn.closest('.premium-message'); 
     const txt = msg ? msg.innerText.trim() : '';
     if(!txt) return;
     navigator.clipboard.writeText(txt).then(()=> toast('Copied to clipboard'));
   }
+  
   function regenerateLast(){
     if(!lastRequestBody){ return toast('Nothing to regenerate yet'); }
     document.getElementById('messageInput').value = lastRequestBody.message;
     sendMessage();
   }
-function clearChat(){
-  // Only clear the display, don't remove from localStorage
-  document.getElementById('chatMessages').innerHTML='';
-  toast('Chat display cleared');
-  // Don't call persistHistory(true) - this removes history permanently
-}
-
+  
+  function clearChat(){
+    document.getElementById('chatMessages').innerHTML='';
+    toast('Chat display cleared');
+  }
 
   function exportChat(){
     const text = Array.from(document.querySelectorAll('#chatMessages .premium-message'))
@@ -1739,107 +1750,132 @@ function clearChat(){
       .map(el => ({ role: el.classList.contains('user')?'user':'bot', html: el.innerHTML }));
     localStorage.setItem(key, JSON.stringify(items));
   }
-function loadHistory(){
-  const key = 'askbot_premium_chat_history';
-  const raw = localStorage.getItem(key);
   
-  if(!raw) {
-    toast('No saved chat history found');
-    return;
-  }
-  
-  try{
-    const arr = JSON.parse(raw);
-    if(arr.length === 0) {
-      toast('Chat history is empty');
+  function loadHistory(){
+    const key = 'askbot_premium_chat_history';
+    const raw = localStorage.getItem(key);
+    
+    if(!raw) {
+      toast('No saved chat history found');
       return;
     }
     
-    const wrap = document.getElementById('chatMessages'); 
-    wrap.innerHTML = ''; // Clear current display
-    
-    // Add a header to indicate this is loaded history
-    const historyHeader = document.createElement('div');
-    historyHeader.style.cssText = `
-      text-align: center; 
-      padding: 12px; 
-      color: #a5b4fc; 
-      font-size: 0.9rem; 
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      margin-bottom: 16px;
-    `;
-    historyHeader.innerHTML = '📚 <strong>Chat History Loaded</strong> - Previous conversations restored';
-    wrap.appendChild(historyHeader);
-    
-    // Load ONLY the actual historical messages (no duplicate welcome messages)
-    arr.forEach(m => {
-      const div = document.createElement('div');
-      div.className = `premium-message ${m.role}`;
-      div.innerHTML = m.html;
-      
-      if(m.role==='bot'){
-        const actions = document.createElement('div'); 
-        actions.className = 'msg-actions';
-        actions.innerHTML = `<button class="action-btn" title="Copy" onclick="copyText(this)"><i class="fa-regular fa-copy"></i></button>`;
-        div.appendChild(actions);
-      }
-      wrap.appendChild(div);
-    });
-    
-    wrap.scrollTop = wrap.scrollHeight;
-    toast(`Loaded ${arr.length} messages from history`);
-    
-  } catch(e) { 
-    console.warn('History load error:', e); 
-    toast('Error loading chat history');
-  }
-}
-
-
-
-  // Countdown with ring
-  function startCountdownTimer(){
-    const data = localStorage.getItem('askbot_premium_access'); if(!data) return;
-    const { expiresAt } = JSON.parse(data);
-    const timeEl = document.getElementById('timeRemaining');
-    const ringEl = document.getElementById('timerRing');
-    const miniEl = document.getElementById('timerMini');
-    const total = new Date(expiresAt) - new Date() + 1000;
-
-    const tick = () => {
-      const now = new Date();
-      const left = new Date(expiresAt) - now;
-      if(left <= 0){
-        timeEl.textContent = 'Expired';
-        ringEl.style.setProperty('--pct', 0);
-        miniEl.textContent = '0';
-        localStorage.removeItem('askbot_premium_access');
-        toast('Your 24‑hour access has expired');
-        setTimeout(()=> location.reload(), 1500);
+    try{
+      const arr = JSON.parse(raw);
+      if(arr.length === 0) {
+        toast('Chat history is empty');
         return;
       }
-      const h = Math.floor(left/3600000);
-      const m = Math.floor((left%3600000)/60000);
-      const s = Math.floor((left%60000)/1000);
-      timeEl.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-      miniEl.textContent = String(h).padStart(2,'0');
-      ringEl.style.setProperty('--pct', Math.max(0, (left/total)));
-      requestAnimationFrame(tick);
-    };
-    tick();
+      
+      const wrap = document.getElementById('chatMessages'); 
+      wrap.innerHTML = '';
+      
+      // Add a header to indicate this is loaded history
+      const historyHeader = document.createElement('div');
+      historyHeader.style.cssText = `
+        text-align: center; 
+        padding: 12px; 
+        color: #a5b4fc; 
+        font-size: 0.9rem; 
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 16px;
+      `;
+      historyHeader.innerHTML = '📚 <strong>Chat History Loaded</strong> - Previous conversations restored';
+      wrap.appendChild(historyHeader);
+      
+      // Load historical messages
+      arr.forEach(m => {
+        const div = document.createElement('div');
+        div.className = `premium-message ${m.role}`;
+        div.innerHTML = m.html;
+        
+        if(m.role==='bot'){
+          const actions = document.createElement('div'); 
+          actions.className = 'msg-actions';
+          actions.innerHTML = `<button class="action-btn" title="Copy" onclick="copyText(this)"><i class="fa-regular fa-copy"></i></button>`;
+          div.appendChild(actions);
+        }
+        wrap.appendChild(div);
+      });
+      
+      wrap.scrollTop = wrap.scrollHeight;
+      toast(`Loaded ${arr.length} messages from history`);
+      
+    } catch(e) { 
+      console.warn('History load error:', e); 
+      toast('Error loading chat history');
+    }
+  }
+
+  // Fixed Countdown Timer
+  function startCountdownTimer(){
+    const data = localStorage.getItem('askbot_premium_access'); 
+    if(!data) {
+      console.warn('No premium access data found');
+      return;
+    }
+    
+    try {
+      const { expiresAt } = JSON.parse(data);
+      const timeEl = document.getElementById('timeRemaining');
+      const ringEl = document.getElementById('timerRing');
+      const miniEl = document.getElementById('timerMini');
+      
+      // Check if elements exist
+      if (!timeEl || !ringEl || !miniEl) {
+        console.error('Timer elements not found');
+        return;
+      }
+      
+      const expiryDate = new Date(expiresAt);
+      const total = expiryDate - new Date() + 1000;
+
+      const tick = () => {
+        const now = new Date();
+        const left = expiryDate - now;
+        
+        if(left <= 0){
+          timeEl.textContent = 'Expired';
+          ringEl.style.setProperty('--pct', 0);
+          miniEl.textContent = '0';
+          localStorage.removeItem('askbot_premium_access');
+          toast('Your 24‑hour access has expired');
+          setTimeout(() => location.reload(), 1500);
+          return;
+        }
+        
+        const h = Math.floor(left/3600000);
+        const m = Math.floor((left%3600000)/60000);
+        const s = Math.floor((left%60000)/1000);
+        
+        timeEl.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        miniEl.textContent = String(h).padStart(2,'0');
+        ringEl.style.setProperty('--pct', Math.max(0, (left/total)));
+        
+        requestAnimationFrame(tick);
+      };
+      tick();
+      
+    } catch (error) {
+      console.error('Error starting countdown timer:', error);
+      toast('Timer initialization failed');
+    }
   }
 
   // UI extras
   function setupUIExtras(){
-    // Toast once at start
     setTimeout(()=> toast('Welcome to Premium ✨'), 600);
   }
+  
   function toast(msg){
-    const t = document.getElementById('toast'); t.textContent = msg; t.style.display='block';
-    clearTimeout(t._h); t._h = setTimeout(()=> t.style.display='none', 2200);
+    const t = document.getElementById('toast'); 
+    t.textContent = msg; 
+    t.style.display='block';
+    clearTimeout(t._h); 
+    t._h = setTimeout(()=> t.style.display='none', 2200);
   }
 
-  // Confetti (lightweight)
+  // Confetti
   function confetti(){
     const N=30;
     for(let i=0;i<N;i++){
@@ -1857,9 +1893,376 @@ function loadHistory(){
     }
   }
 
-</script>
-  <script>
-  // Drawer toggle logic (non-invasive)
+  // File handling functions
+  function handleFileSelect(event) {
+    const files = Array.from(event.target.files);
+    
+    files.forEach(file => {
+      if (file.size > 10 * 1024 * 1024) {
+        toast(`File ${file.name} is too large. Max size is 10MB.`);
+        return;
+      }
+      
+      attachedFiles.push({
+        file: file,
+        id: Date.now() + Math.random(),
+        name: file.name,
+        size: file.size,
+        type: file.type
+      });
+    });
+    
+    updateFilePreview();
+    event.target.value = '';
+  }
+
+  function updateFilePreview() {
+    const previewArea = document.getElementById('filePreview');
+    const attachedFilesDiv = document.getElementById('attachedFiles');
+    
+    if (attachedFiles.length === 0) {
+      previewArea.style.display = 'none';
+      return;
+    }
+    
+    previewArea.style.display = 'block';
+    attachedFilesDiv.innerHTML = '';
+    
+    attachedFiles.forEach(fileData => {
+      const fileDiv = document.createElement('div');
+      fileDiv.className = 'file-item';
+      
+      const icon = getFileIcon(fileData.type);
+      const size = formatFileSize(fileData.size);
+      
+      fileDiv.innerHTML = `
+        <i class="${icon} file-icon"></i>
+        <span class="file-name" title="${fileData.name}">${fileData.name}</span>
+        <span class="file-size">${size}</span>
+        <i class="fas fa-times remove-file" onclick="removeFile('${fileData.id}')"></i>
+      `;
+      
+      attachedFilesDiv.appendChild(fileDiv);
+    });
+  }
+
+  function removeFile(fileId) {
+    attachedFiles = attachedFiles.filter(f => f.id != fileId);
+    updateFilePreview();
+  }
+
+  function getFileIcon(type) {
+    if (type.startsWith('image/')) return 'fas fa-image';
+    if (type.startsWith('video/')) return 'fas fa-video';
+    if (type.startsWith('audio/')) return 'fas fa-music';
+    if (type.includes('pdf')) return 'fas fa-file-pdf';
+    if (type.includes('word') || type.includes('doc')) return 'fas fa-file-word';
+    if (type.includes('excel') || type.includes('sheet')) return 'fas fa-file-excel';
+    if (type.includes('text')) return 'fas fa-file-text';
+    return 'fas fa-file';
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  function addUserMessageWithFiles(text, files) {
+    const wrap = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'premium-message user';
+    
+    let content = '';
+    
+    if (text) {
+      content += `<div>${text}</div>`;
+    }
+    
+    files.forEach(fileData => {
+      if (fileData.type.startsWith('image/')) {
+        const url = URL.createObjectURL(fileData.file);
+        content += `<img src="${url}" class="message-image" alt="${fileData.name}" onclick="openImagePreview('${url}', '${fileData.name}')">`;
+      } else {
+        const icon = getFileIcon(fileData.type);
+        const size = formatFileSize(fileData.size);
+        content += `<div class="message-file">
+          <i class="${icon}"></i>
+          <span>${fileData.name} (${size})</span>
+        </div>`;
+      }
+    });
+    
+    div.innerHTML = content;
+    wrap.appendChild(div);
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+
+  function openImagePreview(url, name) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); display: flex; align-items: center;
+      justify-content: center; z-index: 9999; cursor: pointer;
+    `;
+    
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.cssText = 'max-width: 90%; max-height: 90%; border-radius: 8px;';
+    
+    modal.appendChild(img);
+    modal.onclick = () => document.body.removeChild(modal);
+    document.body.appendChild(modal);
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  function cleanupHistory() {
+    const key = 'askbot_premium_chat_history';
+    const raw = localStorage.getItem(key);
+    
+    if (!raw) return;
+    
+    try {
+      const arr = JSON.parse(raw);
+      
+      // Remove duplicate welcome messages
+      const welcomeText = '🎉 Welcome to AskBot Premium!';
+      const cleanedHistory = arr.filter((msg, index) => {
+        if (msg.role === 'bot' && msg.html.includes(welcomeText)) {
+          return arr.findIndex(m => m.role === 'bot' && m.html.includes(welcomeText)) === index;
+        }
+        return true;
+      });
+      
+      localStorage.setItem(key, JSON.stringify(cleanedHistory));
+      console.log('History cleaned up - removed duplicate welcome messages');
+      
+    } catch(e) {
+      console.warn('Failed to cleanup history:', e);
+    }
+  }
+
+  // ===== ADVANCED VOICE ASSISTANCE SYSTEM =====
+  class AdvancedVoiceAssistant {
+    constructor() {
+      this.recognition = null;
+      this.synthesis = window.speechSynthesis;
+      this.isListening = false;
+      this.isSpeaking = false;
+      this.voiceEnabled = false;
+      
+      this.initializeVoiceUI();
+      this.setupVoiceRecognition();
+      this.setupVoiceSynthesis();
+    }
+
+    initializeVoiceUI() {
+      // Add voice controls to the page
+      const voiceHTML = `
+        <div class="voice-controls">
+          <button class="voice-btn" id="voiceToggle" title="Voice Assistant">
+            <i class="fas fa-microphone"></i>
+            <div class="voice-visualizer"></div>
+          </button>
+          <button class="voice-btn" id="voiceStop" title="Stop Voice" style="display: none;">
+            <i class="fas fa-stop"></i>
+          </button>
+        </div>
+        
+        <div class="voice-status" id="voiceStatus">
+          <span id="voiceStatusText">Listening...</span>
+          <div class="voice-waveform">
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+            <div class="voice-bar"></div>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertAdjacentHTML('beforeend', voiceHTML);
+      
+      // Bind events
+      document.getElementById('voiceToggle').addEventListener('click', () => this.toggleVoice());
+      document.getElementById('voiceStop').addEventListener('click', () => this.stopVoice());
+    }
+
+    setupVoiceRecognition() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        toast('❌ Speech recognition not supported in this browser');
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      this.recognition = new SpeechRecognition();
+      
+      this.recognition.continuous = false;
+      this.recognition.interimResults = false;
+      this.recognition.lang = 'en-US';
+
+      this.recognition.onstart = () => {
+        this.isListening = true;
+        this.updateVoiceUI();
+        this.showVoiceStatus('🎤 Listening... Speak now!');
+      };
+
+      this.recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        this.processVoiceCommand(transcript);
+      };
+
+      this.recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        this.stopListening();
+        toast('❌ Voice recognition error: ' + event.error);
+      };
+
+      this.recognition.onend = () => {
+        this.stopListening();
+      };
+    }
+
+    setupVoiceSynthesis() {
+      // Enhanced voice selection for better quality
+      this.synthesis.onvoiceschanged = () => {
+        const voices = this.synthesis.getVoices();
+        // Prefer neural/enhanced voices
+        this.selectedVoice = voices.find(voice => 
+          voice.name.includes('Neural') || 
+          voice.name.includes('Enhanced') ||
+          voice.name.includes('Premium')
+        ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+      };
+    }
+
+    toggleVoice() {
+      if (this.isListening) {
+        this.stopListening();
+      } else {
+        this.startListening();
+      }
+    }
+
+    startListening() {
+      if (!this.recognition) return;
+      
+      try {
+        this.recognition.start();
+        this.animateVoiceBackground();
+      } catch (error) {
+        console.error('Failed to start recognition:', error);
+        toast('❌ Could not start voice recognition');
+      }
+    }
+
+    stopListening() {
+      if (this.recognition && this.isListening) {
+        this.recognition.stop();
+      }
+      this.isListening = false;
+      this.updateVoiceUI();
+      this.hideVoiceStatus();
+    }
+
+    stopVoice() {
+      this.stopListening();
+      if (this.isSpeaking) {
+        this.synthesis.cancel();
+        this.isSpeaking = false;
+        this.updateVoiceUI();
+      }
+    }
+
+    async processVoiceCommand(transcript) {
+      console.log('Voice command:', transcript);
+      this.showVoiceStatus('🧠 Processing: ' + transcript);
+      
+      // Add voice message to chat with special styling
+      const messageDiv = addMessage('user', transcript);
+      messageDiv.classList.add('voice-message');
+      
+      // Process through your existing chat system
+      document.getElementById('messageInput').value = transcript;
+      await sendMessage();
+      
+      this.hideVoiceStatus();
+    }
+
+    speak(text) {
+      if (!this.synthesis || this.isSpeaking) return;
+      
+      // Clean text for speech (remove markdown, HTML)
+      const cleanText = text.replace(/[*_`#]/g, '').replace(/<[^>]*>/g, '');
+      
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.voice = this.selectedVoice;
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 0.8;
+      
+      utterance.onstart = () => {
+        this.isSpeaking = true;
+        this.updateVoiceUI();
+        this.showVoiceStatus('🔊 Speaking...');
+      };
+      
+      utterance.onend = () => {
+        this.isSpeaking = false;
+        this.updateVoiceUI();
+        this.hideVoiceStatus();
+      };
+      
+      this.synthesis.speak(utterance);
+    }
+
+    updateVoiceUI() {
+      const toggleBtn = document.getElementById('voiceToggle');
+      const stopBtn = document.getElementById('voiceStop');
+      
+      if (!toggleBtn || !stopBtn) return;
+      
+      toggleBtn.className = 'voice-btn';
+      if (this.isListening) toggleBtn.classList.add('listening');
+      if (this.isSpeaking) toggleBtn.classList.add('speaking');
+      
+      stopBtn.style.display = (this.isListening || this.isSpeaking) ? 'block' : 'none';
+    }
+
+    showVoiceStatus(text) {
+      const status = document.getElementById('voiceStatus');
+      const statusText = document.getElementById('voiceStatusText');
+      if (status && statusText) {
+        statusText.textContent = text;
+        status.style.display = 'block';
+      }
+    }
+
+    hideVoiceStatus() {
+      const status = document.getElementById('voiceStatus');
+      if (status) status.style.display = 'none';
+    }
+
+    animateVoiceBackground() {
+      // Enhanced background animation during voice interaction
+      document.body.style.setProperty('--voice-active', '1');
+      setTimeout(() => {
+        document.body.style.setProperty('--voice-active', '0');
+      }, 3000);
+    }
+  }
+
+  // Drawer toggle logic
   (function(){
     const fab = document.getElementById('featuresFab');
     const drawer = document.getElementById('premiumDrawer');
@@ -1887,443 +2290,32 @@ function loadHistory(){
     }
   })();
 
-   function handleFileSelect(event) {
-  const files = Array.from(event.target.files);
-  
-  files.forEach(file => {
-    if (file.size > 10 * 1024 * 1024) {
-      toast(`File ${file.name} is too large. Max size is 10MB.`);
-      return;
+  // Advanced keyboard shortcuts for voice control
+  document.addEventListener('keydown', (e) => {
+    // Spacebar to toggle voice (when not typing)
+    if (e.code === 'Space' && e.target.tagName !== 'INPUT' && voiceAssistant) {
+      e.preventDefault();
+      voiceAssistant.toggleVoice();
     }
     
-    attachedFiles.push({
-      file: file,
-      id: Date.now() + Math.random(),
-      name: file.name,
-      size: file.size,
-      type: file.type
-    });
-  });
-  
-  updateFilePreview();
-  event.target.value = '';
-}
-
-function updateFilePreview() {
-  const previewArea = document.getElementById('filePreview');
-  const attachedFilesDiv = document.getElementById('attachedFiles');
-  
-  if (attachedFiles.length === 0) {
-    previewArea.style.display = 'none';
-    return;
-  }
-  
-  previewArea.style.display = 'block';
-  attachedFilesDiv.innerHTML = '';
-  
-  attachedFiles.forEach(fileData => {
-    const fileDiv = document.createElement('div');
-    fileDiv.className = 'file-item';
+    // Escape to stop voice
+    if (e.code === 'Escape' && voiceAssistant) {
+      voiceAssistant.stopVoice();
+    }
     
-    const icon = getFileIcon(fileData.type);
-    const size = formatFileSize(fileData.size);
-    
-    fileDiv.innerHTML = `
-      <i class="${icon} file-icon"></i>
-      <span class="file-name" title="${fileData.name}">${fileData.name}</span>
-      <span class="file-size">${size}</span>
-      <i class="fas fa-times remove-file" onclick="removeFile('${fileData.id}')"></i>
-    `;
-    
-    attachedFilesDiv.appendChild(fileDiv);
-  });
-}
-
-function removeFile(fileId) {
-  attachedFiles = attachedFiles.filter(f => f.id != fileId);
-  updateFilePreview();
-}
-
-function getFileIcon(type) {
-  if (type.startsWith('image/')) return 'fas fa-image';
-  if (type.startsWith('video/')) return 'fas fa-video';
-  if (type.startsWith('audio/')) return 'fas fa-music';
-  if (type.includes('pdf')) return 'fas fa-file-pdf';
-  if (type.includes('word') || type.includes('doc')) return 'fas fa-file-word';
-  if (type.includes('excel') || type.includes('sheet')) return 'fas fa-file-excel';
-  if (type.includes('text')) return 'fas fa-file-text';
-  return 'fas fa-file';
-}
-
-function formatFileSize(bytes) {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-function addUserMessageWithFiles(text, files) {
-  const wrap = document.getElementById('chatMessages');
-  const div = document.createElement('div');
-  div.className = 'premium-message user';
-  
-  let content = '';
-  
-  if (text) {
-    content += `<div>${text}</div>`;
-  }
-  
-  files.forEach(fileData => {
-    if (fileData.type.startsWith('image/')) {
-      const url = URL.createObjectURL(fileData.file);
-      content += `<img src="${url}" class="message-image" alt="${fileData.name}" onclick="openImagePreview('${url}', '${fileData.name}')">`;
-    } else {
-      const icon = getFileIcon(fileData.type);
-      const size = formatFileSize(fileData.size);
-      content += `<div class="message-file">
-        <i class="${icon}"></i>
-        <span>${fileData.name} (${size})</span>
-      </div>`;
+    // Ctrl/Cmd + M for voice toggle
+    if ((e.ctrlKey || e.metaKey) && e.key === 'm' && voiceAssistant) {
+      e.preventDefault();
+      voiceAssistant.toggleVoice();
     }
   });
-  
-  div.innerHTML = content;
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
-}
 
-function openImagePreview(url, name) {
-  const modal = document.createElement('div');
-  modal.style.cssText = `
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9); display: flex; align-items: center;
-    justify-content: center; z-index: 9999; cursor: pointer;
-  `;
-  
-  const img = document.createElement('img');
-  img.src = url;
-  img.style.cssText = 'max-width: 90%; max-height: 90%; border-radius: 8px;';
-  
-  modal.appendChild(img);
-  modal.onclick = () => document.body.removeChild(modal);
-  document.body.appendChild(modal);
-}
-
-   // Helper function to convert file to base64
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
-
-
-   // Add this function to remove duplicate welcome messages from history
-function cleanupHistory() {
-  const key = 'askbot_premium_chat_history';
-  const raw = localStorage.getItem(key);
-  
-  if (!raw) return;
-  
-  try {
-    const arr = JSON.parse(raw);
-    
-    // Remove duplicate welcome messages
-    const welcomeText = '🎉 Welcome to AskBot Premium!';
-    const cleanedHistory = arr.filter((msg, index) => {
-      // Keep only the first welcome message, remove duplicates
-      if (msg.role === 'bot' && msg.html.includes(welcomeText)) {
-        return arr.findIndex(m => m.role === 'bot' && m.html.includes(welcomeText)) === index;
-      }
-      return true;
-    });
-    
-    localStorage.setItem(key, JSON.stringify(cleanedHistory));
-    console.log('History cleaned up - removed duplicate welcome messages');
-    
-  } catch(e) {
-    console.warn('Failed to cleanup history:', e);
-  }
-}
-
-   // ===== ADVANCED VOICE ASSISTANCE SYSTEM =====
-class AdvancedVoiceAssistant {
-  constructor() {
-    this.recognition = null;
-    this.synthesis = window.speechSynthesis;
-    this.isListening = false;
-    this.isSpeaking = false;
-    this.voiceEnabled = false;
-    
-    this.initializeVoiceUI();
-    this.setupVoiceRecognition();
-    this.setupVoiceSynthesis();
-  }
-
-  initializeVoiceUI() {
-    // Add voice controls to the page
-    const voiceHTML = `
-      <div class="voice-controls">
-        <button class="voice-btn" id="voiceToggle" title="Voice Assistant">
-          <i class="fas fa-microphone"></i>
-          <div class="voice-visualizer"></div>
-        </button>
-        <button class="voice-btn" id="voiceStop" title="Stop Voice" style="display: none;">
-          <i class="fas fa-stop"></i>
-        </button>
-      </div>
-      
-      <div class="voice-status" id="voiceStatus">
-        <span id="voiceStatusText">Listening...</span>
-        <div class="voice-waveform">
-          <div class="voice-bar"></div>
-          <div class="voice-bar"></div>
-          <div class="voice-bar"></div>
-          <div class="voice-bar"></div>
-          <div class="voice-bar"></div>
-        </div>
-      </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', voiceHTML);
-    
-    // Bind events
-    document.getElementById('voiceToggle').addEventListener('click', () => this.toggleVoice());
-    document.getElementById('voiceStop').addEventListener('click', () => this.stopVoice());
-  }
-
-  setupVoiceRecognition() {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      toast('❌ Speech recognition not supported in this browser');
-      return;
-    }
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    this.recognition = new SpeechRecognition();
-    
-    this.recognition.continuous = false;
-    this.recognition.interimResults = false;
-    this.recognition.lang = 'en-US';
-
-    this.recognition.onstart = () => {
-      this.isListening = true;
-      this.updateVoiceUI();
-      this.showVoiceStatus('🎤 Listening... Speak now!');
-    };
-
-    this.recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      this.processVoiceCommand(transcript);
-    };
-
-    this.recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
-      this.stopListening();
-      toast('❌ Voice recognition error: ' + event.error);
-    };
-
-    this.recognition.onend = () => {
-      this.stopListening();
-    };
-  }
-
-  setupVoiceSynthesis() {
-    // Enhanced voice selection for better quality
-    this.synthesis.onvoiceschanged = () => {
-      const voices = this.synthesis.getVoices();
-      // Prefer neural/enhanced voices
-      this.selectedVoice = voices.find(voice => 
-        voice.name.includes('Neural') || 
-        voice.name.includes('Enhanced') ||
-        voice.name.includes('Premium')
-      ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
-    };
-  }
-
-  toggleVoice() {
-    if (this.isListening) {
-      this.stopListening();
-    } else {
-      this.startListening();
-    }
-  }
-
-  startListening() {
-    if (!this.recognition) return;
-    
-    try {
-      this.recognition.start();
-      // Add advanced visual feedback
-      this.animateVoiceBackground();
-    } catch (error) {
-      console.error('Failed to start recognition:', error);
-      toast('❌ Could not start voice recognition');
-    }
-  }
-
-  stopListening() {
-    if (this.recognition && this.isListening) {
-      this.recognition.stop();
-    }
-    this.isListening = false;
-    this.updateVoiceUI();
-    this.hideVoiceStatus();
-  }
-
-  stopVoice() {
-    this.stopListening();
-    if (this.isSpeaking) {
-      this.synthesis.cancel();
-      this.isSpeaking = false;
-      this.updateVoiceUI();
-    }
-  }
-
-  async processVoiceCommand(transcript) {
-    console.log('Voice command:', transcript);
-    this.showVoiceStatus('🧠 Processing: ' + transcript);
-    
-    // Add voice message to chat with special styling
-    const messageDiv = addMessage('user', transcript);
-    messageDiv.classList.add('voice-message');
-    
-    // Process through your existing chat system
-    document.getElementById('messageInput').value = transcript;
-    await sendMessage();
-    
-    this.hideVoiceStatus();
-  }
-
-  speak(text) {
-    if (!this.synthesis || this.isSpeaking) return;
-    
-    // Clean text for speech (remove markdown, HTML)
-    const cleanText = text.replace(/[*_`#]/g, '').replace(/<[^>]*>/g, '');
-    
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.voice = this.selectedVoice;
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 0.8;
-    
-    utterance.onstart = () => {
-      this.isSpeaking = true;
-      this.updateVoiceUI();
-      this.showVoiceStatus('🔊 Speaking...');
-    };
-    
-    utterance.onend = () => {
-      this.isSpeaking = false;
-      this.updateVoiceUI();
-      this.hideVoiceStatus();
-    };
-    
-    this.synthesis.speak(utterance);
-  }
-
-  updateVoiceUI() {
-    const toggleBtn = document.getElementById('voiceToggle');
-    const stopBtn = document.getElementById('voiceStop');
-    
-    toggleBtn.className = 'voice-btn';
-    if (this.isListening) toggleBtn.classList.add('listening');
-    if (this.isSpeaking) toggleBtn.classList.add('speaking');
-    
-    stopBtn.style.display = (this.isListening || this.isSpeaking) ? 'block' : 'none';
-  }
-
-  showVoiceStatus(text) {
-    const status = document.getElementById('voiceStatus');
-    document.getElementById('voiceStatusText').textContent = text;
-    status.style.display = 'block';
-  }
-
-  hideVoiceStatus() {
-    document.getElementById('voiceStatus').style.display = 'none';
-  }
-
-  animateVoiceBackground() {
-    // Enhanced background animation during voice interaction
-    document.body.style.setProperty('--voice-active', '1');
-    setTimeout(() => {
-      document.body.style.setProperty('--voice-active', '0');
-    }, 3000);
-  }
-}
-
-// Initialize voice assistant when chat loads
-let voiceAssistant;
-
-// Modify your existing initializePremiumChat function to include voice
-const originalInitializeChat = initializePremiumChat;
-function initializePremiumChat() {
-  originalInitializeChat();
-  
-  // Initialize voice assistant
-  setTimeout(() => {
-    voiceAssistant = new AdvancedVoiceAssistant();
-    toast('🎤 Voice Assistant Ready! Click the microphone to start.');
-  }, 1000);
-}
-
-// Enhanced addMessage function to support voice responses
-const originalAddMessage = addMessage;
-function addMessage(sender, text, withActions = false) {
-  const messageDiv = originalAddMessage(sender, text, withActions);
-  
-  // Auto-speak bot responses if voice assistant is active
-  if (sender === 'bot' && voiceAssistant && !voiceAssistant.isSpeaking) {
-    messageDiv.classList.add('voice-response');
-    
-    // Add speak button to bot messages
-    if (withActions) {
-      const speakBtn = document.createElement('button');
-      speakBtn.className = 'action-btn';
-      speakBtn.title = 'Speak this message';
-      speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-      speakBtn.onclick = () => voiceAssistant.speak(text);
-      
-      const actions = messageDiv.querySelector('.msg-actions');
-      if (actions) actions.appendChild(speakBtn);
-    }
-    
-    // Optional: Auto-speak responses (uncomment to enable)
-    // setTimeout(() => voiceAssistant.speak(text), 500);
-  }
-  
-  return messageDiv;
-}
-
-   // Advanced keyboard shortcuts for voice control
-document.addEventListener('keydown', (e) => {
-  // Spacebar to toggle voice (when not typing)
-  if (e.code === 'Space' && e.target.tagName !== 'INPUT' && voiceAssistant) {
-    e.preventDefault();
-    voiceAssistant.toggleVoice();
-  }
-  
-  // Escape to stop voice
-  if (e.code === 'Escape' && voiceAssistant) {
-    voiceAssistant.stopVoice();
-  }
-  
-  // Ctrl/Cmd + M for voice toggle
-  if ((e.ctrlKey || e.metaKey) && e.key === 'm' && voiceAssistant) {
-    e.preventDefault();
-    voiceAssistant.toggleVoice();
-  }
-});
-
-
-
-   
 </script>
+
 
 </body>
 </html>
+
 
 
 
