@@ -129,27 +129,6 @@ html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed
     position:relative; overflow:hidden;
   }
 
- /* Make header sticky while scrolling - COMPLETE FIX */
-.premium-chat-header {
-  position: sticky !important;
-  top: 0;
-  z-index: 1000;
-  backdrop-filter: blur(25px) saturate(120%);
-  border-bottom: 1px solid rgba(255,255,255,.15);
-}
-
-/* Ensure proper scrolling in messages area */
-.premium-messages {
-  overflow-y: auto;
-  scroll-padding-top: 20px;
-}
-
-/* Prevent any scroll issues with the container */
-.premium-chat-container {
-  overflow: hidden;
-  position: relative;
-}
-
   .premium-title{display:flex;align-items:center;gap:.8rem;font-size:1.9rem;font-weight:900}
   .premium-title i{color:#facc15;text-shadow:0 2px 12px rgba(250,204,21,.35)}
   .premium-badge{
@@ -2337,6 +2316,7 @@ body::after {
 
 </body>
 </html>
+
 
 
 
