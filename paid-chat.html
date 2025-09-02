@@ -1174,6 +1174,142 @@ body{
   background: rgba(255,255,255,.15);
 }
 
+ /* ===== ADVANCED VOICE ASSISTANCE STYLING ===== */
+.voice-controls {
+  position: fixed; bottom: 120px; right: 20px; z-index: 2000;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.voice-btn {
+  width: 64px; height: 64px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white;
+  box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+
+.voice-btn.listening {
+  background: linear-gradient(135deg, #10ac84, #01a3a4);
+  animation: voicePulse 1.5s infinite;
+}
+
+.voice-btn.speaking {
+  background: linear-gradient(135deg, #5f27cd, #341f97);
+  animation: speakingWave 0.8s infinite;
+}
+
+@keyframes voicePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(16, 172, 132, 0.3); }
+  50% { transform: scale(1.1); box-shadow: 0 12px 40px rgba(16, 172, 132, 0.6); }
+}
+
+@keyframes speakingWave {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(-2deg); }
+  75% { transform: scale(1.05) rotate(2deg); }
+}
+
+.voice-visualizer {
+  position: absolute; inset: -8px; border-radius: 50%; opacity: 0;
+  background: conic-gradient(from 0deg, transparent, #10ac84, transparent);
+  animation: visualizerSpin 2s linear infinite;
+}
+
+.voice-btn.listening .voice-visualizer { opacity: 1; }
+
+@keyframes visualizerSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.voice-status {
+  position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+  background: rgba(17, 24, 39, 0.95); color: #e5e7eb; padding: 12px 20px;
+  border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px); z-index: 3000; display: none;
+  font-size: 0.9rem; font-weight: 500;
+}
+
+.voice-waveform {
+  display: flex; align-items: center; gap: 3px; margin-left: 8px;
+}
+
+.voice-bar {
+  width: 3px; height: 16px; background: linear-gradient(to top, #10ac84, #01a3a4);
+  border-radius: 2px; animation: waveform 1.2s infinite ease-in-out;
+}
+
+.voice-bar:nth-child(1) { animation-delay: 0s; }
+.voice-bar:nth-child(2) { animation-delay: 0.1s; }
+.voice-bar:nth-child(3) { animation-delay: 0.2s; }
+.voice-bar:nth-child(4) { animation-delay: 0.3s; }
+.voice-bar:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes waveform {
+  0%, 40%, 100% { transform: scaleY(0.4); }
+  20% { transform: scaleY(1); }
+}
+
+/* ===== ENHANCED COLOR PALETTE & ADVANCED GRAPHICS ===== */
+:root {
+  /* Advanced color variables with P3 wide gamut support */
+  --neon-cyan: color(display-p3 0.2 0.9 0.95);
+  --neon-purple: color(display-p3 0.6 0.3 0.95);
+  --neon-pink: color(display-p3 0.98 0.4 0.8);
+  --neon-green: color(display-p3 0.3 0.95 0.4);
+  --neon-orange: color(display-p3 0.98 0.6 0.2);
+  
+  /* Fallback for non-P3 displays */
+  --neon-cyan: #33f0ff;
+  --neon-purple: #9966ff;
+  --neon-pink: #ff66cc;
+  --neon-green: #66ff66;
+  --neon-orange: #ff9933;
+}
+
+/* Enhanced aurora background with voice interaction */
+body::after {
+  background: 
+    radial-gradient(40vmax 25vmax at 15% 10%, var(--neon-cyan, #33f0ff) 18%, transparent 60%),
+    radial-gradient(45vmax 30vmax at 85% 20%, var(--neon-purple, #9966ff) 20%, transparent 60%),
+    radial-gradient(45vmax 35vmax at 30% 85%, var(--neon-pink, #ff66cc) 12%, transparent 60%);
+  animation: advancedAuroraFlow 25s ease-in-out infinite alternate;
+}
+
+@keyframes advancedAuroraFlow {
+  0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); }
+  33% { transform: translate3d(3vmax,-2vmax,0) rotate(15deg) scale(1.1); }
+  66% { transform: translate3d(-2vmax,3vmax,0) rotate(-10deg) scale(0.95); }
+  100% { transform: translate3d(1vmax,-1vmax,0) rotate(5deg) scale(1.05); }
+}
+
+/* Advanced holographic text effects */
+.premium-title {
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: holographicShift 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(51, 240, 255, 0.5));
+}
+
+@keyframes holographicShift {
+  0%, 100% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+  50% { background-position: 100% 50%; filter: hue-rotate(180deg); }
+}
+
+/* Enhanced message bubbles with voice indicators */
+.premium-message.user.voice-message {
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  box-shadow: 0 0 30px rgba(51, 240, 255, 0.4);
+}
+
+.premium-message.bot.voice-response {
+  border: 2px solid var(--neon-purple);
+  box-shadow: 0 0 25px rgba(153, 102, 255, 0.3);
+}
+
+
 
 </style>
 </head>
@@ -1913,12 +2049,282 @@ function cleanupHistory() {
   }
 }
 
+   // ===== ADVANCED VOICE ASSISTANCE SYSTEM =====
+class AdvancedVoiceAssistant {
+  constructor() {
+    this.recognition = null;
+    this.synthesis = window.speechSynthesis;
+    this.isListening = false;
+    this.isSpeaking = false;
+    this.voiceEnabled = false;
+    
+    this.initializeVoiceUI();
+    this.setupVoiceRecognition();
+    this.setupVoiceSynthesis();
+  }
+
+  initializeVoiceUI() {
+    // Add voice controls to the page
+    const voiceHTML = `
+      <div class="voice-controls">
+        <button class="voice-btn" id="voiceToggle" title="Voice Assistant">
+          <i class="fas fa-microphone"></i>
+          <div class="voice-visualizer"></div>
+        </button>
+        <button class="voice-btn" id="voiceStop" title="Stop Voice" style="display: none;">
+          <i class="fas fa-stop"></i>
+        </button>
+      </div>
+      
+      <div class="voice-status" id="voiceStatus">
+        <span id="voiceStatusText">Listening...</span>
+        <div class="voice-waveform">
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+        </div>
+      </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', voiceHTML);
+    
+    // Bind events
+    document.getElementById('voiceToggle').addEventListener('click', () => this.toggleVoice());
+    document.getElementById('voiceStop').addEventListener('click', () => this.stopVoice());
+  }
+
+  setupVoiceRecognition() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      toast('❌ Speech recognition not supported in this browser');
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    this.recognition = new SpeechRecognition();
+    
+    this.recognition.continuous = false;
+    this.recognition.interimResults = false;
+    this.recognition.lang = 'en-US';
+
+    this.recognition.onstart = () => {
+      this.isListening = true;
+      this.updateVoiceUI();
+      this.showVoiceStatus('🎤 Listening... Speak now!');
+    };
+
+    this.recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      this.processVoiceCommand(transcript);
+    };
+
+    this.recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      this.stopListening();
+      toast('❌ Voice recognition error: ' + event.error);
+    };
+
+    this.recognition.onend = () => {
+      this.stopListening();
+    };
+  }
+
+  setupVoiceSynthesis() {
+    // Enhanced voice selection for better quality
+    this.synthesis.onvoiceschanged = () => {
+      const voices = this.synthesis.getVoices();
+      // Prefer neural/enhanced voices
+      this.selectedVoice = voices.find(voice => 
+        voice.name.includes('Neural') || 
+        voice.name.includes('Enhanced') ||
+        voice.name.includes('Premium')
+      ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+    };
+  }
+
+  toggleVoice() {
+    if (this.isListening) {
+      this.stopListening();
+    } else {
+      this.startListening();
+    }
+  }
+
+  startListening() {
+    if (!this.recognition) return;
+    
+    try {
+      this.recognition.start();
+      // Add advanced visual feedback
+      this.animateVoiceBackground();
+    } catch (error) {
+      console.error('Failed to start recognition:', error);
+      toast('❌ Could not start voice recognition');
+    }
+  }
+
+  stopListening() {
+    if (this.recognition && this.isListening) {
+      this.recognition.stop();
+    }
+    this.isListening = false;
+    this.updateVoiceUI();
+    this.hideVoiceStatus();
+  }
+
+  stopVoice() {
+    this.stopListening();
+    if (this.isSpeaking) {
+      this.synthesis.cancel();
+      this.isSpeaking = false;
+      this.updateVoiceUI();
+    }
+  }
+
+  async processVoiceCommand(transcript) {
+    console.log('Voice command:', transcript);
+    this.showVoiceStatus('🧠 Processing: ' + transcript);
+    
+    // Add voice message to chat with special styling
+    const messageDiv = addMessage('user', transcript);
+    messageDiv.classList.add('voice-message');
+    
+    // Process through your existing chat system
+    document.getElementById('messageInput').value = transcript;
+    await sendMessage();
+    
+    this.hideVoiceStatus();
+  }
+
+  speak(text) {
+    if (!this.synthesis || this.isSpeaking) return;
+    
+    // Clean text for speech (remove markdown, HTML)
+    const cleanText = text.replace(/[*_`#]/g, '').replace(/<[^>]*>/g, '');
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.voice = this.selectedVoice;
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    utterance.volume = 0.8;
+    
+    utterance.onstart = () => {
+      this.isSpeaking = true;
+      this.updateVoiceUI();
+      this.showVoiceStatus('🔊 Speaking...');
+    };
+    
+    utterance.onend = () => {
+      this.isSpeaking = false;
+      this.updateVoiceUI();
+      this.hideVoiceStatus();
+    };
+    
+    this.synthesis.speak(utterance);
+  }
+
+  updateVoiceUI() {
+    const toggleBtn = document.getElementById('voiceToggle');
+    const stopBtn = document.getElementById('voiceStop');
+    
+    toggleBtn.className = 'voice-btn';
+    if (this.isListening) toggleBtn.classList.add('listening');
+    if (this.isSpeaking) toggleBtn.classList.add('speaking');
+    
+    stopBtn.style.display = (this.isListening || this.isSpeaking) ? 'block' : 'none';
+  }
+
+  showVoiceStatus(text) {
+    const status = document.getElementById('voiceStatus');
+    document.getElementById('voiceStatusText').textContent = text;
+    status.style.display = 'block';
+  }
+
+  hideVoiceStatus() {
+    document.getElementById('voiceStatus').style.display = 'none';
+  }
+
+  animateVoiceBackground() {
+    // Enhanced background animation during voice interaction
+    document.body.style.setProperty('--voice-active', '1');
+    setTimeout(() => {
+      document.body.style.setProperty('--voice-active', '0');
+    }, 3000);
+  }
+}
+
+// Initialize voice assistant when chat loads
+let voiceAssistant;
+
+// Modify your existing initializePremiumChat function to include voice
+const originalInitializeChat = initializePremiumChat;
+function initializePremiumChat() {
+  originalInitializeChat();
+  
+  // Initialize voice assistant
+  setTimeout(() => {
+    voiceAssistant = new AdvancedVoiceAssistant();
+    toast('🎤 Voice Assistant Ready! Click the microphone to start.');
+  }, 1000);
+}
+
+// Enhanced addMessage function to support voice responses
+const originalAddMessage = addMessage;
+function addMessage(sender, text, withActions = false) {
+  const messageDiv = originalAddMessage(sender, text, withActions);
+  
+  // Auto-speak bot responses if voice assistant is active
+  if (sender === 'bot' && voiceAssistant && !voiceAssistant.isSpeaking) {
+    messageDiv.classList.add('voice-response');
+    
+    // Add speak button to bot messages
+    if (withActions) {
+      const speakBtn = document.createElement('button');
+      speakBtn.className = 'action-btn';
+      speakBtn.title = 'Speak this message';
+      speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+      speakBtn.onclick = () => voiceAssistant.speak(text);
+      
+      const actions = messageDiv.querySelector('.msg-actions');
+      if (actions) actions.appendChild(speakBtn);
+    }
+    
+    // Optional: Auto-speak responses (uncomment to enable)
+    // setTimeout(() => voiceAssistant.speak(text), 500);
+  }
+  
+  return messageDiv;
+}
+
+   // Advanced keyboard shortcuts for voice control
+document.addEventListener('keydown', (e) => {
+  // Spacebar to toggle voice (when not typing)
+  if (e.code === 'Space' && e.target.tagName !== 'INPUT' && voiceAssistant) {
+    e.preventDefault();
+    voiceAssistant.toggleVoice();
+  }
+  
+  // Escape to stop voice
+  if (e.code === 'Escape' && voiceAssistant) {
+    voiceAssistant.stopVoice();
+  }
+  
+  // Ctrl/Cmd + M for voice toggle
+  if ((e.ctrlKey || e.metaKey) && e.key === 'm' && voiceAssistant) {
+    e.preventDefault();
+    voiceAssistant.toggleVoice();
+  }
+});
+
+
 
    
 </script>
 
 </body>
 </html>
+
 
 
 
