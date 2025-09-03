@@ -1549,13 +1549,26 @@ function showPremiumChat(){
     sendBtn.addEventListener('click', sendMessage);
     input.addEventListener('keypress', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
 
-    // Quick prompts
-    document.getElementById('quickPrompts').addEventListener('click', (e)=>{
-      if(e.target.classList.contains('chip')){
-        input.value = e.target.textContent.trim();
-        sendMessage();
-      }
-    });
+// Quick prompts - FIXED VERSION
+document.getElementById('quickPrompts').addEventListener('click', (e) => {
+  if(e.target.classList.contains('chip')){
+    const promptText = e.target.textContent.trim();
+    console.log('🔄 Quick prompt clicked:', promptText);
+    
+    // ✅ CRITICAL FIX: Clear file state BEFORE setting input
+    attachedFiles = [];
+    updateFilePreview();
+    
+    const input = document.getElementById('messageInput');
+    input.value = promptText;
+    
+    // ✅ Add small delay to ensure state is clean
+    setTimeout(() => {
+      sendMessage();
+    }, 50);
+  }
+});
+
 
     // Toolbar
     document.getElementById('btnCopyLast').onclick = copyLast;
@@ -2341,6 +2354,7 @@ function showPremiumChat(){
 
 </body>
 </html>
+
 
 
 
