@@ -1424,7 +1424,7 @@ body::after {
   // Config
   const RAZORPAY_KEY = 'rzp_live_RBZzAH4aoPYBRg'; // replace
   const BACKEND_URL  = 'https://askbot-backend.vercel.app'; // replace
-  const PRICE_PAISE  = 1100; // ₹11
+  const PRICE_PAISE  = 1; // ₹1
 
   // State
   let lastUserMessage = '';
@@ -1454,19 +1454,31 @@ body::after {
         currency: 'INR',
         name: 'AskBot Premium',
         description: '24-Hour Premium Access',
-        handler: function (response) {
-          // Save access
-          localStorage.setItem('askbot_premium_access', JSON.stringify({
-            paymentId: response.razorpay_payment_id,
-            expiresAt: new Date(Date.now() + 24*60*60*1000),
-            isPremium: true,
-            timestamp: new Date().toISOString()
-          }));
-          confetti();
-          payButton.innerHTML = '<i class="fas fa-check"></i> Payment Successful!';
-          payButton.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-          setTimeout(showPremiumChat, 1200);
-        },
+       handler: function (response) {
+  console.log('✅ Payment Success:', response);
+  
+  // IMMEDIATELY update button to show success
+  payButton.innerHTML = '<i class="fas fa-check"></i> Payment Successful!';
+  payButton.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+  payButton.disabled = true;
+  
+  // Save access data (your existing code)
+  localStorage.setItem('askbot_premium_access', JSON.stringify({
+    paymentId: response.razorpay_payment_id,
+    expiresAt: new Date(Date.now() + 24*60*60*1000).toISOString(), // Fix: Add .toISOString()
+    isPremium: true,
+    timestamp: new Date().toISOString()
+  }));
+  
+  // Show confetti and success message
+  confetti();
+  toast('🎉 Payment Successful! Activating Premium...');
+  
+  // Transition to chat after delay
+  setTimeout(() => {
+    showPremiumChat();
+  }, 1500);
+},
         prefill: { name: 'Premium User', email: 'user@example.com', contact: '9999999999' },
         theme:  { color: '#667eea' },
         modal:  { ondismiss: () => toast('Payment cancelled. You can try again anytime!') }
@@ -1493,11 +1505,24 @@ body::after {
     }
   }
 
-  function showPremiumChat(){
-    document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('chatSection').style.display = 'flex';
-    initializePremiumChat();
+function showPremiumChat(){
+  console.log('🚀 Showing Premium Chat');
+  
+  // Hide payment section
+  const paymentSection = document.getElementById('paymentSection');
+  const chatSection = document.getElementById('chatSection');
+  
+  if (paymentSection && chatSection) {
+    paymentSection.style.display = 'none';
+    chatSection.style.display = 'flex';
+    console.log('✅ UI sections switched');
+  } else {
+    console.error('❌ Could not find payment or chat sections');
   }
+  
+  initializePremiumChat();
+}
+
 
   // Chat
   function initializePremiumChat(){
@@ -2316,6 +2341,7 @@ body::after {
 
 </body>
 </html>
+
 
 
 
