@@ -126,7 +126,7 @@ html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed
     background: linear-gradient(135deg, rgba(30,58,138,.55), rgba(76,29,149,.55));
     border-bottom:1px solid rgba(255,255,255,.08);
     backdrop-filter: blur(18px);
-    position:relative; overflow:hidden;
+    position: fixed !important; overflow:hidden;
   }
 
   .premium-title{display:flex;align-items:center;gap:.8rem;font-size:1.9rem;font-weight:900}
@@ -171,7 +171,7 @@ html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed
   }
 
   .premium-message{
-    max-width:78%; padding:1.15rem 1.35rem; border-radius:18px; line-height:1.6; font-size:1.03rem;
+    margin-top: 100px; max-width:78%; padding:1.15rem 1.35rem; border-radius:18px; line-height:1.6; font-size:1.03rem;
     position:relative; box-shadow:0 14px 28px rgba(0,0,0,.35); animation:slideIn .35s ease both;
   }
   @keyframes slideIn{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:translateY(0)}}
@@ -347,7 +347,7 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
 
   /* Always-visible Back to Home pill */
 .back-home {
-  position: fixed;
+  position: fixed !important;
   top: calc(12px + env(safe-area-inset-top, 0px));
   left: calc(12px + env(safe-area-inset-left, 0px));
   z-index: 3000;                /* higher than any drawer/backdrop/header */
@@ -682,7 +682,7 @@ body{
 
 /* Premium Features FAB: sit just below Back to Home, left aligned */
 .features-fab {
-  position: fixed;
+  position: fixed !important;
   left: calc(12px + env(safe-area-inset-left, 0px));
   top: calc(60px + env(safe-area-inset-top, 0px)); /* ~BackToHome height + gap */
   z-index: 2500; /* under Back to Home, above content */
@@ -2341,6 +2341,7 @@ function showPremiumChat(){
 
 </body>
 </html>
+
 
 
 
