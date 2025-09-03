@@ -126,7 +126,7 @@ html, body { height: 100%; overflow: auto; } /* ensure page can scroll if needed
     background: linear-gradient(135deg, rgba(30,58,138,.55), rgba(76,29,149,.55));
     border-bottom:1px solid rgba(255,255,255,.08);
     backdrop-filter: blur(18px);
-    position: fixed !important; overflow:hidden;
+    position: fixed; overflow:hidden;
   }
 
   .premium-title{display:flex;align-items:center;gap:.8rem;font-size:1.9rem;font-weight:900}
@@ -347,7 +347,7 @@ html, body { height: 100%; overflow: auto; }    /* allow a scroll root if needed
 
   /* Always-visible Back to Home pill */
 .back-home {
-  position: fixed !important;
+  position: fixed;
   top: calc(12px + env(safe-area-inset-top, 0px));
   left: calc(12px + env(safe-area-inset-left, 0px));
   z-index: 3000;                /* higher than any drawer/backdrop/header */
@@ -2341,6 +2341,7 @@ function showPremiumChat(){
 
 </body>
 </html>
+
 
 
 
