@@ -1,6 +1,13 @@
 /*
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-  Content-Security-Policy: default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; script-src 'self' https: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: data:; font-src 'self' https: data:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self';
+  Content-Security-Policy: default-src 'self'; 
+    script-src 'self' https://trusted.cdn.com 'nonce-<YOUR_NONCE_HERE>'; 
+    style-src 'self' https://trusted.cdn.com 'nonce-<YOUR_NONCE_HERE>'; 
+    img-src 'self' https://trusted.cdn.com data:; 
+    font-src 'self' https://trusted.cdn.com; 
+    connect-src 'self' https://api.trustedservice.com; 
+    frame-ancestors 'none'; 
+    base-uri 'self';
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer-when-downgrade
