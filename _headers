@@ -1,14 +1,53 @@
-/*
-  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-  Content-Security-Policy: default-src 'self'; 
-    script-src 'self' https://trusted.cdn.com 'nonce-<YOUR_NONCE_HERE>'; 
-    style-src 'self' https://trusted.cdn.com 'nonce-<YOUR_NONCE_HERE>'; 
-    img-src 'self' https://trusted.cdn.com data:; 
-    font-src 'self' https://trusted.cdn.com; 
-    connect-src 'self' https://api.trustedservice.com; 
-    frame-ancestors 'none'; 
-    base-uri 'self';
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: no-referrer-when-downgrade
-  Permissions-Policy: geolocation=(), microphone=(), camera=()
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+Content-Security-Policy: 
+  default-src 'self'; 
+  script-src 'self' https: 'unsafe-inline'; 
+  style-src 'self' https: 'unsafe-inline'; 
+  img-src 'self' https: data: blob:; 
+  font-src 'self' https: data:; 
+  connect-src 'self' https:; 
+  frame-ancestors 'none'; 
+  object-src 'none'; 
+  base-uri 'self'; 
+  form-action 'self'; 
+  upgrade-insecure-requests; 
+  block-all-mixed-content;
+
+X-Frame-Options: DENY
+
+X-Content-Type-Options: nosniff
+
+Referrer-Policy: strict-origin-when-cross-origin
+
+Permissions-Policy: 
+  accelerometer=(), 
+  ambient-light-sensor=(), 
+  autoplay=(), 
+  battery=(), 
+  camera=(), 
+  clipboard-write=(self), 
+  display-capture=(), 
+  document-domain=(), 
+  encrypted-media=(), 
+  fullscreen=(self), 
+  geolocation=(), 
+  gyroscope=(), 
+  magnetometer=(), 
+  microphone=(), 
+  midi=(), 
+  payment=(), 
+  picture-in-picture=(), 
+  publickey-credentials-get=(), 
+  sync-xhr=(), 
+  usb=(), 
+  vr=(), 
+  xr-spatial-tracking=();
+
+Cross-Origin-Opener-Policy: same-origin
+
+Cross-Origin-Embedder-Policy: require-corp
+
+Cross-Origin-Resource-Policy: same-origin
+
+Expect-CT: max-age=86400, enforce
