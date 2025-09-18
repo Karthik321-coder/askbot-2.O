@@ -1,1 +1,11 @@
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload Content-Security-Policy: default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; script-src 'self' https: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: data:; font-src 'self' https: data:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; X-Frame-Options: DENY X-Content-Type-Options: nosniff Referrer-Policy: no-referrer-when-downgrade Permissions-Policy: geolocation=(), microphone=(), camera=()
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+Content-Security-Policy: default-src 'self'; script-src 'self' https://trusted.cdn.com 'nonce-XYZ123'; style-src 'self' https://trusted.cdn.com 'nonce-XYZ123'; img-src 'self' https: data:; font-src 'self' https: data:; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; form-action 'self'; block-all-mixed-content; upgrade-insecure-requests;
+
+X-Frame-Options: DENY
+
+X-Content-Type-Options: nosniff
+
+Referrer-Policy: strict-origin-when-cross-origin
+
+Permissions-Policy: geolocation=(), microphone=(), camera=(), fullscreen=(self), clipboard-write=(self), payment=()
