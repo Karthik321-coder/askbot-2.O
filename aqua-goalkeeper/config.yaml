@@ -1,0 +1,94 @@
+# AquaKeeper — Default Configuration
+# ===================================
+
+system:
+  mode: live            # live | simulate | calibrate
+  log_level: INFO       # DEBUG | INFO | WARNING | ERROR
+  record: false         # Record video and telemetry
+  fps_target: 60        # Target detection frame rate
+
+# Goal dimensions (meters)
+goal:
+  width: 3.0            # Standard water polo goal width
+  height: 0.9           # Standard water polo goal height
+
+# Camera settings
+camera:
+  left:
+    device_id: 0
+    resolution: [640, 480]
+    fps: 120
+    exposure: auto
+  right:
+    device_id: 1
+    resolution: [640, 480]
+    fps: 120
+    exposure: auto
+  stereo:
+    baseline_m: 0.30     # Distance between camera centers (meters)
+    convergence_angle: 5  # Degrees
+
+# Ball detection
+detection:
+  model_path: models/ball_detector.pt
+  confidence_threshold: 0.7
+  nms_threshold: 0.4
+  input_size: [640, 640]
+  ball_diameter_m: 0.22  # Standard water polo ball diameter
+  use_gpu: true
+
+# Trajectory prediction
+prediction:
+  kalman:
+    process_noise: 0.01
+    measurement_noise: 0.1
+  lstm:
+    model_path: models/trajectory_lstm.pt
+    sequence_length: 10
+    hidden_size: 128
+  min_observations: 3    # Minimum detections before prediction
+  prediction_horizon_s: 0.5  # Predict this far ahead
+
+# Motor controller
+motor:
+  horizontal:
+    odrive_serial: null  # Auto-detect if null
+    axis: 0
+    max_speed: 4.0       # m/s
+    max_acceleration: 20.0  # m/s^2
+    stroke_m: 3.0        # Rail length
+    counts_per_meter: 8192
+  vertical:
+    odrive_serial: null
+    axis: 1
+    max_speed: 3.0
+    max_acceleration: 15.0
+    stroke_m: 0.9
+    counts_per_meter: 8192
+  home_position: [1.5, 0.45]  # Center of goal (x, y in meters)
+
+# Decision engine
+decision:
+  model_path: models/rl_agent.pt
+  reaction_threshold_s: 0.15  # Minimum time to react
+  confidence_threshold: 0.8   # Minimum prediction confidence to act
+  return_to_center: true      # Return paddle to center after each save
+
+# Paddle
+paddle:
+  width_m: 0.6
+  height_m: 0.4
+
+# Calibration
+calibration:
+  grid_points_h: 5       # Calibration grid horizontal points
+  grid_points_v: 3       # Calibration grid vertical points
+  settle_time_s: 0.5     # Wait time at each calibration point
+  data_file: calibration_data.yaml
+
+# Safety
+safety:
+  max_force_n: 500        # Maximum paddle impact force
+  emergency_stop_pin: 17  # GPIO pin for emergency stop button
+  watchdog_timeout_s: 1.0 # System watchdog timeout
+  pool_boundary_margin_m: 0.05  # Margin from rail ends
