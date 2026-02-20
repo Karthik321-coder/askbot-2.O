@@ -20,6 +20,9 @@ out/
 .cache/
 .parcel-cache/
 .next/
+.pytest_cache/
+__pycache__/
+*.pyc
 
 # IDE files
 .vscode/

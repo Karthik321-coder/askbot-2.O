@@ -159,8 +159,6 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Train RL goalkeeper agent")
     parser.add_argument("--episodes", type=int, default=100000)
     parser.add_argument("--lr", type=float, default=0.0003)
-    parser.add_argument("--gamma", type=float, default=0.99)
-    parser.add_argument("--batch-size", type=int, default=2048)
     parser.add_argument("--hidden-layers", type=int, nargs="+", default=[256, 128, 64])
     args = parser.parse_args()
     train(args)

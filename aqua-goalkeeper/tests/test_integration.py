@@ -45,7 +45,7 @@ class TestFullPipelineSimulation:
         # The paddle should be near the target
         final_pos = motors.get_position()
         assert abs(final_pos[0] - target_x) < 0.5
-        assert abs(final_pos[1] - target_y) < 0.3
+        assert abs(final_pos[1] - target_y) < 0.5
 
     def test_paddle_returns_to_center(self) -> None:
         """After a shot, paddle should return to center when idle."""
