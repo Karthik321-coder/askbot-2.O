@@ -1,0 +1,14 @@
+# Water Polo Ball Detection Dataset
+# YOLOv8 format
+
+path: ./training/data  # Dataset root
+train: images/train
+val: images/val
+test: images/test
+
+# Classes
+names:
+  0: water_polo_ball
+
+# Number of classes
+nc: 1
